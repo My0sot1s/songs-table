@@ -88,13 +88,6 @@ export default {
   // overflow: auto;
 }
 
-hr {
-  height: 1px;
-  background-color: #ccc;
-  border: none;
-  margin-top: 1vh;
-}
-
 .lottie-btn {
   height: 20vh;
   margin-top: 9vh;

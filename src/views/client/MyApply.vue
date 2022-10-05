@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AplyInfo
+    <ApplyInfo
       v-for="(item, index) in applyList"
       :key="index"
       :imgUrl="item.imgUrl"
@@ -35,7 +35,7 @@
           </div>
         </div>
       </template>
-    </AplyInfo>
+    </ApplyInfo>
     <van-dialog
       v-model="dialog.show"
       :title="dialog.title"
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import AplyInfo from '@/components/ApplyInfo.vue'
+import ApplyInfo from '@/components/ApplyInfo.vue'
 
 export default {
   data() {
@@ -95,7 +95,7 @@ export default {
     }
   },
   components: {
-    AplyInfo
+    ApplyInfo
   },
   methods: {
     /* 点击删除图标时 */
