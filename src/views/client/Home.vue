@@ -4,7 +4,8 @@
       <MusicList title="今日歌单" :musicList="todayList">
         <template #default>
           <router-link to="/myApply">
-            <van-icon size="3.5vh" name="apps-o" />
+            <van-icon size="3.5vh" name="user-circle-o" />
+            <!-- <van-icon size="3.5vh" name="apps-o" /> -->
           </router-link>
         </template>
       </MusicList>

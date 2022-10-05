@@ -8,8 +8,8 @@
         <template #error>加载失败</template>
       </van-image>
     </div>
-    <div class="song-name">{{ songName }}</div>
-    <div class="singer">{{ singer }}</div>
+    <div class="song-name van-ellipsis">{{ songName }}</div>
+    <div class="singer van-ellipsis">{{ singer }}</div>
   </div>
 </template>
 
@@ -41,10 +41,12 @@ export default {
 .song-name {
   font-size: 2vh;
   font-weight: 500;
+  width: 15vh;
 }
 
 .singer {
   font-size: 1.5vh;
+  width: 10vh;
   color: #ccc;
 }
 </style>

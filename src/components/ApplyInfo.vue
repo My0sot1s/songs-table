@@ -11,19 +11,24 @@
       </div>
       <div class="info">
         <div>
-          <div class="song-name">{{ songName }}</div>
+          <div class="song-name van-ellipsis">{{ songName }}</div>
           <div>
-            <span class="state"><slot name="state"></slot></span>
-            <van-icon size="3vh" name="ellipsis" />
+            <span class="state">{{ state }}</span>
+            <van-icon
+              size="2vh"
+              :name="iconName"
+              @click.stop="$emit('action', state)"
+            />
           </div>
         </div>
         <div>
-          <div class="user">
+          <div class="singer">
             <van-icon name="user-o" />
-            <span>{{ userName }}</span>
+            <div class="van-ellipsis">{{ singer }}</div>
           </div>
           <div class="time">
-            <van-icon name="calendar-o" /><span>{{ time }}</span>
+            <van-icon name="calendar-o" />
+            <div class="van-ellipsis">{{ time }}</div>
           </div>
         </div>
       </div>
@@ -37,9 +42,12 @@ export default {
   props: {
     imgUrl: String,
     songName: String,
-    userName: String,
-    time: String
-  }
+    singer: String,
+    time: String,
+    state: String,
+    iconName: String
+  },
+  methods: {}
 }
 </script>
 
@@ -74,19 +82,31 @@ export default {
         flex-direction: row;
         justify-content: space-between;
       }
+
       .song-name {
         font-size: 2.5vh;
+        width: 30vw;
       }
 
-      .user,
+      .singer,
       .time {
         font-size: 2vh;
         color: #555;
+        display: flex;
+        align-items: center;
 
-        span {
+        div {
           margin-left: 1vw;
-          margin-right: 4vw;
         }
+      }
+
+      .singer {
+        width: 23vw;
+        margin-right: 1vw;
+      }
+
+      .time {
+        width: 30vw;
       }
 
       .state {
