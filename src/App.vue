@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <router-view />
-    <van-tabbar v-model="active">
+    <!-- <van-tabbar v-model="active">
       <van-tabbar-item icon="home-o"></van-tabbar-item>
       <van-tabbar-item icon="orders-o"></van-tabbar-item>
       <van-tabbar-item icon="setting-o"></van-tabbar-item>
-    </van-tabbar>
+    </van-tabbar> -->
   </div>
 </template>
 
@@ -19,8 +19,8 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .van-tabbar {
-  height: 20vw;
+  height: 10vh;
 }
 </style>

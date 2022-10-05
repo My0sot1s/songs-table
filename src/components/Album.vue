@@ -1,7 +1,12 @@
 <template>
   <div>
     <div class="image">
-      <van-image fit="fill" :src="imgUrl" />
+      <van-image width="15vh" height="15vh" fit="fill" :src="imgUrl">
+        <template #loading>
+          <van-loading type="spinner" size="20" />
+        </template>
+        <template #error>加载失败</template>
+      </van-image>
     </div>
     <div class="song-name">{{ songName }}</div>
     <div class="singer">{{ singer }}</div>
@@ -20,11 +25,12 @@ export default {
 
 <style lang='less' scoped>
 .image {
-  width: 30vw;
-  height: 30vw;
+  width: 15vh;
+  height: 15vh;
   border-radius: 10px;
   margin-right: 3vw;
-  border: 1px solid rgb(221, 221, 221);
+  // border: 1px solid rgb(221, 221, 221);
+  box-shadow: 0 0 5px #999;
   overflow: hidden;
 
   & ~ div {
@@ -32,13 +38,13 @@ export default {
   }
 }
 
-.song-name{
-    font-size: 4.5vw;
-    font-weight: 500;
+.song-name {
+  font-size: 2vh;
+  font-weight: 500;
 }
 
-.singer{
-    font-size: 3.5vw;
-    color: #ccc;
+.singer {
+  font-size: 1.5vh;
+  color: #ccc;
 }
 </style>
