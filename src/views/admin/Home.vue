@@ -9,7 +9,7 @@
     </div>
     <hr />
     <ApplyInfo
-      v-for="(item, index) in applyList"
+      v-for="(item, index) in curDayList"
       :key="index"
       :imgUrl="item.imgUrl"
       :songName="item.songName"
@@ -17,10 +17,12 @@
       :time="item.time"
       :state="item.state"
       iconName="ellipsis"
-      @action="action(index)"
-    >
-    </ApplyInfo>
-    <TabBar></TabBar>
+      @action="
+        actionSheet.show = true
+        curIndex = index
+      "
+    />
+    <TabBar/>
     <van-calendar
       color="#3c9cff"
       :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
@@ -51,6 +53,7 @@
 <script>
 import ApplyInfo from '@/components/ApplyInfo'
 import TabBar from '@/components/TabBar'
+import formatDate from '@/tools/FormatDate'
 
 export default {
   components: {
@@ -81,7 +84,7 @@ export default {
             'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
           songName: '春夏秋冬',
           singer: '张国荣',
-          time: '2022-10-5',
+          time: '2022-10-6',
           state: '厦门校区'
         },
         {
@@ -89,7 +92,7 @@ export default {
             'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
           songName: '富士山下',
           singer: '陈奕迅',
-          time: '2022-10-5',
+          time: '2022-10-7',
           state: '厦门校区'
         }
       ],
@@ -107,34 +110,17 @@ export default {
       }
     }
   },
+  computed: {
+    curDayList() {
+      return this.applyList.filter(
+        (item) => item.time === this.dateString.split(' ')[1]
+      )
+    }
+  },
   methods: {
-    formatDate(dateObj) {
-      const year = dateObj.getFullYear()
-      const month = dateObj.getMonth() + 1
-      const date = dateObj.getDate()
-      const week = dateObj.toDateString().split(' ')[0]
-      let recent = ''
-      switch (new Date().getDate() - date) {
-        case -1:
-          recent = '明日'
-          break
-        case 0:
-          recent = '今日'
-          break
-        case 1:
-          recent = '昨日'
-          break
-      }
-      this.dateString = `${recent} ${year}-${month}-${date} ${week}`
-    },
-    /* 点击右上角小点时触发 */
-    action(index) {
-      this.actionSheet.show = true
-      this.curIndex = index
-    },
     /* 选择日期后触发 */
     selDay(Date) {
-      this.formatDate(Date)
+      this.dateString = formatDate(Date)
       this.showCalendar = false
     },
     /* 确认删除后触发 */
@@ -143,7 +129,7 @@ export default {
     }
   },
   mounted() {
-    this.formatDate(new Date())
+    this.dateString = formatDate(new Date())
   }
 }
 </script>

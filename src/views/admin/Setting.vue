@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="header">管理</div>
+    <div class="admin-header">管理</div>
     <hr />
     <div class="body">
       <div>特殊时间点歌规则</div>
       <div>使用帮助</div>
       <div>意见与反馈</div>
     </div>
-    <TabBar></TabBar>
+    <TabBar/>
   </div>
 </template>
 
@@ -22,11 +22,6 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.header {
-  margin: 2vh;
-  font-size: 3vh;
-}
-
 .body div {
   display: flex;
   align-items: center;

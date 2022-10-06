@@ -15,4 +15,9 @@ hr {
   margin-top: 1vh;
   margin-bottom: 1vh;
 }
+
+.admin-header {
+  margin: 2vh;
+  font-size: 3vh;
+}
 </style>
