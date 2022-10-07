@@ -19,7 +19,8 @@ export default {
   },
   mounted() {
     this.$store.commit('changeNavText', '点歌')
-  }
+  },
+  methods: {}
 }
 </script>
 
@@ -29,5 +30,8 @@ body {
 }
 .van-overlay {
   background-color: inherit !important;
+  overflow: scroll;
+  z-index: 1;
+  padding: 0 !important;
 }
 </style>

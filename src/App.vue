@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <NavBar :navText="this.$store.state.navText" :leftArrow="this.$store.state.leftArrow" />
+    <NavBar
+      fixed
+      placeholder
+      :navText="this.$store.state.navText"
+      :leftArrow="this.$store.state.leftArrow"
+    />
     <router-view />
   </div>
 </template>

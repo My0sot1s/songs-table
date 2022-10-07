@@ -92,13 +92,18 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: white;
-  margin: 36vw 2vw 0 2vw;
+  margin: 36vw 2vw 1vw 2vw;
   padding: 8vw 7vw 0 7vw;
   border-radius: 4vw;
   box-shadow: 0 0 5px #999;
+  overflow: scroll;
+  z-index: 1;
   .van-search {
     padding: 0;
     margin-bottom: 6vw;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0 vw;
   }
   .van-list {
     max-height: 100vw;
