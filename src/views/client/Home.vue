@@ -13,7 +13,7 @@
       <MusicList title="即将到来" :musicList="laterList"></MusicList>
       <hr />
     </div>
-    <div ref="lottie" class="lottie-btn"></div>
+    <div ref="lottie" @click="toSelect()" class="lottie-btn"></div>
   </div>
 </template>
 
@@ -69,6 +69,11 @@ export default {
   },
   components: {
     MusicList
+  },
+  methods: {
+    toSelect() {
+      this.$router.push('/selectmusic')
+    }
   },
   mounted() {
     this.lottieInstance = lottie.loadAnimation({

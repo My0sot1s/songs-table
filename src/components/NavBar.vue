@@ -16,7 +16,7 @@ export default {
       console.log('返回')
     },
     back() {
-      this.$router.back()
+      if (this.$store.state.leftArrow) this.$router.back()
     }
   }
 }
