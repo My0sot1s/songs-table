@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div class="admin-header">申请列表</div>
     <hr />
     <div class="navBar">
       <div>

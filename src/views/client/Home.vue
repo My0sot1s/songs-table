@@ -92,4 +92,5 @@ export default {
   height: 20vh;
   margin-top: 9vh;
 }
-</style>>
+</style>
+>

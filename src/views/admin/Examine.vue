@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div class="admin-header">申请详情</div>
     <hr />
     <div class="image">
       <van-image width="20vh" height="20vh" fit="fill" :src="applyInfo.imgUrl">

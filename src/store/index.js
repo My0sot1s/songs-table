@@ -5,13 +5,18 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    navText: '',
+    leftArrow: false
   },
-  getters: {
-  },
+  getters: {},
   mutations: {
+    changeNavText(state, text) {
+      state.navText = text
+    },
+    changeLeftArrow(state, flag) {
+      state.leftArrow = flag
+    }
   },
-  actions: {
-  },
-  modules: {
-  }
+  actions: {},
+  modules: {}
 })
