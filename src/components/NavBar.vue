@@ -24,13 +24,8 @@ export default {
 
 <style>
 .van-nav-bar {
-  height: 28vw;
   border-bottom: 1px solid #bbb;
   z-index: 999 !important;
-}
-.van-nav-bar__content {
-  position: absolute !important;
-  bottom: 2vw;
 }
 .van-nav-bar__left > * {
   white-space: nowrap;

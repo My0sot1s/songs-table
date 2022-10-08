@@ -28,6 +28,7 @@ export default {
   data() {
     return {
       value: '',
+      timer: null,
       list: [],
       loading: false,
       finished: false,
@@ -82,6 +83,18 @@ export default {
         e.$el.style.backgroundColor = 'inherit'
       })
       this.$refs.cells[id].$el.style.backgroundColor = 'rgb(239, 242, 247)'
+    },
+    search() {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        if (this.value.length === 0) return
+        console.log(this.value)
+      }, 200)
+    }
+  },
+  watch: {
+    value: {
+      handler: 'search'
     }
   }
 }
@@ -92,7 +105,7 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: white;
-  margin: 36vw 2vw 1vw 2vw;
+  margin: 22vw 2vw 1vw 2vw;
   padding: 8vw 7vw 0 7vw;
   border-radius: 4vw;
   box-shadow: 0 0 5px #999;

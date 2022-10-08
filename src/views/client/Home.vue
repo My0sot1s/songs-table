@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div class="client-header">点歌台</div>
     <div class="content">
       <MusicList title="今日歌单" :musicList="todayList">
         <template #default>
