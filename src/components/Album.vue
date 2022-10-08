@@ -1,4 +1,5 @@
 <template>
+  <!-- 首页方形唱片 -->
   <div>
     <div class="image">
       <van-image width="15vh" height="15vh" fit="fill" :src="imgUrl">

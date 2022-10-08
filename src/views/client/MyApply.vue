@@ -1,10 +1,10 @@
 <template>
   <div>
-    <van-sticky>
+    <!-- <van-sticky offset-top="6vh">
       <div class="header">
         <van-icon @click="$router.replace('/home')" name="arrow-left" />申请详情
       </div>
-    </van-sticky>
+    </van-sticky> -->
     <ApplyInfo
       v-for="(item, index) in applyList"
       :key="index"
@@ -22,7 +22,7 @@
           class="footer"
           v-show="curIndex === index && item.state !== '已结束'"
         >
-          <hr />
+          <!-- <hr /> -->
           <div
             :class="{ 'flex-end': item.state == '已撤回' }"
             v-if="item.state !== '已结束'"
@@ -209,20 +209,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.header {
+/* .header {
   font-size: 2.5vh;
   padding: 2vh 5vw;
   border-bottom: 1px solid #ccc;
   background-color: #fafbfd;
-}
+} */
 
 .footer {
-  hr {
-    height: 1px;
-    background-color: #ccc;
-    border: none;
-    margin: 0;
-  }
+  border-top: 1px solid #ccc;
 
   & > div {
     padding: 2vh;

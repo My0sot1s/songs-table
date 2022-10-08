@@ -17,7 +17,7 @@ const navMap = new Map([
   ['SelectMusic', { leftArrow: true, navText: '点歌' }],
   ['Admin', { leftArrow: false, navText: '歌单列表' }],
   ['AdminHome', { leftArrow: false, navText: '歌单列表' }],
-  ['Setting', { leftArrow: true, navText: '管理' }],
+  ['Setting', { leftArrow: false, navText: '管理' }],
   ['ApplyList', { leftArrow: false, navText: '申请列表' }],
   ['Examine', { leftArrow: true, navText: '申请详情' }]
 ])

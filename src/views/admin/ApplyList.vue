@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="admin-content">
-      <div class="admin-header">申请列表</div>
-      <van-sticky>
+      <!-- <div class="admin-header">申请列表</div> -->
+      <van-sticky offset-top="6vh">
         <div class="admin-navBar">
           <div>
             <div

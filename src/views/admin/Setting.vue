@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="admin-header">管理</div>
-    <hr />
+    <!-- <div class="admin-header">管理</div> -->
+    <!-- <hr /> -->
     <div class="body">
       <div>特殊时间点歌规则</div>
       <div>使用帮助</div>

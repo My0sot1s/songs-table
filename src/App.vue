@@ -30,8 +30,21 @@ hr {
   margin-bottom: 1vh;
 }
 
-.admin-header {
+/* .admin-header {
   margin: 2vh;
   font-size: 3vh;
+} */
+
+/* 顶部导航栏样式 */
+.van-nav-bar__content {
+  height: 6vh !important;
+}
+
+.van-nav-bar__text {
+  font-size: 2.8vh;
+}
+
+.van-nav-bar__arrow {
+  font-size: 2.6vh !important;
 }
 </style>

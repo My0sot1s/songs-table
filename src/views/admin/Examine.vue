@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-sticky>
+    <van-sticky offset-top="6vh">
       <div class="header">
         <van-icon
           @click="$router.replace('/admin/applyList')"

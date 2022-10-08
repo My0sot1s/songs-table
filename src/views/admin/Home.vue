@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="admin-content">
-      <div class="admin-header">歌单列表</div>
-      <van-sticky>
+      <!-- <div class="admin-header">歌单列表</div> -->
+      <van-sticky offset-top="6vh">
         <div class="admin-navBar">
           <div class="title">歌单</div>
           <div class="time" @click="showCalendar = true">
