@@ -189,23 +189,11 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.admin-content{
-  margin-bottom: 12vh;
+.admin-content {
+  margin-bottom: 20vh;
 }
 
 .admin-navBar {
-  display: flex;
-  justify-content: space-between;
-  background-color: #fafbfd;
-  padding: 1vh 0;
-  border-bottom: 1px solid #ccc;
-  border-top: 1px solid #ccc;
-
-  & > div {
-    display: flex;
-    align-items: center;
-  }
-
   .title {
     font-size: 2.1vh;
     margin-left: 6vw;

@@ -24,7 +24,7 @@
         <div>
           <div class="singer">
             <van-icon name="user-o" />
-            <div class="van-ellipsis">{{ singer }}</div>
+            <div class="van-ellipsis">{{ singer || '佚名' }}</div>
           </div>
           <div class="time">
             <van-icon name="calendar-o" />

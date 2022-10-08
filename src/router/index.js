@@ -34,7 +34,7 @@ const routes = [
   {
     name: 'Admin',
     path: '/admin',
-    component: AdminHome
+    redirect: '/admin/home'
   },
   {
     name: 'AdminHome',

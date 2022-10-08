@@ -35,6 +35,20 @@ hr {
   font-size: 3vh;
 } */
 
+.admin-navBar {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fafbfd;
+  padding: 1vh 0;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+
+  & > div {
+    display: flex;
+    align-items: center;
+  }
+}
+
 /* 顶部导航栏样式 */
 .van-nav-bar__content {
   height: 6vh !important;

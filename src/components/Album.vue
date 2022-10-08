@@ -10,7 +10,7 @@
       </van-image>
     </div>
     <div class="song-name van-ellipsis">{{ songName }}</div>
-    <div class="singer van-ellipsis">{{ singer }}</div>
+    <div class="singer van-ellipsis">{{ singer || '佚名' }}</div>
   </div>
 </template>
 
