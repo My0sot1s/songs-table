@@ -1,28 +1,34 @@
 <template>
   <div>
-    <div class="header">
-      <div class="title">歌单</div>
-      <div class="time" @click="showCalendar = true">
-        <div>{{ dateString }}</div>
-        <div><van-icon size="3.5vh" name="calendar-o" /></div>
-      </div>
+    <div class="admin-content">
+      <div class="admin-header">歌单列表</div>
+      <van-sticky>
+        <div class="admin-navBar">
+          <div class="title">歌单</div>
+          <div class="time" @click="showCalendar = true">
+            <div class="time-date">{{ dateString }}</div>
+            <div><van-icon size="3.5vh" name="calendar-o" /></div>
+          </div>
+        </div>
+      </van-sticky>
+
+      <ApplyInfo
+        v-for="(item, index) in curDayList"
+        :key="index"
+        :imgUrl="item.imgUrl"
+        :songName="item.songName"
+        :singer="item.singer"
+        :time="item.time"
+        :state="item.state"
+        iconName="ellipsis"
+        @action="
+          actionSheet.show = true
+          curIndex = index
+        "
+      />
     </div>
-    <hr />
-    <ApplyInfo
-      v-for="(item, index) in curDayList"
-      :key="index"
-      :imgUrl="item.imgUrl"
-      :songName="item.songName"
-      :singer="item.singer"
-      :time="item.time"
-      :state="item.state"
-      iconName="ellipsis"
-      @action="
-        actionSheet.show = true
-        curIndex = index
-      "
-    />
-    <TabBar/>
+
+    <TabBar />
     <van-calendar
       color="#3c9cff"
       :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
@@ -68,7 +74,7 @@ export default {
             'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
           songName: '浮夸',
           singer: '陈奕迅',
-          time: '2022-10-5',
+          time: '2022-10-8',
           state: '厦门校区'
         },
         {
@@ -76,7 +82,55 @@ export default {
             'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
           songName: '雅俗共赏',
           singer: '许嵩',
-          time: '2022-10-5',
+          time: '2022-10-8',
+          state: '厦门校区'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
+          songName: '浮夸',
+          singer: '陈奕迅',
+          time: '2022-10-8',
+          state: '厦门校区'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
+          songName: '雅俗共赏',
+          singer: '许嵩',
+          time: '2022-10-8',
+          state: '厦门校区'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
+          songName: '浮夸',
+          singer: '陈奕迅',
+          time: '2022-10-8',
+          state: '厦门校区'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
+          songName: '雅俗共赏',
+          singer: '许嵩',
+          time: '2022-10-8',
+          state: '厦门校区'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
+          songName: '浮夸',
+          singer: '陈奕迅',
+          time: '2022-10-8',
+          state: '厦门校区'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
+          songName: '雅俗共赏',
+          singer: '许嵩',
+          time: '2022-10-8',
           state: '厦门校区'
         },
         {
@@ -135,23 +189,36 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.header {
+.admin-content{
+  margin-bottom: 12vh;
+}
+
+.admin-navBar {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
-  margin: 2vh;
+  background-color: #fafbfd;
+  padding: 1vh 0;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+
+  & > div {
+    display: flex;
+    align-items: center;
+  }
 
   .title {
-    font-size: 3vh;
+    font-size: 2.1vh;
+    margin-left: 6vw;
   }
 
   .time {
     display: flex;
     flex-direction: row;
     align-items: center;
-    font-size: 2.5vh;
+    margin-right: 3vw;
+    font-size: 1.8vh;
 
-    & > div:first-child {
+    &-date {
       color: #555;
       margin-right: 2vw;
     }

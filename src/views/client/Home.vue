@@ -1,6 +1,7 @@
 <template>
-  <div class="content">
-    <div>
+  <div>
+    <div class="client-header">点歌台</div>
+    <div class="content">
       <MusicList title="今日歌单" :musicList="todayList">
         <template #default>
           <router-link to="/myApply">
@@ -88,6 +89,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.client-header {
+  font-size: 2.8vh;
+  padding: 2vh 6vw;
+  border-bottom: 1px solid #ccc;
+}
+
 .content {
   padding: 3vw;
   // overflow: auto;
@@ -95,7 +102,6 @@ export default {
 
 .lottie-btn {
   height: 20vh;
-  margin-top: 9vh;
 }
 </style>
 >

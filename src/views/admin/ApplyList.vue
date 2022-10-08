@@ -1,53 +1,58 @@
 <template>
   <div>
-    <hr />
-    <div class="navBar">
-      <div>
-        <div
-          class="nav"
-          v-for="(nav, index) in ['待处理', '已处理']"
-          :key="index"
-          :class="{ 'active-nav': curNav === index }"
-          @click="curNav = index"
-        >
-          {{ nav }}
+    <div class="admin-content">
+      <div class="admin-header">申请列表</div>
+      <van-sticky>
+        <div class="admin-navBar">
+          <div>
+            <div
+              class="nav"
+              v-for="(nav, index) in ['待处理', '已处理']"
+              :key="index"
+              :class="{ 'active-nav': curNav === index }"
+              @click="curNav = index"
+            >
+              {{ nav }}
+            </div>
+          </div>
+          <div class="time" @click="showCalendar = true">
+            <div>{{ dateString || '所有时间' }}</div>
+            <div><van-icon size="3.5vh" name="calendar-o" /></div>
+          </div>
         </div>
+      </van-sticky>
+
+      <div v-if="curNav === 0">
+        <ApplyInfo
+          v-for="(item, index) in curDayPendingList"
+          :key="index"
+          :imgUrl="item.imgUrl"
+          :songName="item.songName"
+          :singer="item.singer"
+          :time="item.time"
+          :state="item.state"
+          @click.native="toExamine(index)"
+        />
       </div>
-      <div class="time" @click="showCalendar = true">
-        <div>{{ dateString || '所有时间' }}</div>
-        <div><van-icon size="3.5vh" name="calendar-o" /></div>
+      <div v-else>
+        <ApplyInfo
+          v-for="(item, index) in curDayProcessedList"
+          :key="index"
+          :imgUrl="item.imgUrl"
+          :songName="item.songName"
+          :singer="item.singer"
+          :time="item.time"
+          :state="item.state"
+          iconName="ellipsis"
+          @action="
+            actionSheet.show = true
+            curIndex = index
+          "
+        />
       </div>
     </div>
-    <hr />
-    <div v-if="curNav === 0">
-      <ApplyInfo
-        v-for="(item, index) in curDayPendingList"
-        :key="index"
-        :imgUrl="item.imgUrl"
-        :songName="item.songName"
-        :singer="item.singer"
-        :time="item.time"
-        :state="item.state"
-        @click.native="toExamine(index)"
-      />
-    </div>
-    <div v-else>
-      <ApplyInfo
-        v-for="(item, index) in curDayProcessedList"
-        :key="index"
-        :imgUrl="item.imgUrl"
-        :songName="item.songName"
-        :singer="item.singer"
-        :time="item.time"
-        :state="item.state"
-        iconName="ellipsis"
-        @action="
-          actionSheet.show = true
-          curIndex = index
-        "
-      />
-    </div>
-    <TabBar/>
+
+    <TabBar />
     <van-calendar
       color="#3c9cff"
       :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
@@ -132,6 +137,78 @@ export default {
           singer: '陈奕迅',
           time: '2022-10-7',
           state: '未通过'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
+          songName: '雅俗共赏',
+          singer: '许嵩',
+          time: '2022-10-5',
+          state: ''
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
+          songName: '春夏秋冬',
+          singer: '张国荣',
+          time: '2022-10-6',
+          state: ''
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
+          songName: '富士山下',
+          singer: '陈奕迅',
+          time: '2022-10-7',
+          state: '未通过'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
+          songName: '雅俗共赏',
+          singer: '许嵩',
+          time: '2022-10-5',
+          state: ''
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
+          songName: '春夏秋冬',
+          singer: '张国荣',
+          time: '2022-10-6',
+          state: ''
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
+          songName: '富士山下',
+          singer: '陈奕迅',
+          time: '2022-10-7',
+          state: '未通过'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
+          songName: '雅俗共赏',
+          singer: '许嵩',
+          time: '2022-10-5',
+          state: ''
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
+          songName: '春夏秋冬',
+          singer: '张国荣',
+          time: '2022-10-6',
+          state: ''
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
+          songName: '富士山下',
+          singer: '陈奕迅',
+          time: '2022-10-7',
+          state: '未通过'
         }
       ],
       dateString: '',
@@ -183,9 +260,17 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.navBar {
+.admin-content {
+  margin-bottom: 12vh;
+}
+
+.admin-navBar {
   display: flex;
   justify-content: space-between;
+  background-color: #fafbfd;
+  padding: 1vh 0;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
 
   & > div {
     display: flex;

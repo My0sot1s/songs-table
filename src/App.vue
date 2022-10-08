@@ -3,6 +3,7 @@
     <NavBar
       fixed
       placeholder
+      v-if="this.$store.state.navText"
       :navText="this.$store.state.navText"
       :leftArrow="this.$store.state.leftArrow"
     />

@@ -1,6 +1,13 @@
 <template>
   <div>
-    <hr />
+    <van-sticky>
+      <div class="header">
+        <van-icon
+          @click="$router.replace('/admin/applyList')"
+          name="arrow-left"
+        />申请详情
+      </div>
+    </van-sticky>
     <div class="image">
       <van-image width="20vh" height="20vh" fit="fill" :src="applyInfo.imgUrl">
         <template #loading>
@@ -51,6 +58,12 @@
         <div @click="pass" class="btn2">通过</div>
       </div>
     </div>
+    <van-dialog
+      v-model="dialog.show"
+      :title="dialog.title"
+      :show-cancel-button="true"
+    >
+    </van-dialog>
   </div>
 </template>
 
@@ -70,14 +83,23 @@ export default {
         to: '小明',
         message:
           '至若春和景明，波澜不惊，上下天光，一碧万顷；沙鸥翔集，锦鳞游泳，岸芷汀兰，郁郁青青。而或长烟一空，皓月千里，浮光跃金，静影沉璧；渔歌互答，此乐何极！'
+      },
+      dialog: {
+        show: false,
+        title: '',
+        type: Boolean /* true为通过请求，false为驳回请求 */
       }
     }
   },
   methods: {
     reject() {
+      this.dialog.title = '确认驳回请求？'
+      this.dialog.show = true
       console.log('reject')
     },
     pass() {
+      this.dialog.title = '确认通过请求？'
+      this.dialog.show = true
       console.log('pass')
     }
   }
@@ -85,6 +107,13 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.header {
+  font-size: 2.5vh;
+  padding: 2vh 5vw;
+  border-bottom: 1px solid #ccc;
+  background-color: #fafbfd;
+}
+
 .image {
   width: 20vh;
   height: 20vh;
@@ -171,7 +200,7 @@ export default {
     background-color: #fff;
     box-shadow: 0 0 10px #ccc;
     width: 30vw;
-    height: 4.5vh;
+    height: 5vh;
     display: flex;
     align-items: center;
     border-radius: 10px;

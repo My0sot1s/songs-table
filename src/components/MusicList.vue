@@ -1,11 +1,11 @@
 <template>
-  <div class="content">
-    <div class="header">
+  <div class="music-list">
+    <div class="music-list-header">
       <div>{{ title }}</div>
       <slot></slot>
     </div>
     <div>
-      <div class="body">
+      <div class="music-list-body">
         <!-- <transition-group tag="div" class="body"> -->
         <Album
           v-for="(item, index) in musicList"
@@ -35,24 +35,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 2vh;
+.music-list {
+  padding: 3vw;
 
-  & > div {
-    margin-left: 1vw;
-    font-size: 2.5vh;
+  &-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 2vh;
+
+    & > div {
+      margin-left: 1vw;
+      font-size: 2.5vh;
+    }
   }
-}
 
-.body {
-  display: flex;
-  flex-direction: row;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    display: none;
+  &-body {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 </style>>

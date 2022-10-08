@@ -1,5 +1,10 @@
 <template>
   <div>
+    <van-sticky>
+      <div class="header">
+        <van-icon @click="$router.replace('/home')" name="arrow-left" />申请详情
+      </div>
+    </van-sticky>
     <ApplyInfo
       v-for="(item, index) in applyList"
       :key="index"
@@ -84,6 +89,78 @@ export default {
           singer: '陈奕迅',
           time: '2022-10-5',
           state: '已结束'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
+          songName: '雅俗共赏',
+          singer: '许嵩',
+          time: '2022-10-5',
+          state: ''
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
+          songName: '春夏秋冬',
+          singer: '张国荣',
+          time: '2022-10-5',
+          state: '已撤回'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
+          songName: '富士山下',
+          singer: '陈奕迅',
+          time: '2022-10-5',
+          state: '已结束'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
+          songName: '雅俗共赏',
+          singer: '许嵩',
+          time: '2022-10-5',
+          state: ''
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
+          songName: '春夏秋冬',
+          singer: '张国荣',
+          time: '2022-10-5',
+          state: '已撤回'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
+          songName: '富士山下',
+          singer: '陈奕迅',
+          time: '2022-10-5',
+          state: '已结束'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
+          songName: '雅俗共赏',
+          singer: '许嵩',
+          time: '2022-10-5',
+          state: ''
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
+          songName: '春夏秋冬',
+          singer: '张国荣',
+          time: '2022-10-5',
+          state: '已撤回'
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
+          songName: '富士山下',
+          singer: '陈奕迅',
+          time: '2022-10-5',
+          state: '已结束'
         }
       ] /* 请求列表 */,
       curIndex: 0 /* 当前显示footer的index */,
@@ -132,6 +209,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.header {
+  font-size: 2.5vh;
+  padding: 2vh 5vw;
+  border-bottom: 1px solid #ccc;
+  background-color: #fafbfd;
+}
+
 .footer {
   hr {
     height: 1px;
