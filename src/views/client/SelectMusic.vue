@@ -15,71 +15,69 @@
       <van-search
         disabled
         action-textdisabled
-        v-model="value"
+        v-model="form.song1"
         placeholder="请选择歌曲"
       />
       <van-search
         disabled
         action-textdisabled
-        v-model="value"
+        v-model="form.song2"
         placeholder="请选择备选歌曲"
       />
       <van-field
-        v-model="password"
-        type="password"
-        name="密码"
+        v-model="form.to"
+        name="To"
         label="To"
-        placeholder="您希望将这首歌送给谁"
+        placeholder="你希望将这首歌送给谁"
         :rules="[{ required: true, message: '请填写密码' }]"
       />
       <van-field
-        v-model="username"
-        name="用户名"
+        v-model="form.username"
+        name="姓名"
         label="姓名"
         placeholder="请输入你的姓名"
         :rules="[{ required: true, message: '姓名不得超过六个字' }]"
       />
       <van-field
-        v-model="password"
-        type="password"
-        name="密码"
-        label="电话"
-        placeholder="请输入您的电话号码"
-        :rules="[{ required: true, message: '请填写密码' }]"
+        v-model="form.tel"
+        placeholder="请输入你的手机号"
+        type="tel"
+        label="手机号"
       />
       <van-field
-        v-model="fieldValue"
+        v-model="form.campus"
         is-link
         readonly
         label="校区"
-        placeholder="请选择您所在的校区"
+        placeholder="请选择你所在的校区"
         @click="showCampus = true"
       />
       <van-popup v-model="showCampus" round position="bottom">
         <van-cascader
-          v-model="cascaderValue"
-          title="请选择所在地区"
+          v-model="form.campus"
+          title="请选择所在校区"
           :options="options"
           @close="showCampus = false"
-          @finish="onFinish"
+          @finish="showCampus = false"
         />
       </van-popup>
       <van-cell
         title="请选择送出日期"
-        :value="date"
+        :value="form.date"
         @click="showCalendar = true"
-        ><van-icon name="calendar-o"
+        ><van-icon v-if="this.form.date.length === 0" name="calendar-o"
       /></van-cell>
       <van-calendar
+        :show-confirm="false"
         color="#1989fa"
         v-model="showCalendar"
         @confirm="onConfirm"
       />
       <van-field
-        v-model="message"
+        v-model="form.message"
         rows="2"
         autosize
-        label="您希望送给TA的话"
+        label="寄语"
         type="textarea"
         maxlength="50"
         placeholder=""
@@ -102,6 +100,16 @@ export default {
   },
   data() {
     return {
+      form: {
+        song1: '',
+        song2: '',
+        to: '',
+        username: '',
+        tel: '',
+        campus: '',
+        date: '',
+        message: ''
+      },
       showPick: false,
       notice:
         '欢迎来到华侨大学点歌台！如果你有想听的歌，或者想要送出的祝福，请认真填写下面的表格，我们会在每天晚上的6：40-7：00将歌曲送出。要记得留下电话号码我们才能够在有需要的时候联系你们哦。',
@@ -129,7 +137,18 @@ export default {
   mounted() {
     this.$store.commit('changeNavText', '点歌')
   },
-  methods: {}
+  methods: {
+    formatDate(date) {
+      return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+    },
+    onSubmit() {
+      console.log(this.form)
+    },
+    onConfirm(date) {
+      this.showCalendar = false
+      this.form.date = this.formatDate(date)
+    }
+  }
 }
 </script>
 

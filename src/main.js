@@ -4,12 +4,10 @@ import router from './router'
 import store from './store'
 import Vant from 'vant'
 import 'vant/lib/index.css'
-
 Vue.use(Vant)
 
 Vue.config.productionTip = false
 
-/* 用起来上面有好大一片空白，我就注释掉了 */
 const navMap = new Map([
   [undefined, { leftArrow: false, navText: '点歌台' }],
   ['Home', { leftArrow: true, navText: '点歌台' }],

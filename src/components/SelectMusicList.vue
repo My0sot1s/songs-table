@@ -23,6 +23,7 @@
 
 <script>
 import MusicCell from '@/components/MusicCell'
+import { searchRequest } from '@/api'
 export default {
   components: {
     MusicCell
@@ -88,9 +89,10 @@ export default {
     },
     search() {
       clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
+      this.timer = setTimeout(async () => {
         if (this.value.length === 0) return
-        console.log(this.value)
+        const res = await searchRequest({ s: this.value })
+        console.log(res)
       }, 200)
     }
   },
