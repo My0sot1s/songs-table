@@ -54,6 +54,7 @@
       />
       <van-popup v-model="showCampus" round position="bottom">
         <van-cascader
+          active-color="#1989fa"
           v-model="form.campus"
           title="请选择所在校区"
           :options="options"
