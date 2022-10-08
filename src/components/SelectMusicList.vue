@@ -1,6 +1,8 @@
 <template>
   <div id="selectMusicList" @click.stop>
-    <van-search shape="round" v-model="value" placeholder="" />
+    <van-form>
+      <van-search shape="round" v-model="value" placeholder="" />
+    </van-form>
     <van-list
       v-model="loading"
       :finished="finished"
