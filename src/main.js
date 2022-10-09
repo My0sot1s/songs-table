@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import Vant from 'vant'
 import 'vant/lib/index.css'
+import initAxios from './request'
 Vue.use(Vant)
 
 Vue.config.productionTip = false
@@ -32,8 +33,10 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-new Vue({
-  router,
-  store,
-  render: (h) => h(App)
-}).$mount('#app')
+initAxios(Vue).then(() => {
+  new Vue({
+    router,
+    store,
+    render: (h) => h(App)
+  }).$mount('#app')
+})

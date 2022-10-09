@@ -1,13 +1,13 @@
 <template>
   <div>
-    <van-sticky offset-top="6vh">
+    <!-- <van-sticky offset-top="6vh">
       <div class="header">
         <van-icon
           @click="$router.replace('/admin/applyList')"
           name="arrow-left"
         />申请详情
       </div>
-    </van-sticky>
+    </van-sticky> -->
     <div class="image">
       <van-image width="20vh" height="20vh" fit="fill" :src="applyInfo.imgUrl">
         <template #loading>
@@ -52,12 +52,11 @@
       </div>
     </div>
 
-    <div>
-      <div class="btn1">
-        <div @click="reject">驳回</div>
-        <div @click="pass" class="btn2">通过</div>
-      </div>
+    <div class="btn1">
+      <div @click="reject">驳回</div>
+      <div @click="pass" class="btn2">通过</div>
     </div>
+
     <van-dialog
       v-model="dialog.show"
       :title="dialog.title"
@@ -107,12 +106,16 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.header {
+.examine{
+  overflow: auto;
+}
+
+/* .header {
   font-size: 2.5vh;
   padding: 2vh 5vw;
   border-bottom: 1px solid #ccc;
   background-color: #fafbfd;
-}
+} */
 
 .image {
   width: 20vh;
@@ -185,8 +188,7 @@ export default {
 
 .btn1 {
   width: 62vw;
-  margin: 0 auto;
-  margin-top: 3vh;
+  margin: 3vh auto;
   height: 6vh;
   border-radius: 10px;
   background-color: #f8fafc;
