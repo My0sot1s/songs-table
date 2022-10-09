@@ -7,23 +7,25 @@
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
-      @load="onLoad"
+      @load="search(false)"
     >
       <MusicCell
         ref="cells"
-        v-for="music in musicList"
-        :key="music.id"
+        v-for="(music, index) in musicList"
+        :key="music.songid"
         :music="music"
-        @click.native="select(music.id)"
+        @click.native="select(index)"
       />
     </van-list>
-    <van-button type="default">确认</van-button>
+    <van-button type="default" v-if="this.musicList.length != 0"
+      >确认</van-button
+    >
   </div>
 </template>
 
 <script>
 import MusicCell from '@/components/MusicCell'
-import { searchRequest } from '@/api'
+import { searchMusic } from '@/api'
 export default {
   components: {
     MusicCell
@@ -32,68 +34,37 @@ export default {
     return {
       value: '',
       timer: null,
-      list: [],
       loading: false,
       finished: false,
-      musicList: [
-        {
-          id: 0,
-          img: '',
-          name: '恋爱脑',
-          singer: 'nana'
-        },
-        {
-          id: 1,
-          img: '',
-          name: 'Solace',
-          singer: 'Feint'
-        },
-        {
-          id: 2,
-          img: '',
-          name: 'A Moment Apart游戏《极限竞速：地平线4》背景音乐',
-          singer: 'ODESZA'
-        },
-        {
-          id: 3,
-          img: '',
-          name: 'ココロスペアキー',
-          singer: '会沢紗弥'
-        }
-      ]
+      musicList: [],
+      pageNo: 1
     }
   },
   methods: {
-    onLoad() {
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-
-        // 加载状态结束
-        this.loading = false
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    select(id) {
+    select(index) {
       this.$refs.cells.forEach((e) => {
         e.$el.style.backgroundColor = 'inherit'
       })
-      this.$refs.cells[id].$el.style.backgroundColor = 'rgb(239, 242, 247)'
+      this.$refs.cells[index].$el.style.backgroundColor = 'rgb(239, 242, 247)'
     },
-    search() {
+    search(refresh = true) {
       clearTimeout(this.timer)
       this.timer = setTimeout(async () => {
+        if (refresh) {
+          this.pageNo = 1
+          this.musicList = []
+        }
         if (this.value.length === 0) return
-        const res = await searchRequest({ s: this.value })
-        console.log(res)
+        const { data } = await searchMusic({
+          key: this.value,
+          pageNo: this.pageNo
+        })
+        console.log(data.data)
+        this.pageNo = ++data.data.pageNo
+        this.musicList.push(...data.data.list)
       }, 200)
+      // qq音乐的接口只能返回第一页的数据，后面的要客户端，真恶心x
+      this.finished = true
     }
   },
   watch: {

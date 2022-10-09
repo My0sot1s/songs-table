@@ -137,7 +137,6 @@ export default {
       this.form.date = this.formatDate(date)
     },
     popUp(index) {
-      console.log('pop')
       this.$emit('popUp', index)
     }
   }

@@ -1,19 +1,22 @@
 <template>
   <div id="cell">
-    <div id="img"></div>
+    <van-image
+      error-icon="https://y.qq.com/music/photo_new/T002R300x300M0000030lak94GN5Ad_0.jpg"
+      width="9vw"
+      height="9vw"
+      :src="`https://y.qq.com/music/photo_new/T002R300x300M000${music.albummid}_1.jpg?max_age=2592000`"
+    />
     <div id="detail">
-      <van-notice-bar
-        color="black"
-        :text="music.name"
-      />
-      <div id="singer">{{music.singer}}</div>
+      <van-notice-bar color="black" :text="music.name" />
+      <van-notice-bar id="singer">{{ music.singer[0].name + ' - ' + music.albumname}}</van-notice-bar>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['music']
+  props: ['music'],
+  mounted() {}
 }
 </script>
 
@@ -27,9 +30,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  #img {
-    width: 9vw;
-    height: 9vw;
+  .van-image {
     border-radius: 1vw;
     background-color: skyblue;
   }

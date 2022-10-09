@@ -1,7 +1,7 @@
 // 封装axios
 import theAxios from 'axios'
 const axios = theAxios.create({
-  baseURL: 'https://registration.sends.cc/api/admin',
+  baseURL: '',
   timeout: 20000
 })
 // 请求拦截
@@ -23,13 +23,15 @@ export default ({
   method = 'GET',
   params = {},
   data = {},
-  headers = {}
+  headers = {},
+  baseURL = axios.baseURL
 }) => {
   return axios({
     url,
     method,
     params,
     data,
-    headers
+    headers,
+    baseURL
   })
 }
