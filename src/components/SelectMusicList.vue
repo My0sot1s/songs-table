@@ -109,7 +109,7 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: white;
-  margin: 22vw 2vw 1vw 2vw;
+  margin: 22vw 2vw -2vw 2vw;
   padding: 8vw 7vw 0 7vw;
   border-radius: 4vw;
   box-shadow: 0 0 5px #999;
