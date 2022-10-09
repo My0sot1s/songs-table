@@ -17,7 +17,10 @@
         @click.native="select(index)"
       />
     </van-list>
-    <van-button type="default" v-if="this.musicList.length != 0"
+    <van-button
+      type="default"
+      @click="confirm"
+      v-if="this.musicList.length != 0"
       >确认</van-button
     >
   </div>
@@ -32,6 +35,7 @@ export default {
   },
   data() {
     return {
+      index: 0,
       value: '',
       timer: null,
       loading: false,
@@ -42,10 +46,14 @@ export default {
   },
   methods: {
     select(index) {
+      this.index = index
       this.$refs.cells.forEach((e) => {
         e.$el.style.backgroundColor = 'inherit'
       })
       this.$refs.cells[index].$el.style.backgroundColor = 'rgb(239, 242, 247)'
+    },
+    confirm() {
+      this.$emit('confirmMusic', this.musicList[this.index])
     },
     search(refresh = true) {
       clearTimeout(this.timer)

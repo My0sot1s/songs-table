@@ -1,9 +1,9 @@
 <template>
   <div id="ChooseMusic">
     <van-overlay lock-scroll :show="showPick" @click="showPick = false">
-      <SelectMusicList />
+      <SelectMusicList @confirmMusic="confirmMusic" />
     </van-overlay>
-    <ApplyForm @popUp="popUp" />
+    <ApplyForm :musics="musics" @popUp="popUp" />
   </div>
 </template>
 
@@ -18,7 +18,8 @@ export default {
   data() {
     return {
       showPick: false,
-      musicIndex: 0
+      musicIndex: 0,
+      musics: []
     }
   },
   mounted() {
@@ -28,6 +29,11 @@ export default {
     popUp(index) {
       this.showPick = true
       this.musicIndex = index
+    },
+    confirmMusic(music) {
+      this.musics[this.musicIndex] = music
+      this.$set(this.musics, this.musicIndex, music)
+      this.showPick = false
     }
   }
 }

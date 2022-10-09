@@ -11,14 +11,16 @@
     <van-search
       @click="popUp(0)"
       action-textdisabled
-      v-model="form.song1"
+      v-model="form.songs[0]"
       placeholder="请选择歌曲"
+      v-if="musics.length <= 0"
     />
     <van-search
       @click="popUp(1)"
       action-textdisabled
-      v-model="form.song2"
+      v-model="form.songs[1]"
       placeholder="请选择备选歌曲"
+      v-if="musics.length <= 1"
     />
     <van-field
       v-model="form.to"
@@ -90,11 +92,13 @@
 
 <script>
 export default {
+  props: ['musics'],
   data() {
     return {
+      musics1: [],
+      musicsLen: 0,
       form: {
-        song1: '',
-        song2: '',
+        songs: [],
         to: '',
         username: '',
         tel: '',
