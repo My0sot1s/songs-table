@@ -81,15 +81,8 @@
       cancel-text="取消"
       close-on-click-action
       close-on-popstate
-      @select="dialog.show = true"
+      @select="selAction"
     />
-    <van-dialog
-      v-model="dialog.show"
-      :title="dialog.title"
-      :show-cancel-button="true"
-      @confirm="retried"
-    >
-    </van-dialog>
   </div>
 </template>
 
@@ -97,6 +90,7 @@
 import ApplyInfo from '@/components/ApplyInfo'
 import TabBar from '@/components/TabBar'
 import formatDate from '@/tools/FormatDate'
+import { Dialog } from 'vant'
 
 export default {
   components: {
@@ -220,10 +214,6 @@ export default {
       actionSheet: {
         show: false,
         actions: [{ name: '重新审核' }]
-      },
-      dialog: {
-        show: false,
-        title: '要重新审核该歌曲吗'
       }
     }
   },
@@ -247,6 +237,17 @@ export default {
     selDay(date) {
       this.dateString = formatDate(date)
       this.showCalendar = false
+    },
+    selAction() {
+      Dialog.confirm({
+        title: '要重新审核该歌曲吗？'
+      })
+        .then(() => {
+          this.retried()
+        })
+        .catch(() => {
+          // on cancel
+        })
     },
     toExamine(index) {
       console.log(index)

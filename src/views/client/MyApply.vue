@@ -1,10 +1,5 @@
 <template>
   <div>
-    <!-- <van-sticky offset-top="6vh">
-      <div class="header">
-        <van-icon @click="$router.replace('/home')" name="arrow-left" />申请详情
-      </div>
-    </van-sticky> -->
     <ApplyInfo
       v-for="(item, index) in applyList"
       :key="index"
@@ -15,14 +10,13 @@
       :state="item.state"
       iconName="delete-o"
       @click.native="curIndex = curIndex === index ? -1 : index"
-      @action="action"
+      @action="delApply"
     >
       <template #footer>
         <div
           class="footer"
           v-show="curIndex === index && item.state !== '已结束'"
         >
-          <!-- <hr /> -->
           <div
             :class="{ 'flex-end': item.state == '已撤回' }"
             v-if="item.state !== '已结束'"
@@ -41,18 +35,12 @@
         </div>
       </template>
     </ApplyInfo>
-    <van-dialog
-      v-model="dialog.show"
-      :title="dialog.title"
-      :show-cancel-button="dialog.showCancel"
-      @confirm="delApply"
-    >
-    </van-dialog>
   </div>
 </template>
 
 <script>
 import ApplyInfo from '@/components/ApplyInfo.vue'
+import { Dialog } from 'vant'
 
 export default {
   data() {
@@ -89,112 +77,59 @@ export default {
           singer: '陈奕迅',
           time: '2022-10-5',
           state: '已结束'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-5',
-          state: ''
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
-          songName: '春夏秋冬',
-          singer: '张国荣',
-          time: '2022-10-5',
-          state: '已撤回'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
-          songName: '富士山下',
-          singer: '陈奕迅',
-          time: '2022-10-5',
-          state: '已结束'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-5',
-          state: ''
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
-          songName: '春夏秋冬',
-          singer: '张国荣',
-          time: '2022-10-5',
-          state: '已撤回'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
-          songName: '富士山下',
-          singer: '陈奕迅',
-          time: '2022-10-5',
-          state: '已结束'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-5',
-          state: ''
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
-          songName: '春夏秋冬',
-          singer: '张国荣',
-          time: '2022-10-5',
-          state: '已撤回'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
-          songName: '富士山下',
-          singer: '陈奕迅',
-          time: '2022-10-5',
-          state: '已结束'
         }
       ] /* 请求列表 */,
-      curIndex: 0 /* 当前显示footer的index */,
-      dialog: {
-        show: false,
-        title: '',
-        showCancel: false
-      } /* 弹窗相关 */
+      curIndex: 0 /* 当前显示footer的index */
     }
   },
   components: {
     ApplyInfo
   },
+  mounted() {
+    this.$axios.get('/user/myApplication').then((res) => {
+      console.log(res)
+    })
+  },
   methods: {
     /* 点击删除图标时 */
-    action(state) {
+    delApply(state) {
       if (state === '已结束' || state === '已撤回') {
-        this.dialog.title = '删除后不可找回，确定删除？'
-        this.dialog.showCancel = true
+        Dialog.confirm({
+          title: '删除后不可找回，确定删除？'
+        })
+          .then(() => {
+            this.$axios
+              .post('/user/delete', {
+                id: this.applyList[this.curIndex].id
+              })
+              .then((res) => {
+              })
+          })
+          .catch(() => {
+            // on cancel
+          })
       } else {
-        this.dialog.title = '请先撤回请求'
-        this.dialog.showCancel = false
-      }
-      this.dialog.show = true
-    },
-    /* 确认删除时 */
-    delApply() {
-      if (this.dialog.showCancel) {
-        console.log('删除请求')
+        Dialog.alert({
+          message: '请先撤回请求'
+        })
       }
     },
     /* 点击撤回请求时 */
     withdraw() {
-      console.log('撤回请求')
+      Dialog.confirm({
+        title: '确认撤回请求？'
+      })
+        .then(() => {
+          this.$axios
+            .post('/user/recall', {
+              id: this.applyList[this.curIndex].id
+            })
+            .then((res) => {
+            })
+        })
+        .catch(() => {
+          // on cancel
+        })
     },
     /* 点击查看详情或重新提交时 */
     toForms(state) {
@@ -209,13 +144,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/* .header {
-  font-size: 2.5vh;
-  padding: 2vh 5vw;
-  border-bottom: 1px solid #ccc;
-  background-color: #fafbfd;
-} */
-
 .footer {
   border-top: 1px solid #ccc;
 

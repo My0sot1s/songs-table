@@ -84,13 +84,11 @@ export default {
       animationData: music
     })
 
-    Promise.all([
-      this.$axios.get('/user/todaySongs'),
-      this.$axios.get('/user/comingSongs')
-    ]).then((resp) => {
-      const [todayResp, comingResp] = resp
-      console.log(todayResp)
-      console.log(comingResp)
+    this.$axios.get('/user/todaySongs').then((res) => {
+      console.log(res)
+    })
+    this.$axios.get('/user/comingSongs').then((res) => {
+      console.log(res)
     })
   }
 }

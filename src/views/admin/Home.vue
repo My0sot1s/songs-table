@@ -43,16 +43,8 @@
       cancel-text="取消"
       close-on-click-action
       close-on-popstate
-      @select="dialog.show = true"
+      @select="selAction"
     />
-    <van-dialog
-      v-model="dialog.show"
-      :title="dialog.title"
-      :message="dialog.message"
-      :show-cancel-button="true"
-      @confirm="delItem"
-    >
-    </van-dialog>
   </div>
 </template>
 
@@ -60,6 +52,7 @@
 import ApplyInfo from '@/components/ApplyInfo'
 import TabBar from '@/components/TabBar'
 import formatDate from '@/tools/FormatDate'
+import { Dialog } from 'vant'
 
 export default {
   components: {
@@ -156,11 +149,6 @@ export default {
       actionSheet: {
         show: false,
         actions: [{ name: '取消播送这首歌' }]
-      },
-      dialog: {
-        show: false,
-        title: '真的要将其移出歌单吗',
-        message: '您可以在 申请列表 - 已处理 - 该日 内找到并将其回复'
       }
     }
   },
@@ -176,6 +164,18 @@ export default {
     selDay(Date) {
       this.dateString = formatDate(Date)
       this.showCalendar = false
+    },
+    selAction() {
+      Dialog.confirm({
+        title: '真的要将其移出歌单吗',
+        message: '您可以在 申请列表 - 已处理 - 该日 内找到并将其回复'
+      })
+        .then(() => {
+          this.delItem()
+        })
+        .catch(() => {
+          // on cancel
+        })
     },
     /* 确认删除后触发 */
     delItem() {

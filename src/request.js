@@ -5,7 +5,8 @@ const location = {
   origin: document.location.origin,
   search: document.location.search,
   searchParams: new URLSearchParams(document.location.search),
-  isInWechat: window.navigator.userAgent.includes('MicroMessenger')
+  isInWechat: window.navigator.userAgent.includes('MicroMessenger'),
+  isAdmin: document.location.hash.includes('admin')
 }
 
 function wxLoginRedirect() {
@@ -36,7 +37,6 @@ function setStorage(key, value) {
 
 function setToken(token) {
   setStorage('token', token)
-  console.log(token)
   state.token = token
 }
 
@@ -97,8 +97,8 @@ axios.interceptors.request.use(
 // 响应拦截
 axios.interceptors.response.use(
   function (response) {
-    if (response.data.code) {
-      const code = response.data.code.toString()
+    if (!location.isAdmin && response.data.data.code) {
+      const code = response.data.data.code.toString()
       if (['401', '440', '441'].includes(code)) {
         wxLoginRedirect()
       }
@@ -123,9 +123,13 @@ export default function initAxios(vue) {
       return resolve()
     }
 
-    /* 关闭授权就注释下面三行和响应拦截 */
-    checkCode()
-      .then(checkToken)
-      .then(resolve())
+    /* 关闭授权就注释下面几行和响应拦截 */
+    if (!location.isAdmin) {
+      checkCode()
+        .then(checkToken)
+        .then(resolve())
+    } else {
+      resolve()
+    }
   })
 }
