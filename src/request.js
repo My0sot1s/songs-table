@@ -10,8 +10,9 @@ const location = {
 }
 
 function wxLoginRedirect() {
-  window.location.href =
-    `https://apps.hqu.edu.cn/wechat-hqu/wechatauth.html?proxyTo=authoauth&sendUrl=/connect/oauth2/authorize?appid=wxfe035b066fb1158b&redirect_uri=${encodeURIComponent(`${location.origin}`)}&encode_flag=Y&response_type=code&scope=snsapi_userinfo#wechat_redirect`
+  window.location.href = `https://apps.hqu.edu.cn/wechat-hqu/wechatauth.html?proxyTo=authoauth&sendUrl=/connect/oauth2/authorize?appid=wxfe035b066fb1158b&redirect_uri=${encodeURIComponent(
+    `${location.origin}`
+  )}&encode_flag=Y&response_type=code&scope=snsapi_userinfo#wechat_redirect`
 }
 
 const axios = theAxios.create({
@@ -55,14 +56,17 @@ function checkCode() {
       const wxCode = searchParams.get('code')
 
       if (wxCode) {
-        axios.post('/user/login', { code: wxCode }).then((res) => {
-          if (res.data.data.token) {
-            setToken(res.data.data.token)
-            resolve()
-          } else {
-            reject(res.data)
-          }
-        }).catch(err => console.log(err))
+        axios
+          .post('/user/login', { code: wxCode })
+          .then((res) => {
+            if (res.data.data.token) {
+              setToken(res.data.data.token)
+              resolve()
+            } else {
+              reject(res.data)
+            }
+          })
+          .catch((err) => console.log(err))
           .finally(() => {
             window.location.replace('/')
           })
@@ -85,11 +89,12 @@ function checkToken() {
 // 请求拦截
 axios.interceptors.request.use(
   function (config) {
-    if (state.token) {
+    if (state.token && config.baseURL !== 'http://124.222.111.191:3300') {
       config.headers.token = state.token
     }
     return config
-  }, async (error) => {
+  },
+  async (error) => {
     console.dir(error)
   }
 )
@@ -125,11 +130,27 @@ export default function initAxios(vue) {
 
     /* 关闭授权就注释下面几行和响应拦截 */
     if (!location.isAdmin) {
-      checkCode()
-        .then(checkToken)
-        .then(resolve())
+      checkCode().then(checkToken).then(resolve())
     } else {
       resolve()
     }
+  })
+}
+
+export const request = ({
+  url,
+  method = 'GET',
+  params = {},
+  data = {},
+  headers = {},
+  baseURL = axios.baseURL
+}) => {
+  return axios({
+    url,
+    method,
+    params,
+    data,
+    headers,
+    baseURL
   })
 }

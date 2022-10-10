@@ -1,5 +1,5 @@
 // 封装请求api
-import axios from '@/request.js'
+import { request as axios } from '@/request.js'
 import encrypt from '@/tools/encrypt.js'
 // 跨域了，啥用没有
 export const searchRequest = ({ s }) => {
