@@ -28,7 +28,7 @@
 
 <script>
 import MusicCell from '@/components/MusicCell'
-import { searchMusic } from '@/api'
+
 export default {
   components: {
     MusicCell
@@ -63,7 +63,7 @@ export default {
           this.musicList = []
         }
         if (this.value.length === 0) return
-        const { data } = await searchMusic({
+        const { data } = await this.$musicApi.QQsearchMusic({
           key: this.value,
           pageNo: this.pageNo
         })

@@ -12,20 +12,23 @@
         </div>
       </van-sticky>
 
-      <ApplyInfo
-        v-for="(item, index) in curDayList"
-        :key="index"
-        :imgUrl="item.imgUrl"
-        :songName="item.songName"
-        :singer="item.singer"
-        :time="item.time"
-        :state="item.state"
-        iconName="ellipsis"
-        @action="
-          actionSheet.show = true
-          curIndex = index
-        "
-      />
+      <div>
+        <ApplyInfo
+          v-for="(item, index) in curDayList"
+          :key="index"
+          :imgUrl="item.imgUrl"
+          :songName="item.songName"
+          :singer="item.singer"
+          :time="item.time"
+          :state="item.state"
+          iconName="ellipsis"
+          @action="
+            actionSheet.show = true
+            curIndex = index
+          "
+        />
+      </div>
+      <div ref="lottie" v-show="curDayList.length === 0"></div>
     </div>
 
     <TabBar />
@@ -52,6 +55,8 @@
 import ApplyInfo from '@/components/ApplyInfo'
 import TabBar from '@/components/TabBar'
 import formatDate from '@/tools/FormatDate'
+import lottie from 'lottie-web'
+import empty from '@/assets/empty.json'
 import { Dialog } from 'vant'
 
 export default {
@@ -67,7 +72,7 @@ export default {
             'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
           songName: '浮夸',
           singer: '陈奕迅',
-          time: '2022-10-8',
+          time: '2022-10-11',
           state: '厦门校区'
         },
         {
@@ -75,7 +80,7 @@ export default {
             'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
           songName: '雅俗共赏',
           singer: '许嵩',
-          time: '2022-10-8',
+          time: '2022-10-10',
           state: '厦门校区'
         },
         {
@@ -83,63 +88,7 @@ export default {
             'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
           songName: '浮夸',
           singer: '陈奕迅',
-          time: '2022-10-8',
-          state: '厦门校区'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-8',
-          state: '厦门校区'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
-          songName: '浮夸',
-          singer: '陈奕迅',
-          time: '2022-10-8',
-          state: '厦门校区'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-8',
-          state: '厦门校区'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
-          songName: '浮夸',
-          singer: '陈奕迅',
-          time: '2022-10-8',
-          state: '厦门校区'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-8',
-          state: '厦门校区'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
-          songName: '春夏秋冬',
-          singer: '张国荣',
-          time: '2022-10-6',
-          state: '厦门校区'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
-          songName: '富士山下',
-          singer: '陈奕迅',
-          time: '2022-10-7',
+          time: '2022-10-9',
           state: '厦门校区'
         }
       ],
@@ -158,6 +107,17 @@ export default {
         (item) => item.time === this.dateString.split(' ')[1]
       )
     }
+  },
+  mounted() {
+    this.dateString = formatDate(new Date())
+
+    lottie.loadAnimation({
+      container: this.$refs.lottie,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      animationData: empty
+    })
   },
   methods: {
     /* 选择日期后触发 */
@@ -181,9 +141,6 @@ export default {
     delItem() {
       console.log(`取消播放第${this.curIndex + 1}首歌`)
     }
-  },
-  mounted() {
-    this.dateString = formatDate(new Date())
   }
 }
 </script>

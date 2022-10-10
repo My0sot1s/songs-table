@@ -5,6 +5,8 @@ import store from './store'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 import initAxios from './request'
+import musicApi from './api'
+
 Vue.use(Vant)
 
 Vue.config.productionTip = false
@@ -34,6 +36,7 @@ router.beforeEach((to, from, next) => {
 })
 
 initAxios(Vue).then(() => {
+  Vue.prototype.$musicApi = musicApi
   new Vue({
     router,
     store,

@@ -5,7 +5,6 @@
         <template #default>
           <router-link to="/myApply">
             <van-icon size="3.5vh" name="user-circle-o" />
-            <!-- <van-icon size="3.5vh" name="apps-o" /> -->
           </router-link>
         </template>
       </MusicList>
@@ -25,46 +24,8 @@ import music from '@/assets/music.json'
 export default {
   data() {
     return {
-      todayList: [
-        {
-          imgUrl:
-            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
-          songName: '浮夸',
-          singer: '陈奕迅'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/vSdrZFQn3uMetLL_j3AnQg==/109951163432562414.jpg',
-          songName: '贝加尔湖畔',
-          singer: '李健'
-        }
-      ],
-      laterList: [
-        {
-          imgUrl:
-            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
-          songName: '富士山下',
-          singer: '陈奕迅'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/uP0o1y8zqPT2P7pbYDZuzw==/109951165264460749.jpg',
-          songName: '必杀技',
-          singer: '古巨基'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
-          songName: '春夏秋冬',
-          singer: '张国荣'
-        }
-      ]
+      todayList: [],
+      laterList: []
     }
   },
   components: {
@@ -85,10 +46,40 @@ export default {
     })
 
     this.$axios.get('/user/todaySongs').then((res) => {
-      console.log(res)
+      // 待完善，未对code做判断
+      if (res.data.data) {
+        res.data.data.forEach((item) => {
+          this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
+            if (!detail.data.songs || detail.data.songs.length === 0) return
+            const temp = {}
+            temp.imgUrl = detail.data.songs[0].al.picUrl
+            temp.songName = detail.data.songs[0].name
+            temp.singer = detail.data.songs[0].ar[0].name
+            for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
+              temp.singer += ' ' + detail.data.songs[0].ar[i].name
+            }
+            this.todayList.push(temp)
+          })
+        })
+      }
     })
+
     this.$axios.get('/user/comingSongs').then((res) => {
-      console.log(res)
+      if (res.data.data) {
+        res.data.data.forEach((item) => {
+          this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
+            if (!detail.data.songs || detail.data.songs.length === 0) return
+            const temp = {}
+            temp.imgUrl = detail.data.songs[0].al.picUrl
+            temp.songName = detail.data.songs[0].name
+            temp.singer = detail.data.songs[0].ar[0].name
+            for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
+              temp.singer += ' ' + detail.data.songs[0].ar[i].name
+            }
+            this.laterList.push(temp)
+          })
+        })
+      }
     })
   }
 }

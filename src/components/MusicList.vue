@@ -7,13 +7,22 @@
     <div>
       <div class="music-list-body">
         <!-- <transition-group tag="div" class="body"> -->
-        <Album
-          v-for="(item, index) in musicList"
-          :key="index"
-          :imgUrl="item.imgUrl"
-          :songName="item.songName"
-          :singer="item.singer"
-        ></Album>
+        <div v-if="musicList.length !== 0">
+          <Album
+            v-for="(item, index) in musicList"
+            :key="index"
+            :imgUrl="item.imgUrl"
+            :songName="item.songName"
+            :singer="item.singer"
+          />
+        </div>
+        <div v-else>
+          <Album
+            imgUrl="https://y.qq.com/music/photo_new/T002R300x300M0000030lak94GN5Ad_0.jpg"
+            songName="暂无歌曲"
+            singer=" "
+          />
+        </div>
         <!-- </transition-group> -->
       </div>
     </div>

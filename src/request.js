@@ -97,8 +97,8 @@ axios.interceptors.request.use(
 // 响应拦截
 axios.interceptors.response.use(
   function (response) {
-    if (!location.isAdmin && response.data.data.code) {
-      const code = response.data.data.code.toString()
+    if (!location.isAdmin && response.data.code) {
+      const code = response.data.code.toString()
       if (['401', '440', '441'].includes(code)) {
         wxLoginRedirect()
       }

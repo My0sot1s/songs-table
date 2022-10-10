@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Home from '@/views/client/Home'
 import MyApply from '@/views/client/MyApply'
 import SelectMusic from '@/views/client/SelectMusic'
+import Login from '@/views/admin/Login'
 import AdminHome from '@/views/admin/Home'
 import ApplyList from '@/views/admin/ApplyList'
 import Setting from '@/views/admin/Setting'
@@ -34,7 +35,12 @@ const routes = [
   {
     name: 'Admin',
     path: '/admin',
-    redirect: '/admin/home'
+    redirect: '/admin/login'
+  },
+  {
+    name: 'AdminLogin',
+    path: '/admin/login',
+    component: Login
   },
   {
     name: 'AdminHome',

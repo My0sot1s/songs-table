@@ -50,6 +50,7 @@
           "
         />
       </div>
+      <div ref="lottie" v-show="showEmpty"></div>
     </div>
 
     <TabBar />
@@ -91,6 +92,8 @@ import ApplyInfo from '@/components/ApplyInfo'
 import TabBar from '@/components/TabBar'
 import formatDate from '@/tools/FormatDate'
 import { Dialog } from 'vant'
+import lottie from 'lottie-web'
+import empty from '@/assets/empty.json'
 
 export default {
   components: {
@@ -105,7 +108,7 @@ export default {
             'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
           songName: '浮夸',
           singer: '陈奕迅',
-          time: '2022-10-5',
+          time: '2022-10-11',
           state: ''
         },
         {
@@ -113,7 +116,7 @@ export default {
             'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
           songName: '雅俗共赏',
           singer: '许嵩',
-          time: '2022-10-5',
+          time: '2022-10-10',
           state: ''
         },
         {
@@ -121,87 +124,15 @@ export default {
             'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
           songName: '春夏秋冬',
           singer: '张国荣',
-          time: '2022-10-6',
-          state: ''
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
-          songName: '富士山下',
-          singer: '陈奕迅',
-          time: '2022-10-7',
+          time: '2022-10-11',
           state: '未通过'
         },
         {
           imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-5',
-          state: ''
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
-          songName: '春夏秋冬',
-          singer: '张国荣',
-          time: '2022-10-6',
-          state: ''
-        },
-        {
-          imgUrl:
             'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
           songName: '富士山下',
           singer: '陈奕迅',
-          time: '2022-10-7',
-          state: '未通过'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-5',
-          state: ''
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
-          songName: '春夏秋冬',
-          singer: '张国荣',
-          time: '2022-10-6',
-          state: ''
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
-          songName: '富士山下',
-          singer: '陈奕迅',
-          time: '2022-10-7',
-          state: '未通过'
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-5',
-          state: ''
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
-          songName: '春夏秋冬',
-          singer: '张国荣',
-          time: '2022-10-6',
-          state: ''
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
-          songName: '富士山下',
-          singer: '陈奕迅',
-          time: '2022-10-7',
+          time: '2022-10-10',
           state: '未通过'
         }
       ],
@@ -231,7 +162,22 @@ export default {
           (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
           item.state.includes('通过')
       )
+    },
+    showEmpty() {
+      return (
+        (this.curNav === 0 && this.curDayPendingList.length === 0) ||
+        (this.curNav === 1 && this.curDayProcessedList.length === 0)
+      )
     }
+  },
+  mounted() {
+    lottie.loadAnimation({
+      container: this.$refs.lottie,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      animationData: empty
+    })
   },
   methods: {
     selDay(date) {
