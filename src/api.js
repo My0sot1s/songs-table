@@ -1,7 +1,6 @@
 // 封装请求api
 import axios from 'axios'
 import encrypt from '@/tools/encrypt.js'
-
 // 跨域了，啥用没有
 const QQsearchRequest = ({ s }) => {
   const { params, encSecKey } = encrypt({ s })
