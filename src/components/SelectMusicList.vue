@@ -51,7 +51,6 @@ export default {
       cells.forEach((e) => {
         e.style.transform = ''
       })
-      /* cells[index].style.backgroundColor = 'rgb(239, 242, 247)' */
       cells[index].style.transform = 'translate(105%, 0)'
       console.log(cells[index].style)
     },
@@ -61,21 +60,47 @@ export default {
     search(refresh = true) {
       clearTimeout(this.timer)
       this.timer = setTimeout(async () => {
+        if (this.value.length === 0) return
         if (refresh) {
           this.pageNo = 1
           this.musicList = []
         }
-        if (this.value.length === 0) return
-        const { data } = await this.$musicApi.QQsearchMusic({
-          key: this.value,
-          pageNo: this.pageNo
-        })
-        console.log(data.data)
-        this.pageNo = ++data.data.pageNo
-        this.musicList.push(...data.data.list)
+        if (this.musicList.length === 0) {
+          const { data } = await this.$musicApi.QQsearchMusic({
+            key: this.value,
+            pageNo: this.pageNo
+          })
+          data.data.list.forEach((item) => {
+            item.cover = `https://y.qq.com/music/photo_new/T002R300x300M000${item.albummid}_1.jpg?max_age=2592000`
+          })
+          console.log(data.data)
+          this.musicList.push(...data.data.list)
+          this.loading = false
+        } else {
+          const { data } = await this.$musicApi.NetEaseCloudSearch({
+            keywords: this.value,
+            limit: 30,
+            offset: 15 * (this.pageNo - 1)
+          })
+          this.pageNo++
+          console.log(data.result.songs)
+          /* this.musicList.push(...data.result.songs) */
+          function MusicObject(song) {
+            this.name = song.name
+            this.singer = [{ name: '' }]
+            this.singer[0].name = song.ar[0].name
+            this.albumname = song.al.name
+            this.cover = song.al.picUrl
+          }
+          data.result.songs.forEach((song) => {
+            this.musicList.push(new MusicObject(song))
+          })
+          console.log(this.musicList)
+          this.loading = false
+          this.finished = true
+        }
       }, 200)
       // qq音乐的接口只能返回第一页的数据，后面的要客户端，真恶心x
-      this.finished = true
     }
   },
   watch: {

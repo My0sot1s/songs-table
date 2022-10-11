@@ -6,7 +6,7 @@
       error-icon="https://y.qq.com/music/photo_new/T002R300x300M0000030lak94GN5Ad_0.jpg"
       width="9vw"
       height="9vw"
-      :src="`https://y.qq.com/music/photo_new/T002R300x300M000${music.albummid}_1.jpg?max_age=2592000`"
+      :src="music.cover"
     />
     <div id="detail">
       <van-notice-bar color="black" :text="music.name" />

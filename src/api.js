@@ -29,12 +29,14 @@ const QQsearchMusic = ({ key, pageNo = 1, pageSize = 20, t = 0 }) =>
   })
 
 /* 网易云搜索歌曲 */
-const NetEaseCloudSearch = keywords => {
+const NetEaseCloudSearch = (keywords, limit = 15, offset = 0) => {
   return axios({
     url: 'http://124.220.183.86:3000/search',
     method: 'get',
     params: {
-      keywords
+      keywords,
+      limit,
+      offset
     }
   })
 }
@@ -46,7 +48,7 @@ res.data.songs[0].ar[i].name是歌手名，可能有多个歌手，ar是个数�
 res.data.songs[0].al.picUrl是专辑封面
 res.data.songs[0].al.name是专辑名
 */
-const NetEaseCloudDetail = ids => {
+const NetEaseCloudDetail = (ids) => {
   return axios({
     url: 'http://124.220.183.86:3000/song/detail',
     method: 'get',
