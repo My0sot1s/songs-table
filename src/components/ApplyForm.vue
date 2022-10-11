@@ -108,7 +108,7 @@
 
 <script>
 import { submitRequest } from '@/api.js'
-import { Notify } from 'vant'
+import { Toast } from 'vant'
 export default {
   props: ['musics'],
   data() {
@@ -178,22 +178,22 @@ export default {
       console.log(this.form)
       /* const notices = ['请选择首选歌曲', '请选择备选歌曲'] */
       if (this.musics.length === 0) {
-        Notify('请选择歌曲')
+        Toast.fail('请选择歌曲')
         return
       }
       try {
         const res = await submitRequest(this.form)
         if (res.status === 200) {
-          Notify({ type: 'success', message: '提交成功' })
+          Toast.success('提交成功！')
           this.$router.push('/home')
         }
       } catch (err) {
         console.log(err.message)
-        Notify(err.message)
+        Toast.fail(err.message)
       }
       /* for (let i = 0; i < 2; i++) {
         if (!this.musics[i]) {
-          Notify(notices[i])
+          Toast.fail(notices[i])
           return
         }
       } */
