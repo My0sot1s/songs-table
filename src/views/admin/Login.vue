@@ -23,13 +23,12 @@
         >
       </div>
     </van-form>
-    <van-loading v-if="login" size="40px" type="spinner" vertical
-      >登录中...</van-loading
-    >
   </div>
 </template>
 
 <script>
+import { Toast } from 'vant'
+
 export default {
   data() {
     return {
@@ -38,9 +37,16 @@ export default {
       login: false
     }
   },
+  mounted() {
+    Toast.setDefaultOptions({ duration: 800 })
+  },
   methods: {
     onSubmit() {
-      this.login = true
+      Toast.loading({
+        message: '登录中...',
+        forbidClick: true,
+        loadingType: 'spinner'
+      })
       this.$axios
         .post('/admin/login', {
           name: this.username,
@@ -48,8 +54,17 @@ export default {
         })
         .then((res) => {
           console.log(res)
+          if (res.data.code === 200) {
+            localStorage.setItem('admin_token', res.data.data.token)
+            Toast.clear()
+            this.$router.replace('/admin/home')
+          } else {
+            Toast.fail(res.data.msg)
+          }
         })
-        .finally(() => (this.login = false))
+        .catch(() => {
+          Toast.fail('请求异常')
+        })
     }
   }
 }

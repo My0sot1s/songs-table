@@ -45,7 +45,8 @@ function setToken(token) {
 
 function initState() {
   return {
-    token: getStorage('token')
+    token: getStorage('token'),
+    adminToken: getStorage('admin_token')
   }
 }
 
@@ -92,8 +93,10 @@ function checkToken() {
 axios.interceptors.request.use(
   function (config) {
     config.data = qs.stringify(config.data)
-    if (state.token) {
+    if (!location.isAdmin && state.token) {
       config.headers.token = state.token
+    } else if (location.isAdmin && state.token) {
+      config.headers.token = state.adminToken
     }
     return config
   },

@@ -20,7 +20,7 @@
           :songName="item.songName"
           :singer="item.singer"
           :time="item.time"
-          :state="item.state"
+          :campus="item.campus"
           iconName="ellipsis"
           @action="
             actionSheet.show = true
@@ -73,7 +73,7 @@ export default {
           songName: '浮夸',
           singer: '陈奕迅',
           time: '2022-10-11',
-          state: '厦门校区'
+          campus: '厦门校区'
         },
         {
           imgUrl:
@@ -81,7 +81,7 @@ export default {
           songName: '雅俗共赏',
           singer: '许嵩',
           time: '2022-10-10',
-          state: '厦门校区'
+          campus: '厦门校区'
         },
         {
           imgUrl:
@@ -89,7 +89,7 @@ export default {
           songName: '浮夸',
           singer: '陈奕迅',
           time: '2022-10-9',
-          state: '厦门校区'
+          campus: '厦门校区'
         }
       ],
       curIndex: Number,
@@ -128,7 +128,7 @@ export default {
     selAction() {
       Dialog.confirm({
         title: '真的要将其移出歌单吗',
-        message: '您可以在 申请列表 - 已处理 - 该日 内找到并将其回复'
+        message: '您可以在 申请列表 - 已处理 - 该日 内找到并将其恢复'
       })
         .then(() => {
           this.delItem()

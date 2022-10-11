@@ -109,7 +109,7 @@ export default {
           songName: '浮夸',
           singer: '陈奕迅',
           time: '2022-10-11',
-          state: ''
+          state: 1
         },
         {
           imgUrl:
@@ -117,7 +117,7 @@ export default {
           songName: '雅俗共赏',
           singer: '许嵩',
           time: '2022-10-10',
-          state: ''
+          state: 1
         },
         {
           imgUrl:
@@ -125,7 +125,7 @@ export default {
           songName: '春夏秋冬',
           singer: '张国荣',
           time: '2022-10-11',
-          state: '未通过'
+          state: 2
         },
         {
           imgUrl:
@@ -133,7 +133,7 @@ export default {
           songName: '富士山下',
           singer: '陈奕迅',
           time: '2022-10-10',
-          state: '未通过'
+          state: 3
         }
       ],
       dateString: '',
@@ -153,14 +153,14 @@ export default {
       return this.applyList.filter(
         (item) =>
           (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
-          !item.state.includes('通过')
+          item.state === 1
       )
     },
     curDayProcessedList() {
       return this.applyList.filter(
         (item) =>
           (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
-          item.state.includes('通过')
+          item.state !== 1
       )
     },
     showEmpty() {

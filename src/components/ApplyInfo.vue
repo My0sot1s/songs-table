@@ -13,11 +13,12 @@
         <div>
           <div class="song-name van-ellipsis">{{ songName }}</div>
           <div>
-            <span class="state">{{ state }}</span>
+            <span class="state" v-if="state">{{ grtState(state) }}</span>
+            <span class="campus" v-if="campus">{{ campus }}</span>
             <van-icon
               size="2vh"
               :name="iconName"
-              @click.stop="$emit('action', state)"
+              @click="$emit('action', state)"
             />
           </div>
         </div>
@@ -44,10 +45,26 @@ export default {
     songName: String,
     singer: String,
     time: String,
-    state: String,
-    iconName: String
+    state: Number,
+    iconName: String,
+    campus: String
   },
-  methods: {}
+  data() {
+    return {
+      STATE: {
+        '-1': '已撤回',
+        0: '已结束',
+        1: '待审核',
+        2: '未通过',
+        3: '待播放'
+      }
+    }
+  },
+  methods: {
+    grtState(num) {
+      return this.STATE[num]
+    }
+  }
 }
 </script>
 
@@ -109,7 +126,8 @@ export default {
         width: 30vw;
       }
 
-      .state {
+      .state,
+      .campus {
         font-size: 1.6vh;
         color: #999;
         margin-right: 2vw;
