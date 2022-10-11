@@ -47,10 +47,13 @@ export default {
   methods: {
     select(index) {
       this.index = index
-      this.$refs.cells.forEach((e) => {
-        e.$el.style.backgroundColor = 'inherit'
+      const cells = [...document.querySelectorAll('#background')]
+      cells.forEach((e) => {
+        e.style.transform = ''
       })
-      this.$refs.cells[index].$el.style.backgroundColor = 'rgb(239, 242, 247)'
+      /* cells[index].style.backgroundColor = 'rgb(239, 242, 247)' */
+      cells[index].style.transform = 'translate(105%, 0)'
+      console.log(cells[index].style)
     },
     confirm() {
       this.$emit('confirmMusic', this.musicList[this.index])

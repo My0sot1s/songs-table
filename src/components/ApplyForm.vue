@@ -200,9 +200,6 @@ export default {
 .van-button {
   box-shadow: 0 0 5px #999;
 }
-.van-search {
-  color: black !important;
-}
 .van-notice-bar {
   position: fixed;
 }
