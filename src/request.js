@@ -1,5 +1,6 @@
 // 封装axios
 import theAxios from 'axios'
+import qs from 'qs'
 
 const location = {
   origin: document.location.origin,
@@ -16,6 +17,7 @@ function wxLoginRedirect() {
 }
 
 const axios = theAxios.create({
+  headers: { 'content-Type': 'application/x-www-form-urlencoded' },
   baseURL: '',
   timeout: 20000
 })
@@ -89,6 +91,7 @@ function checkToken() {
 // 请求拦截
 axios.interceptors.request.use(
   function (config) {
+    config.data = qs.stringify(config.data)
     if (state.token) {
       config.headers.token = state.token
     }

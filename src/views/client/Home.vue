@@ -46,8 +46,7 @@ export default {
     })
 
     this.$axios.get('/user/todaySongs').then((res) => {
-      // 待完善，未对code做判断
-      if (res.data.data) {
+      if (res.data.code === 200 && res.data.data) {
         res.data.data.forEach((item) => {
           this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
             if (!detail.data.songs || detail.data.songs.length === 0) return
@@ -65,7 +64,7 @@ export default {
     })
 
     this.$axios.get('/user/comingSongs').then((res) => {
-      if (res.data.data) {
+      if (res.data.code === 200 && res.data.data) {
         res.data.data.forEach((item) => {
           this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
             if (!detail.data.songs || detail.data.songs.length === 0) return

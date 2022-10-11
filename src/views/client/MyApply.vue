@@ -37,7 +37,7 @@
         </template>
       </ApplyInfo>
     </div>
-    <div ref="lottie" class="myApply" v-else></div>
+    <div ref="lottie" v-else></div>
   </div>
 </template>
 
@@ -139,14 +139,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.myApply {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #fefefe;
-}
-
 .footer {
   border-top: 1px solid #ccc;
 
