@@ -185,7 +185,7 @@ export default {
         const res = await submitRequest(this.form)
         if (res.status === 200) {
           Toast.success('提交成功！')
-          this.$router.push('/home')
+          this.$router.replace('/home')
         }
       } catch (err) {
         console.log(err.message)
