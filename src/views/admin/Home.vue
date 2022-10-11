@@ -12,16 +12,15 @@
         </div>
       </van-sticky>
 
-      <div>
+      <div v-for="(item, index) in curDayList" :key="item.id">
         <ApplyInfo
-          v-for="(item, index) in curDayList"
-          :key="index"
           :imgUrl="item.imgUrl"
           :songName="item.songName"
           :singer="item.singer"
           :time="item.time"
           :campus="item.campus"
           iconName="ellipsis"
+          @click.native="toExamine(index)"
           @action="
             actionSheet.show = true
             curIndex = index
@@ -57,7 +56,7 @@ import TabBar from '@/components/TabBar'
 import formatDate from '@/tools/FormatDate'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
-import { Dialog } from 'vant'
+import { Dialog, Toast } from 'vant'
 
 export default {
   components: {
@@ -73,7 +72,8 @@ export default {
           songName: '浮夸',
           singer: '陈奕迅',
           time: '2022-10-11',
-          campus: '厦门校区'
+          campus: '厦门校区',
+          id: 5
         },
         {
           imgUrl:
@@ -81,7 +81,8 @@ export default {
           songName: '雅俗共赏',
           singer: '许嵩',
           time: '2022-10-10',
-          campus: '厦门校区'
+          campus: '厦门校区',
+          id: 4
         },
         {
           imgUrl:
@@ -89,7 +90,8 @@ export default {
           songName: '浮夸',
           singer: '陈奕迅',
           time: '2022-10-9',
-          campus: '厦门校区'
+          campus: '厦门校区',
+          id: 3
         }
       ],
       curIndex: Number,
@@ -110,6 +112,62 @@ export default {
   },
   mounted() {
     this.dateString = formatDate(new Date())
+
+    this.$axios.get('/admin/songList').then((res) => {
+      if (res.data.code === 200 && res.data.data) {
+        res.data.data.forEach((item) => {
+          // if (item.state === 3) {
+          const temp = {}
+          temp.id = item.ID
+          temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
+          temp.campus = item.school_district
+          this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
+            if (!detail.data.songs || detail.data.songs.length === 0) return
+            temp.imgUrl = detail.data.songs[0].al.picUrl
+            temp.songName = detail.data.songs[0].name
+            temp.singer = detail.data.songs[0].ar[0].name
+            for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
+              temp.singer += ' ' + detail.data.songs[0].ar[i].name
+            }
+            this.applyList.push(temp)
+          })
+          // }
+        })
+      }
+    })
+
+    // this.$axios.get('/admin/songList').then((res) => {
+    //   if (res.data.code === 200 && res.data.data) {
+    //     const tempList = []
+    //     const promiseList = []
+    //     res.data.data.forEach((item) => {
+    //       const promise = new Promise((resolve, reject) => {
+    //         this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
+    //           if (!detail.data.songs || detail.data.songs.length === 0) return
+    //           const temp = {}
+    //           temp.id = item.ID
+    //           temp.time = formatDate(new Date(item.broadcast_date)).split(
+    //             ' '
+    //           )[1]
+    //           temp.campus = item.school_district
+    //           temp.imgUrl = detail.data.songs[0].al.picUrl
+    //           temp.songName = detail.data.songs[0].name
+    //           temp.singer = detail.data.songs[0].ar[0].name
+    //           for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
+    //             temp.singer += ' ' + detail.data.songs[0].ar[i].name
+    //           }
+    //           tempList.push(temp)
+    //           resolve()
+    //         })
+    //       })
+    //       promiseList.push(promise)
+    //     })
+    //     /* 当所有promise都处理完成后再展示,数量多了会有一段时间白屏 */
+    //     Promise.allSettled(promiseList).then(() =>
+    //       this.applyList.push(...tempList)
+    //     )
+    //   }
+    // })
 
     lottie.loadAnimation({
       container: this.$refs.lottie,
@@ -139,7 +197,30 @@ export default {
     },
     /* 确认删除后触发 */
     delItem() {
-      console.log(`取消播放第${this.curIndex + 1}首歌`)
+      Toast.loading({
+        message: '请求中...',
+        forbidClick: true,
+        loadingType: 'spinner'
+      })
+      this.$axios
+        .post('/admin/noPass', {
+          id: this.curDayList[this.curIndex].id
+        })
+        .then((res) => {
+          if (res.data.code === 200) {
+            this.curDayList.splice(this.curIndex, 1)
+            this.$forceUpdate()
+            Toast.clear()
+          } else {
+            Toast.fail(res.data.msg)
+          }
+        })
+        .catch(() => {
+          Toast.fail('请求异常')
+        })
+    },
+    toExamine() {
+      this.$router.push('/admin/examine')
     }
   }
 }

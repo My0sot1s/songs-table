@@ -7,7 +7,9 @@
       :navText="this.$store.state.navText"
       :leftArrow="this.$store.state.leftArrow"
     />
-    <router-view />
+    <keep-alive include="ApplyList">
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
@@ -29,11 +31,6 @@ hr {
   margin-top: 1vh;
   margin-bottom: 1vh;
 }
-
-/* .admin-header {
-  margin: 2vh;
-  font-size: 3vh;
-} */
 
 .admin-navBar {
   display: flex;

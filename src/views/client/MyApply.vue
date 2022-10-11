@@ -16,7 +16,7 @@
         :state="item.state"
         iconName="delete-o"
         @click.native="curIndex = curIndex === index ? -1 : index"
-        @action="delApply"
+        @action="delApply($event, index)"
       >
         <template #footer>
           <!-- 当前点击且未结束时显示 -->
@@ -25,7 +25,7 @@
               <!-- 状态不是已撤回或者未通过时显示 -->
               <div
                 v-if="!(item.state === -1 || item.state === 2)"
-                @click.stop="withdraw"
+                @click.stop="withdraw(index)"
               >
                 <van-icon color="#555" name="revoke" /><span>申请撤回</span>
               </div>
@@ -58,7 +58,44 @@ export default {
   },
   data() {
     return {
-      applyList: [] /* 请求列表 */,
+      applyList: [
+        {
+          imgUrl:
+            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
+          songName: '浮夸',
+          singer: '陈奕迅',
+          time: '2022-10-5',
+          state: -1,
+          id: 1
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
+          songName: '雅俗共赏',
+          singer: '许嵩',
+          time: '2022-10-5',
+          state: 0,
+          id: 2
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
+          songName: '春夏秋冬',
+          singer: '张国荣',
+          time: '2022-10-5',
+          state: 1,
+          id: 3
+        },
+        {
+          imgUrl:
+            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
+          songName: '富士山下',
+          singer: '陈奕迅',
+          time: '2022-10-5',
+          state: 2,
+          id: 4
+        }
+      ] /* 请求列表 */,
       curList: [],
       curIndex: 0 /* 当前显示footer的index */,
       menu: {
@@ -118,23 +155,22 @@ export default {
   },
   methods: {
     /* 点击删除图标时 */
-    delApply(state) {
+    delApply(state, index) {
+      this.curIndex = index
       Toast.clear()
       if (state === -1 || state === 0 || state === 2) {
         Dialog.confirm({
           title: '删除后不可找回，确定删除？'
         })
           .then(() => {
-            console.log(this.curIndex)
-
             this.$axios
               .post('/user/delete', {
-                id: this.curList[this.curIndex].id
+                id: this.curList[index].id
               })
               .then((res) => {
                 console.log(res)
                 if (res.data.code === 200) {
-                  this.curList.splice(this.curIndex, 1)
+                  this.curList.splice(index, 1)
                   this.curIndex = -1
                   Toast.success('删除成功')
                 } else {
@@ -153,18 +189,18 @@ export default {
       }
     },
     /* 点击撤回请求时 */
-    withdraw() {
+    withdraw(index) {
       Dialog.confirm({
         title: '确认撤回请求？'
       })
         .then(() => {
           this.$axios
             .post('/user/recall', {
-              id: this.curList[this.curIndex].id
+              id: this.curList[index].id
             })
             .then((res) => {
               if (res.data.code === 200) {
-                this.curList[this.curIndex].state = -1
+                this.curList[index].state = -1
                 Toast.success('撤回成功')
               } else {
                 Toast.fail('撤回失败')

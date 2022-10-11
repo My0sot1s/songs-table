@@ -18,7 +18,7 @@
             <van-icon
               size="2vh"
               :name="iconName"
-              @click="$emit('action', state)"
+              @click.stop="$emit('action', state)"
             />
           </div>
         </div>

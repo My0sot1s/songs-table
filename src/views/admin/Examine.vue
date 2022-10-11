@@ -44,11 +44,10 @@
       </div>
     </div>
 
-    <div class="btn1">
+    <div class="btn1" v-if="showBtn">
       <div @click="reject">驳回</div>
       <div @click="pass" class="btn2">通过</div>
     </div>
-
   </div>
 </template>
 
@@ -70,8 +69,12 @@ export default {
         to: '小明',
         message:
           '至若春和景明，波澜不惊，上下天光，一碧万顷；沙鸥翔集，锦鳞游泳，岸芷汀兰，郁郁青青。而或长烟一空，皓月千里，浮光跃金，静影沉璧；渔歌互答，此乐何极！'
-      }
+      },
+      showBtn: false
     }
+  },
+  mounted() {
+    this.showBtn = this.$route.params.showBtn
   },
   methods: {
     reject() {

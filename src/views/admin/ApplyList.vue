@@ -22,7 +22,7 @@
         </div>
       </van-sticky>
 
-      <div v-if="curNav === 0">
+      <div v-show="curNav === 0">
         <ApplyInfo
           v-for="(item, index) in curDayPendingList"
           :key="index"
@@ -34,7 +34,7 @@
           @click.native="toExamine(index)"
         />
       </div>
-      <div v-else>
+      <div v-show="curNav === 1">
         <ApplyInfo
           v-for="(item, index) in curDayProcessedList"
           :key="index"
@@ -44,6 +44,7 @@
           :time="item.time"
           :state="item.state"
           iconName="ellipsis"
+          @click.native="toExamine(index)"
           @action="
             actionSheet.show = true
             curIndex = index
@@ -96,6 +97,7 @@ import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
 
 export default {
+  name: 'ApplyList',
   components: {
     TabBar,
     ApplyInfo
@@ -179,6 +181,9 @@ export default {
       animationData: empty
     })
   },
+  destroyed() {
+    console.log('被销毁了')
+  },
   methods: {
     selDay(date) {
       this.dateString = formatDate(date)
@@ -196,12 +201,23 @@ export default {
         })
     },
     toExamine(index) {
-      console.log(index)
-      this.$router.push('/admin/examine')
+      const showBtn = this.curNav === 0
+      this.$router.push({
+        name: 'Examine',
+        params: {
+          showBtn
+        }
+      })
     },
     retried() {
       console.log(`重新审核第${this.curIndex + 1}首歌`)
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name !== 'Examine') {
+      this.$destroy()
+    }
+    next()
   }
 }
 </script>

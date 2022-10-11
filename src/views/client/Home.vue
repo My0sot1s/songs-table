@@ -31,11 +31,6 @@ export default {
   components: {
     MusicList
   },
-  methods: {
-    toSelect() {
-      this.$router.push('/selectmusic')
-    }
-  },
   mounted() {
     this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
@@ -80,6 +75,11 @@ export default {
         })
       }
     })
+  },
+  methods: {
+    toSelect() {
+      this.$router.push('/selectmusic')
+    }
   }
 }
 </script>
