@@ -114,8 +114,8 @@ export default {
   data() {
     return {
       form: {
-        songId: this.musics[0]?.songid,
-        searchPath: this.musics[0]?.searchPath,
+        songId: '',
+        searchPath: '',
         receiverName: '',
         senderName: '',
         phoneNum: '',
@@ -151,7 +151,7 @@ export default {
   watch: {
     musics: {
       handler() {
-        this.form.songId = this.musics[0]?.songid
+        this.form.songId = this.musics[0]?.songid.toString()
         this.form.searchPath = this.musics[0]?.searchPath
         const arr = ['请选择歌曲', '请选择备选歌曲']
         /* const a = ['首选：', '备选：'] */
@@ -183,7 +183,10 @@ export default {
       }
       try {
         const res = await submitRequest(this.form)
-        if (res.status === 200) Notify({ type: 'success', message: '提交成功' })
+        if (res.status === 200) {
+          Notify({ type: 'success', message: '提交成功' })
+          this.$router.push('/home')
+        }
       } catch (err) {
         console.log(err.message)
         Notify(err.message)

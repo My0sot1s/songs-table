@@ -4,5 +4,5 @@ export const submitRequest = (form) =>
   axios({
     method: 'POST',
     url: '/user/submit',
-    data: { form }
+    data: form
   })

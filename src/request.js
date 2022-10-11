@@ -147,7 +147,6 @@ export const request = ({
   method = 'GET',
   params = {},
   data = {},
-  headers = {},
   baseURL = axios.baseURL
 }) => {
   return axios({
@@ -155,7 +154,6 @@ export const request = ({
     method,
     params,
     data,
-    headers,
     baseURL
   })
 }
