@@ -52,7 +52,6 @@ export default {
         e.style.transform = ''
       })
       cells[index].style.transform = 'translate(105%, 0)'
-      console.log(cells[index].style)
     },
     confirm() {
       this.$emit('confirmMusic', this.musicList[this.index])
@@ -66,17 +65,20 @@ export default {
           this.musicList = []
         }
         if (this.musicList.length === 0) {
+          // qq音乐接口
           const { data } = await this.$musicApi.QQsearchMusic({
             key: this.value,
             pageNo: this.pageNo
           })
           data.data.list.forEach((item) => {
+            item.searchPath = 'qq'
             item.cover = `https://y.qq.com/music/photo_new/T002R300x300M000${item.albummid}_1.jpg?max_age=2592000`
           })
           console.log(data.data)
           this.musicList.push(...data.data.list)
           this.loading = false
         } else {
+          // 网易云接口
           const { data } = await this.$musicApi.NetEaseCloudSearch({
             keywords: this.value,
             limit: 30,
@@ -87,10 +89,12 @@ export default {
           /* this.musicList.push(...data.result.songs) */
           function MusicObject(song) {
             this.name = song.name
+            this.songid = song.songid
             this.singer = [{ name: '' }]
             this.singer[0].name = song.ar[0].name
             this.albumname = song.al.name
             this.cover = song.al.picUrl
+            this.searchPath = '网易云'
           }
           data.result.songs.forEach((song) => {
             this.musicList.push(new MusicObject(song))
@@ -128,6 +132,9 @@ export default {
     position: -webkit-sticky;
     position: sticky;
     top: 0 vw;
+    .van-search__content {
+      background-color: rgb(250, 251, 253);
+    }
   }
   .van-list {
     max-height: 100vw;

@@ -5,7 +5,7 @@ import store from './store'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 import initAxios from './request'
-import musicApi from './api'
+import musicApi from './musicApi'
 
 Vue.use(Vant)
 

@@ -142,3 +142,20 @@ export default function initAxios(vue) {
     }
   })
 }
+export const request = ({
+  url,
+  method = 'GET',
+  params = {},
+  data = {},
+  headers = {},
+  baseURL = axios.baseURL
+}) => {
+  return axios({
+    url,
+    method,
+    params,
+    data,
+    headers,
+    baseURL
+  })
+}

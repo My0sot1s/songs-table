@@ -9,6 +9,7 @@
     ></van-notice-bar>
     <van-divider />
     <van-search
+      shape="round"
       class="search"
       readonly
       @click="popUp(0)"
@@ -16,30 +17,30 @@
       :placeholder="placeHolders[0]"
     />
     <van-search
+      shape="round"
       class="search"
       readonly
       @click="popUp(1)"
       action-textdisabled
       :placeholder="placeHolders[1]"
+      v-if="false"
     />
     <van-field
       maxlength="12"
-      v-model="form.to"
-      name="To"
+      v-model="form.receiverName"
       label="To"
       placeholder="你希望将这首歌送给谁"
       :rules="[{ required: true, message: '' }]"
     />
     <van-field
       maxlength="12"
-      v-model="form.username"
-      name="姓名"
+      v-model="form.senderName"
       label="姓名"
       placeholder="请输入你的姓名"
       :rules="[{ required: true, message: '' }]"
     />
     <van-field
-      v-model="form.tel"
+      v-model="form.phoneNum"
       placeholder="请输入你的手机号"
       type="tel"
       label="手机号"
@@ -53,29 +54,28 @@
       ]"
     />
     <van-field
-      v-model="form.campus"
+      v-model="form.schoolDistrict"
       is-link
       readonly
       label="校区"
       placeholder="请选择你所在的校区"
-      @click="showCampus = true"
+      @click="showschoolDistrict = true"
       :rules="[{ required: true, message: '' }]"
     />
-    <van-popup v-model="showCampus" round position="bottom">
+    <van-popup v-model="showschoolDistrict" round position="bottom">
       <van-cascader
         active-color="#1989fa"
-        v-model="form.campus"
+        v-model="form.schoolDistrict"
         title="请选择所在校区"
         :options="options"
-        @close="showCampus = false"
-        @finish="showCampus = false"
+        @close="showschoolDistrict = false"
+        @finish="showschoolDistrict = false"
       />
     </van-popup>
     <van-field
       readonly
       clickable
-      name="calendar"
-      :value="form.date"
+      :value="showingDate"
       label="送出日期"
       placeholder="点击选择日期"
       @click="showCalendar = true"
@@ -88,7 +88,7 @@
       @confirm="onConfirm"
     />
     <van-field
-      v-model="form.message"
+      v-model="form.blessingWords"
       rows="2"
       autosize
       label="寄语"
@@ -107,24 +107,27 @@
 </template>
 
 <script>
+import { submitRequest } from '@/api.js'
 import { Notify } from 'vant'
 export default {
   props: ['musics'],
   data() {
     return {
       form: {
-        songs: this.musics,
-        to: '',
-        username: '',
-        tel: '',
-        campus: '',
-        date: '',
-        message: ''
+        songId: this.musics[0]?.songid,
+        searchPath: this.musics[0]?.searchPath,
+        receiverName: '',
+        senderName: '',
+        phoneNum: '',
+        schoolDistrict: '',
+        broadcastDate: '',
+        blessingWords: ''
       },
+      showingDate: '',
       placeHolders: [],
       notice:
         '欢迎来到华侨大学点歌台！如果你有想听的歌，或者想要送出的祝福，请认真填写下面的表格，我们会在每天晚上的6：40 - 7：00将歌曲送出。要记得留下电话号码我们才能够在有需要的时候联系你们哦。',
-      showCampus: false,
+      showschoolDistrict: false,
       fieldValue: '',
       cascaderValue: '',
       // 选项列表，children 代表子选项，支持多级嵌套
@@ -146,18 +149,18 @@ export default {
     }
   },
   watch: {
-    'form.songs': {
+    musics: {
       handler() {
+        this.form.songId = this.musics[0]?.songid
+        this.form.searchPath = this.musics[0]?.searchPath
         const arr = ['请选择歌曲', '请选择备选歌曲']
-        const a = ['首选：', '备选：']
-        if (this.form.songs.length > 0) {
+        /* const a = ['首选：', '备选：'] */
+        if (this.musics.length > 0) {
           for (let i = 0; i < 2; i++) {
-            if (this.form.songs[i]) {
+            if (this.musics[i]) {
               arr[i] =
-                a[i] +
-                this.form.songs[i].name +
-                ' - ' +
-                this.form.songs[i].singer[0].name
+                /* a[i] + */
+                this.musics[i].name + ' - ' + this.musics[i].singer[0].name
             }
           }
         }
@@ -171,27 +174,40 @@ export default {
     formatDate(date) {
       return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
     },
-    onSubmit() {
+    async onSubmit() {
       console.log(this.form)
-      const notices = ['请选择首选歌曲', '请选择备选歌曲']
-      if (this.form.songs.length === 0) {
+      /* const notices = ['请选择首选歌曲', '请选择备选歌曲'] */
+      if (this.musics.length === 0) {
         Notify('请选择歌曲')
         return
       }
-      for (let i = 0; i < 2; i++) {
-        if (!this.form.songs[i]) {
+      try {
+        const res = await submitRequest(this.form)
+        if (res.status === 200) Notify({ type: 'success', message: '提交成功' })
+      } catch (err) {
+        console.log(err.message)
+        Notify(err.message)
+      }
+      /* for (let i = 0; i < 2; i++) {
+        if (!this.musics[i]) {
           Notify(notices[i])
           return
         }
-      }
+      } */
     },
     onConfirm(date) {
       this.showCalendar = false
-      this.form.date = this.formatDate(date)
+      this.form.broadcastDate = date.getTime()
+      this.showingDate = this.formatDate(date)
     },
     popUp(index) {
       this.$emit('popUp', index)
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      console.log(this.musics)
+    }, 10000)
   }
 }
 </script>
@@ -202,5 +218,8 @@ export default {
 }
 .van-notice-bar {
   position: fixed;
+}
+.van-search__content {
+  background-color: rgb(250, 251, 253) !important;
 }
 </style>

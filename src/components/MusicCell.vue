@@ -31,7 +31,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #cell {
   position: relative;
   height: 16vw;
@@ -45,10 +45,9 @@ export default {
   overflow: hidden;
   .van-image {
     border-radius: 1vw;
-    background-color: skyblue;
   }
   #background {
-    background-color: rgb(240, 242, 243);
+    background-color: rgb(239, 242, 247);
     border-radius: 1vw;
     position: absolute;
     left: -105%;
