@@ -3,6 +3,11 @@
     <van-form>
       <van-search shape="round" v-model="value" placeholder="" />
     </van-form>
+    <van-empty
+      v-if="this.musicList.length === 0"
+      image="search"
+      description=""
+    />
     <van-list
       v-model="loading"
       :finished="finished"
@@ -126,6 +131,7 @@ export default {
   box-shadow: 0 0 5px #999;
   overflow: scroll;
   z-index: 1;
+  max-height: 70vh;
   .van-search {
     padding: 0;
     margin-bottom: 6vw;
@@ -137,7 +143,7 @@ export default {
     }
   }
   .van-list {
-    max-height: 100vw;
+    max-height: 45vh;
     padding: 0 1vw 0 1vw;
     border-top: 2px solid rgb(250, 251, 253);
     overflow: scroll;
