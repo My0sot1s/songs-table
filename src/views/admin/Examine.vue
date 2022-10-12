@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { Dialog } from 'vant'
+import { Dialog, Toast } from 'vant'
 
 export default {
   data() {
@@ -82,7 +82,26 @@ export default {
         title: '确认驳回请求？'
       })
         .then(() => {
-          console.log('reject')
+          Toast.loading({
+            message: '请求中...',
+            forbidClick: true,
+            loadingType: 'spinner'
+          })
+          this.$axios
+            .post('/admin/noPass', {
+              // 待改为传进来的
+              id: 1
+            })
+            .then((res) => {
+              if (res.data.code === 200) {
+                Toast.clear()
+              } else {
+                Toast.fail(res.data.msg)
+              }
+            })
+            .catch(() => {
+              Toast.fail('请求异常')
+            })
         })
         .catch(() => {
           // on cancel
@@ -93,7 +112,25 @@ export default {
         title: '确认通过请求？'
       })
         .then(() => {
-          console.log('pass')
+          Toast.loading({
+            message: '请求中...',
+            forbidClick: true,
+            loadingType: 'spinner'
+          })
+          this.$axios
+            .post('/admin/pass', {
+              id: 1
+            })
+            .then((res) => {
+              if (res.data.code === 200) {
+                Toast.clear()
+              } else {
+                Toast.fail(res.data.msg)
+              }
+            })
+            .catch(() => {
+              Toast.fail('请求异常')
+            })
         })
         .catch(() => {
           // on cancel

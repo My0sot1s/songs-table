@@ -1,6 +1,6 @@
 // 封装axios
 import theAxios from 'axios'
-import qs from 'qs'
+// import qs from 'qs'
 
 const location = {
   origin: document.location.origin,
@@ -17,7 +17,7 @@ function wxLoginRedirect() {
 }
 
 const axios = theAxios.create({
-  headers: { 'content-Type': 'application/x-www-form-urlencoded' },
+  // headers: { 'content-Type': 'application/x-www-form-urlencoded' },
   baseURL: '',
   timeout: 20000
 })
@@ -92,10 +92,11 @@ function checkToken() {
 // 请求拦截
 axios.interceptors.request.use(
   function (config) {
-    config.data = qs.stringify(config.data)
+    // config.data = qs.stringify(config.data)
     if (!location.isAdmin && state.token) {
       config.headers.token = state.token
-    } else if (location.isAdmin && state.token) {
+    } else if (location.isAdmin) {
+      if (!state.adminToken) state.adminToken = localStorage.getItem('admin_token')
       config.headers.token = state.adminToken
     }
     return config
@@ -108,10 +109,11 @@ axios.interceptors.request.use(
 // 响应拦截
 axios.interceptors.response.use(
   function (response) {
-    if (!location.isAdmin && response.data.code) {
+    if (response.data.code) {
       const code = response.data.code.toString()
       if (['401', '440', '441'].includes(code)) {
-        wxLoginRedirect()
+        if (!location.isAdmin) wxLoginRedirect()
+        else window.location.hash = '/admin'
       }
     }
     return response

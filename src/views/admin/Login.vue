@@ -53,7 +53,6 @@ export default {
           password: this.password
         })
         .then((res) => {
-          console.log(res)
           if (res.data.code === 200) {
             localStorage.setItem('admin_token', res.data.data.token)
             Toast.clear()

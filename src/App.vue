@@ -7,7 +7,7 @@
       :navText="this.$store.state.navText"
       :leftArrow="this.$store.state.leftArrow"
     />
-    <keep-alive include="ApplyList">
+    <keep-alive include="ApplyList,adminHome">
       <router-view />
     </keep-alive>
   </div>

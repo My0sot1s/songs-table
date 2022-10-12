@@ -25,7 +25,7 @@
       <div v-show="curNav === 0">
         <ApplyInfo
           v-for="(item, index) in curDayPendingList"
-          :key="index"
+          :key="item.id"
           :imgUrl="item.imgUrl"
           :songName="item.songName"
           :singer="item.singer"
@@ -92,7 +92,7 @@
 import ApplyInfo from '@/components/ApplyInfo'
 import TabBar from '@/components/TabBar'
 import formatDate from '@/tools/FormatDate'
-import { Dialog } from 'vant'
+import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
 
@@ -104,40 +104,7 @@ export default {
   },
   data() {
     return {
-      applyList: [
-        {
-          imgUrl:
-            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
-          songName: '浮夸',
-          singer: '陈奕迅',
-          time: '2022-10-11',
-          state: 1
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-10',
-          state: 1
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
-          songName: '春夏秋冬',
-          singer: '张国荣',
-          time: '2022-10-11',
-          state: 2
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
-          songName: '富士山下',
-          singer: '陈奕迅',
-          time: '2022-10-10',
-          state: 3
-        }
-      ],
+      applyList: [],
       dateString: '',
       /* 当前导航 0：待处理，1：已处理 */
       curNav: 0,
@@ -162,7 +129,7 @@ export default {
       return this.applyList.filter(
         (item) =>
           (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
-          item.state !== 1
+          (item.state === 2 || item.state === 3)
       )
     },
     showEmpty() {
@@ -181,10 +148,33 @@ export default {
       animationData: empty
     })
   },
-  destroyed() {
-    console.log('被销毁了')
+  activated() {
+    this.applyList = []
+    this.getApplyList()
   },
   methods: {
+    getApplyList() {
+      this.$axios.get('/admin/songList').then((res) => {
+        if (res.data.code === 200 && res.data.data) {
+          res.data.data.forEach((item) => {
+            const temp = {}
+            temp.id = item.ID
+            temp.state = item.status
+            temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
+            this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
+              if (!detail.data.songs || detail.data.songs.length === 0) return
+              temp.imgUrl = detail.data.songs[0].al.picUrl
+              temp.songName = detail.data.songs[0].name
+              temp.singer = detail.data.songs[0].ar[0].name
+              for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
+                temp.singer += ' ' + detail.data.songs[0].ar[i].name
+              }
+              this.applyList.push(temp)
+            })
+          })
+        }
+      })
+    },
     selDay(date) {
       this.dateString = formatDate(date)
       this.showCalendar = false
@@ -210,14 +200,32 @@ export default {
       })
     },
     retried() {
-      console.log(`重新审核第${this.curIndex + 1}首歌`)
+      Toast.loading({
+        message: '请求中...',
+        forbidClick: true,
+        loadingType: 'spinner'
+      })
+      const state = this.curDayProcessedList[this.curIndex].state
+      let url = ''
+      if (state === 2) url = '/admin/pass'
+      else if (state === 3) url = '/admin/noPass'
+      this.$axios
+        .post(url, {
+          id: this.curDayProcessedList[this.curIndex].id
+        })
+        .then((res) => {
+          if (res.data.code === 200) {
+            this.curDayProcessedList[this.curIndex].state = state === 2 ? 3 : 2
+            this.$forceUpdate()
+            Toast.clear()
+          } else {
+            Toast.fail(res.data.msg)
+          }
+        })
+        .catch(() => {
+          Toast.fail('请求异常')
+        })
     }
-  },
-  beforeRouteLeave(to, from, next) {
-    if (to.name !== 'Examine') {
-      this.$destroy()
-    }
-    next()
   }
 }
 </script>

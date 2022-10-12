@@ -59,41 +59,14 @@ import empty from '@/assets/empty.json'
 import { Dialog, Toast } from 'vant'
 
 export default {
+  name: 'adminHome',
   components: {
     ApplyInfo,
     TabBar
   },
   data() {
     return {
-      applyList: [
-        {
-          imgUrl:
-            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
-          songName: '浮夸',
-          singer: '陈奕迅',
-          time: '2022-10-11',
-          campus: '厦门校区',
-          id: 5
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-10',
-          campus: '厦门校区',
-          id: 4
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
-          songName: '浮夸',
-          singer: '陈奕迅',
-          time: '2022-10-9',
-          campus: '厦门校区',
-          id: 3
-        }
-      ],
+      applyList: [],
       curIndex: Number,
       dateString: '',
       showCalendar: false,
@@ -105,36 +78,11 @@ export default {
   },
   computed: {
     curDayList() {
-      return this.applyList.filter(
-        (item) => item.time === this.dateString.split(' ')[1]
-      )
+      return this.applyList.filter((item) => item.time)
     }
   },
   mounted() {
     this.dateString = formatDate(new Date())
-
-    this.$axios.get('/admin/songList').then((res) => {
-      if (res.data.code === 200 && res.data.data) {
-        res.data.data.forEach((item) => {
-          // if (item.state === 3) {
-          const temp = {}
-          temp.id = item.ID
-          temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
-          temp.campus = item.school_district
-          this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
-            if (!detail.data.songs || detail.data.songs.length === 0) return
-            temp.imgUrl = detail.data.songs[0].al.picUrl
-            temp.songName = detail.data.songs[0].name
-            temp.singer = detail.data.songs[0].ar[0].name
-            for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
-              temp.singer += ' ' + detail.data.songs[0].ar[i].name
-            }
-            this.applyList.push(temp)
-          })
-          // }
-        })
-      }
-    })
 
     // this.$axios.get('/admin/songList').then((res) => {
     //   if (res.data.code === 200 && res.data.data) {
@@ -162,7 +110,7 @@ export default {
     //       })
     //       promiseList.push(promise)
     //     })
-    //     /* 当所有promise都处理完成后再展示,数量多了会有一段时间白屏 */
+    //     /* 过程异步,响应较快,但顺序不固定 */
     //     Promise.allSettled(promiseList).then(() =>
     //       this.applyList.push(...tempList)
     //     )
@@ -177,7 +125,37 @@ export default {
       animationData: empty
     })
   },
+  activated() {
+    this.applyList = []
+    this.getApplyList()
+  },
   methods: {
+    getApplyList() {
+      this.$axios.get('/admin/songList').then((res) => {
+        if (res.data.code === 200 && res.data.data) {
+          res.data.data.forEach((item) => {
+            if (item.status === 3) {
+              const temp = {}
+              temp.id = item.ID
+              temp.time = formatDate(new Date(item.broadcast_date)).split(
+                ' '
+              )[1]
+              temp.campus = item.school_district
+              this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
+                if (!detail.data.songs || detail.data.songs.length === 0) return
+                temp.imgUrl = detail.data.songs[0].al.picUrl
+                temp.songName = detail.data.songs[0].name
+                temp.singer = detail.data.songs[0].ar[0].name
+                for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
+                  temp.singer += ' ' + detail.data.songs[0].ar[i].name
+                }
+                this.applyList.push(temp)
+              })
+            }
+          })
+        }
+      })
+    },
     /* 选择日期后触发 */
     selDay(Date) {
       this.dateString = formatDate(Date)
