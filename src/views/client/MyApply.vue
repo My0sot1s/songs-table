@@ -48,6 +48,7 @@
 
 <script>
 import ApplyInfo from '@/components/ApplyInfo.vue'
+import formatDate from '@/tools/FormatDate'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
@@ -58,44 +59,7 @@ export default {
   },
   data() {
     return {
-      applyList: [
-        {
-          imgUrl:
-            'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
-          songName: '浮夸',
-          singer: '陈奕迅',
-          time: '2022-10-5',
-          state: -1,
-          id: 1
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/Wcs2dbukFx3TUWkRuxVCpw==/3431575794705764.jpg',
-          songName: '雅俗共赏',
-          singer: '许嵩',
-          time: '2022-10-5',
-          state: 0,
-          id: 2
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/bqq6DITA5nj_yd_i6dsiTA==/109951166225429773.jpg',
-          songName: '春夏秋冬',
-          singer: '张国荣',
-          time: '2022-10-5',
-          state: 1,
-          id: 3
-        },
-        {
-          imgUrl:
-            'http://p1.music.126.net/jzNxBp5DCER2_aKGsXeRww==/109951167435823724.jpg',
-          songName: '富士山下',
-          singer: '陈奕迅',
-          time: '2022-10-5',
-          state: 2,
-          id: 4
-        }
-      ] /* 请求列表 */,
+      applyList: [] /* 请求列表 */,
       curList: [],
       curIndex: 0 /* 当前显示footer的index */,
       menu: {
@@ -124,21 +88,21 @@ export default {
       .get('/user/myApplication')
       .then((res) => {
         res.data.data.forEach((item) => {
-          const temp = {}
-          temp.id = item.ID
-          // temp.time = item.CreatedAt
-          temp.time = item.CreatedAt.split('T')[0]
-          temp.state = item.status
-          this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
-            if (!detail.data.songs || detail.data.songs.length === 0) return
-            temp.imgUrl = detail.data.songs[0].al.picUrl
-            temp.songName = detail.data.songs[0].name
-            temp.singer = detail.data.songs[0].ar[0].name
-            for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
-              temp.singer += ' ' + detail.data.songs[0].ar[i].name
-            }
-            this.applyList.push(temp)
-          })
+          if (item.search_path === '网易云') {
+            this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
+              if (detail.data.songs.length !== 0) {
+                this.applyList.push(this.getTemp(item, detail))
+              }
+            })
+          } else if (item.search_path === 'qq') {
+            this.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
+              if (detail.data.data.track_info.name) {
+                this.applyList.push(
+                  this.getTemp(item, detail.data.data.track_info)
+                )
+              }
+            })
+          }
         })
       })
       .finally(() => {
@@ -154,6 +118,29 @@ export default {
     })
   },
   methods: {
+    getTemp(item, detail) {
+      const temp = {}
+      temp.id = item.ID
+      temp.time = formatDate(new Date(item.CreatedAt)).split(' ')[1]
+      temp.state = item.status
+      if (item.search_path === '网易云') {
+        temp.imgUrl = detail.data.songs[0].al.picUrl
+        temp.songName = detail.data.songs[0].name
+        temp.singer = detail.data.songs[0].ar[0].name
+        for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
+          temp.singer += ' ' + detail.data.songs[0].ar[i].name
+        }
+      } else if (item.search_path === 'qq') {
+        temp.imgUrl = `https://y.gtimg.cn/music/photo_new/T002R300x300M000${detail.album.mid}.jpg`
+        temp.songName = detail.name
+        temp.singer = detail.singer[0].name
+        for (let i = 1; i < detail.singer.length; i++) {
+          temp.singer += ' ' + detail.singer[i].name
+        }
+      }
+
+      return temp
+    },
     /* 点击删除图标时 */
     delApply(state, index) {
       this.curIndex = index
