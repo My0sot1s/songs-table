@@ -30,14 +30,15 @@ const QQsearchMusic = ({ key, pageNo = 1, pageSize = 20, t = 0 }) =>
 
 /*
 QQ音乐获取歌曲信息
-data.info.trsck_info.name  歌名
-data.info.track_info.singer[0].name 歌手
+data.track_info.name  歌名
+data.track_info.singer[0].name 歌手
 
-data.info.track_info.album.name 专辑名
-data.info.track_info.album.mid 专辑id
+data.track_info.album.name 专辑名
+data.track_info.album.mid 专辑id
 `https://y.gtimg.cn/music/photo_new/T002R300x300M000${mid}.jpg` 专辑封面
 */
 const QQMusicDetail = (ids) => {
+  // ids = '001Nl0W80sBSwJ'
   return axios({
     url: `http://124.222.111.191:3300/song?songmid=${ids}`,
     method: 'GET'
@@ -69,8 +70,8 @@ const NetEaseCloudDetail = (ids) => {
     url: 'http://124.220.183.86:3000/song/detail',
     method: 'get',
     params: {
-      // ids
-      ids: 347230
+      ids
+      // ids: 347230
     }
   })
 }
