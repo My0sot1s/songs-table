@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="admin-content">
+    <div ref="content" class="admin-content" @scroll="handelScroll">
       <!-- <div class="admin-header">申请列表</div> -->
       <van-sticky offset-top="6vh">
         <div class="admin-navBar">
@@ -10,7 +10,7 @@
               v-for="(nav, index) in ['待处理', '已处理']"
               :key="index"
               :class="{ 'active-nav': curNav === index }"
-              @click="curNav = index"
+              @click="changeNav(index)"
             >
               {{ nav }}
             </div>
@@ -54,6 +54,9 @@
       <div ref="lottie" v-show="showEmpty"></div>
     </div>
 
+    <div class="goTop" v-show="showGoTop" @click="goTop">
+      <van-icon name="back-top" />
+    </div>
     <TabBar />
     <van-calendar
       color="#3c9cff"
@@ -114,7 +117,9 @@ export default {
       actionSheet: {
         show: false,
         actions: [{ name: '重新审核' }]
-      }
+      },
+      scrollTop: 0,
+      showGoTop: false
     }
   },
   computed: {
@@ -149,30 +154,102 @@ export default {
     })
   },
   activated() {
-    this.applyList = []
     this.getApplyList()
+  },
+  deactivated() {
+    localStorage.setItem('applyListScrollTop', this.scrollTop)
+  },
+  destroyed() {
+    localStorage.removeItem('applyListScrollTop')
+    localStorage.removeItem('nav_0_scrollTop')
+    localStorage.removeItem('nav_1_scrollTop')
   },
   methods: {
     getApplyList() {
-      this.$axios.get('/admin/songList').then((res) => {
-        if (res.data.code === 200 && res.data.data) {
-          res.data.data.forEach((item) => {
-            const temp = {}
-            temp.id = item.ID
-            temp.state = item.status
-            temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
-            this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
-              if (!detail.data.songs || detail.data.songs.length === 0) return
-              temp.imgUrl = detail.data.songs[0].al.picUrl
-              temp.songName = detail.data.songs[0].name
-              temp.singer = detail.data.songs[0].ar[0].name
-              for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
-                temp.singer += ' ' + detail.data.songs[0].ar[i].name
-              }
-              this.applyList.push(temp)
+      // 根据是否是第一次进入页面采取不同方法获取数据
+      if (this.applyList.length === 0) {
+        // 过程同步，每获取一个便添加到页面，视觉上不会有长时间白屏，但不能在全部结束后进行处理，无法配合缓存
+        this.$axios.get('/admin/songList').then((res) => {
+          if (res.data.code === 200 && res.data.data) {
+            res.data.data.forEach((item) => {
+              this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
+                if (!detail.data.songs || detail.data.songs.length === 0) return
+                this.applyList.push(this.getTemp(item, detail))
+              })
             })
-          })
-        }
+          }
+        })
+      } else {
+        Toast.loading({
+          message: '加载中...',
+          forbidClick: true,
+          loadingType: 'spinner'
+        })
+        // 过程同步，初次加载会有短时间白屏，但可以配合缓存，在全部获取后只对不同的进行更新，避免重复渲染
+        this.$axios.get('/admin/songList').then((res) => {
+          if (res.data.code === 200 && res.data.data) {
+            let promise = Promise.resolve()
+            const tempList = []
+            res.data.data.forEach((item) => {
+              promise = promise.then(() => {
+                return new Promise((resolve, reject) => {
+                  this.$musicApi
+                    .NetEaseCloudDetail(item.song_id)
+                    .then((detail) => {
+                      if (
+                        !detail.data.songs ||
+                        detail.data.songs.length === 0
+                      ) {
+                        reject(new Error('empty songs'))
+                      }
+                      tempList.push(this.getTemp(item, detail))
+                      resolve()
+                    })
+                })
+              })
+            })
+            promise.then(() => {
+              // diffList 只对不同元素进行替换，避免重复渲染和再次进入时出现白屏
+              for (let i = 0; i < tempList.length; i++) {
+                if (
+                  JSON.stringify(this.applyList[i]) !==
+                  JSON.stringify(tempList[i])
+                ) {
+                  this.applyList.splice(i, 1, tempList[i])
+                }
+              }
+              this.scrollTop = localStorage.getItem('applyListScrollTop')
+              this.$nextTick(() => {
+                this.$refs.content.scrollTop = this.scrollTop || 0
+              })
+              Toast.clear()
+            })
+          }
+        })
+      }
+    },
+    // 对获取到的数据进行处理后赋值给temp
+    getTemp(item, detail) {
+      const temp = {}
+      temp.id = item.ID
+      temp.state = item.status
+      temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
+      temp.imgUrl = detail.data.songs[0].al.picUrl
+      temp.songName = detail.data.songs[0].name
+      temp.singer = detail.data.songs[0].ar[0].name
+      for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
+        temp.singer += ' ' + detail.data.songs[0].ar[i].name
+      }
+      return temp
+    },
+    // 切换导航时对scroll进行缓存和赋值
+    changeNav(index) {
+      this.curNav = index
+      const otherIndex = index === 0 ? 1 : 0
+      localStorage.setItem(`nav_${otherIndex}_scrollTop`, this.scrollTop)
+      this.$nextTick(() => {
+        this.$refs.content.scrollTop =
+          localStorage.getItem(`nav_${index}_scrollTop`) || 0
       })
     },
     selDay(date) {
@@ -191,14 +268,25 @@ export default {
         })
     },
     toExamine(index) {
+      const { id, imgUrl, songName, singer, time } =
+        this.curNav === 0
+          ? this.curDayPendingList[index]
+          : this.curDayProcessedList[index]
       const showBtn = this.curNav === 0
-      this.$router.push({
-        name: 'Examine',
-        params: {
-          showBtn
-        }
-      })
+      localStorage.setItem(
+        'musicInfo',
+        JSON.stringify({
+          showBtn,
+          id,
+          imgUrl,
+          songName,
+          singer,
+          time
+        })
+      )
+      this.$router.push('/admin/examine')
     },
+    // 重新审核歌曲
     retried() {
       Toast.loading({
         message: '请求中...',
@@ -218,6 +306,7 @@ export default {
             this.curDayProcessedList[this.curIndex].state = state === 2 ? 3 : 2
             this.$forceUpdate()
             Toast.clear()
+            Toast.success('更改成功')
           } else {
             Toast.fail(res.data.msg)
           }
@@ -225,6 +314,15 @@ export default {
         .catch(() => {
           Toast.fail('请求异常')
         })
+    },
+    // 监听scroll事件，获取scrollTop
+    handelScroll(e) {
+      this.scrollTop = e.path[0].scrollTop
+      this.showGoTop = this.scrollTop > 200
+    },
+    goTop() {
+      this.scrollTop = 0
+      this.$refs.content.scrollTop = 0
     }
   }
 }
@@ -232,7 +330,9 @@ export default {
 
 <style lang='less' scoped>
 .admin-content {
-  margin-bottom: 20vh;
+  margin-bottom: 5vh;
+  overflow: scroll;
+  height: 85vh;
 }
 
 .admin-navBar {
@@ -262,5 +362,20 @@ export default {
     width: 90vw;
     height: 4.4vh;
   }
+}
+
+.goTop {
+  width: 5vh;
+  height: 5vh;
+  background-color: #fff;
+  box-shadow: 0 0 5px #999;
+  position: fixed;
+  bottom: 12vh;
+  right: 3vw;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3vh;
 }
 </style>

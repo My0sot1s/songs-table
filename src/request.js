@@ -6,8 +6,7 @@ const location = {
   origin: document.location.origin,
   search: document.location.search,
   searchParams: new URLSearchParams(document.location.search),
-  isInWechat: window.navigator.userAgent.includes('MicroMessenger'),
-  isAdmin: document.location.hash.includes('admin')
+  isInWechat: window.navigator.userAgent.includes('MicroMessenger')
 }
 
 function wxLoginRedirect() {
@@ -93,9 +92,9 @@ function checkToken() {
 axios.interceptors.request.use(
   function (config) {
     // config.data = qs.stringify(config.data)
-    if (!location.isAdmin && state.token) {
+    if (!document.location.hash.includes('admin') && state.token) {
       config.headers.token = state.token
-    } else if (location.isAdmin) {
+    } else if (document.location.hash.includes('admin')) {
       if (!state.adminToken) state.adminToken = localStorage.getItem('admin_token')
       config.headers.token = state.adminToken
     }
@@ -112,8 +111,8 @@ axios.interceptors.response.use(
     if (response.data.code) {
       const code = response.data.code.toString()
       if (['401', '440', '441'].includes(code)) {
-        if (!location.isAdmin) wxLoginRedirect()
-        else window.location.hash = '/admin'
+        if (document.location.hash.includes('admin')) window.location.hash = '/admin'
+        else wxLoginRedirect()
       }
     }
     return response
@@ -137,7 +136,7 @@ export default function initAxios(vue) {
     }
 
     /* 关闭授权就注释下面几行和响应拦截 */
-    if (!location.isAdmin) {
+    if (!document.location.hash.includes('admin')) {
       checkCode().then(checkToken).then(resolve())
     } else {
       resolve()

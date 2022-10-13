@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="admin-content">
+    <div ref="content" class="admin-content" @scroll="handelScroll">
       <!-- <div class="admin-header">歌单列表</div> -->
       <van-sticky offset-top="6vh">
         <div class="admin-navBar">
@@ -30,6 +30,9 @@
       <div ref="lottie" v-show="curDayList.length === 0"></div>
     </div>
 
+    <div class="goTop" v-show="showGoTop" @click="goTop">
+      <van-icon name="back-top" />
+    </div>
     <TabBar />
     <van-calendar
       color="#3c9cff"
@@ -73,7 +76,9 @@ export default {
       actionSheet: {
         show: false,
         actions: [{ name: '取消播送这首歌' }]
-      }
+      },
+      scrollTop: 0,
+      showGoTop: false
     }
   },
   computed: {
@@ -110,7 +115,7 @@ export default {
     //       })
     //       promiseList.push(promise)
     //     })
-    //     /* 过程异步,响应较快,但顺序不固定 */
+    //     /* 过程异步,导致顺序不固定，要配合缓存得先排序 */
     //     Promise.allSettled(promiseList).then(() =>
     //       this.applyList.push(...tempList)
     //     )
@@ -126,35 +131,94 @@ export default {
     })
   },
   activated() {
-    this.applyList = []
     this.getApplyList()
+  },
+  deactivated() {
+    localStorage.setItem('homeScrollTop', this.scrollTop)
+  },
+  destroyed() {
+    localStorage.removeItem('homeScrollTop')
   },
   methods: {
     getApplyList() {
-      this.$axios.get('/admin/songList').then((res) => {
-        if (res.data.code === 200 && res.data.data) {
-          res.data.data.forEach((item) => {
-            if (item.status === 3) {
-              const temp = {}
-              temp.id = item.ID
-              temp.time = formatDate(new Date(item.broadcast_date)).split(
-                ' '
-              )[1]
-              temp.campus = item.school_district
-              this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
-                if (!detail.data.songs || detail.data.songs.length === 0) return
-                temp.imgUrl = detail.data.songs[0].al.picUrl
-                temp.songName = detail.data.songs[0].name
-                temp.singer = detail.data.songs[0].ar[0].name
-                for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
-                  temp.singer += ' ' + detail.data.songs[0].ar[i].name
+      if (this.applyList.length === 0) {
+        this.$axios.get('/admin/songList').then((res) => {
+          if (res.data.code === 200 && res.data.data) {
+            res.data.data.forEach((item) => {
+              if (item.status === 3) {
+                this.$musicApi
+                  .NetEaseCloudDetail(item.song_id)
+                  .then((detail) => {
+                    if (detail.data.songs && detail.data.songs.length !== 0) {
+                      this.applyList.push(this.getTemp(item, detail))
+                    }
+                  })
+              }
+            })
+          }
+        })
+      } else {
+        Toast.loading({
+          message: '加载中...',
+          forbidClick: true,
+          loadingType: 'spinner'
+        })
+        this.$axios.get('/admin/songList').then((res) => {
+          if (res.data.code === 200 && res.data.data) {
+            let promise = Promise.resolve()
+            const tempList = []
+            res.data.data.forEach((item) => {
+              if (item.status === 3) {
+                promise = promise.then(() => {
+                  return new Promise((resolve, reject) => {
+                    this.$musicApi
+                      .NetEaseCloudDetail(item.song_id)
+                      .then((detail) => {
+                        if (
+                          !detail.data.songs ||
+                          detail.data.songs.length === 0
+                        ) {
+                          reject(new Error('empty songs'))
+                        }
+                        tempList.push(this.getTemp(item, detail))
+                        resolve()
+                      })
+                  })
+                })
+              }
+            })
+            promise.then(() => {
+              for (let i = 0; i < tempList.length; i++) {
+                if (
+                  JSON.stringify(this.applyList[i]) !==
+                  JSON.stringify(tempList[i])
+                ) {
+                  this.applyList.splice(i, 1, tempList[i])
                 }
-                this.applyList.push(temp)
+              }
+              this.scrollTop = localStorage.getItem('homeScrollTop')
+              this.$nextTick(() => {
+                this.$refs.content.scrollTop = this.scrollTop || 0
               })
-            }
-          })
-        }
-      })
+              Toast.clear()
+              // console.log(this.scrollTop, this.$refs.content.scrollTop)
+            })
+          }
+        })
+      }
+    },
+    getTemp(item, detail) {
+      const temp = {}
+      temp.id = item.ID
+      temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
+      temp.campus = item.school_district
+      temp.imgUrl = detail.data.songs[0].al.picUrl
+      temp.songName = detail.data.songs[0].name
+      temp.singer = detail.data.songs[0].ar[0].name
+      for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
+        temp.singer += ' ' + detail.data.songs[0].ar[i].name
+      }
+      return temp
     },
     /* 选择日期后触发 */
     selDay(Date) {
@@ -189,6 +253,7 @@ export default {
             this.curDayList.splice(this.curIndex, 1)
             this.$forceUpdate()
             Toast.clear()
+            Toast.success('取消成功')
           } else {
             Toast.fail(res.data.msg)
           }
@@ -197,8 +262,29 @@ export default {
           Toast.fail('请求异常')
         })
     },
-    toExamine() {
+    toExamine(index) {
+      const { id, imgUrl, songName, singer, time } = this.applyList[index]
+      localStorage.setItem(
+        'musicInfo',
+        JSON.stringify({
+          showBtn: false,
+          id,
+          imgUrl,
+          songName,
+          singer,
+          time
+        })
+      )
       this.$router.push('/admin/examine')
+    },
+    // 监听scroll事件，获取scrollTop
+    handelScroll(e) {
+      this.scrollTop = e.path[0].scrollTop
+      this.showGoTop = this.scrollTop > 200
+    },
+    goTop() {
+      this.scrollTop = 0
+      this.$refs.content.scrollTop = 0
     }
   }
 }
@@ -206,7 +292,9 @@ export default {
 
 <style lang='less' scoped>
 .admin-content {
-  margin-bottom: 20vh;
+  margin-bottom: 5vh;
+  overflow: scroll;
+  height: 85vh;
 }
 
 .admin-navBar {
@@ -227,5 +315,20 @@ export default {
       margin-right: 2vw;
     }
   }
+}
+
+.goTop {
+  width: 5vh;
+  height: 5vh;
+  background-color: #fff;
+  box-shadow: 0 0 5px #999;
+  position: fixed;
+  bottom: 12vh;
+  right: 3vw;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3vh;
 }
 </style>

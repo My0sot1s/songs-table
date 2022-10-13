@@ -13,14 +13,12 @@
       <div style="font-weight: bold">·</div>
       <div>{{ applyInfo.campus }}</div>
     </div>
-    <hr />
     <div class="song-info info">
       <div>
         <div class="song-name van-ellipsis">{{ applyInfo.songName }}</div>
         <div class="singer van-ellipsis">{{ applyInfo.singer }}</div>
       </div>
     </div>
-    <hr />
     <div class="user-info info">
       <div>
         <div class="from">
@@ -36,15 +34,16 @@
         </div>
       </div>
     </div>
-    <hr />
-    <div class="info">
+    <div class="info" v-if="applyInfo.message">
       <div>
         <div class="title">给TA的话</div>
-        <div class="message">{{ applyInfo.message }}</div>
+        <div class="message">
+          {{ applyInfo.message }}
+        </div>
       </div>
     </div>
 
-    <div class="btn1" v-if="showBtn">
+    <div class="btn1" v-if="applyInfo.showBtn">
       <div @click="reject">驳回</div>
       <div @click="pass" class="btn2">通过</div>
     </div>
@@ -57,24 +56,29 @@ import { Dialog, Toast } from 'vant'
 export default {
   data() {
     return {
-      applyInfo: {
-        imgUrl:
-          'http://p1.music.126.net/xuFy0k8O_xKuAqbbjC24Ig==/109951166497586944.jpg',
-        songName: '浮夸',
-        singer: '陈奕迅',
-        time: '2022-10-5',
-        campus: '厦门校区',
-        from: '李华',
-        phone: '18585858585',
-        to: '小明',
-        message:
-          '至若春和景明，波澜不惊，上下天光，一碧万顷；沙鸥翔集，锦鳞游泳，岸芷汀兰，郁郁青青。而或长烟一空，皓月千里，浮光跃金，静影沉璧；渔歌互答，此乐何极！'
-      },
-      showBtn: false
+      applyInfo: {}
     }
   },
   mounted() {
-    this.showBtn = this.$route.params.showBtn
+    const musicInfo = JSON.parse(localStorage.getItem('musicInfo'))
+    this.$axios.get(`/admin/songDetails?id=${musicInfo.id}`).then((res) => {
+      if (res.data.code === 200) {
+        const resInfo = res.data.data[0]
+        const campus = resInfo.school_district
+        const from = resInfo.sender_name
+        const phone = resInfo.phone_num
+        const to = resInfo.receiver_name
+        const message = resInfo.blessing_words
+        this.applyInfo = {
+          ...musicInfo,
+          campus,
+          from,
+          phone,
+          to,
+          message
+        }
+      }
+    })
   },
   methods: {
     reject() {
@@ -89,12 +93,12 @@ export default {
           })
           this.$axios
             .post('/admin/noPass', {
-              // 待改为传进来的
-              id: 1
+              id: this.applyInfo.id
             })
             .then((res) => {
               if (res.data.code === 200) {
                 Toast.clear()
+                this.$router.replace('/admin/applyList')
               } else {
                 Toast.fail(res.data.msg)
               }
@@ -119,11 +123,12 @@ export default {
           })
           this.$axios
             .post('/admin/pass', {
-              id: 1
+              id: this.applyInfo.id
             })
             .then((res) => {
               if (res.data.code === 200) {
                 Toast.clear()
+                this.$router.replace('/admin/applyList')
               } else {
                 Toast.fail(res.data.msg)
               }
@@ -165,6 +170,9 @@ export default {
 .info {
   display: flex;
   justify-content: center;
+  border-top: 1px solid #ccc;
+  padding-top: 1vh;
+  margin-top: 1vh;
 
   & > div {
     width: 80vw;
