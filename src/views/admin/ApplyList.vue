@@ -43,6 +43,7 @@
           :singer="item.singer"
           :time="item.time"
           :state="item.state"
+          :lazeLoad="!firstLoad"
           iconName="ellipsis"
           @click.native="toExamine(index)"
           @action="
@@ -119,7 +120,8 @@ export default {
         actions: [{ name: '重新审核' }]
       },
       scrollTop: 0,
-      showGoTop: false
+      showGoTop: false,
+      firstLoad: true
     }
   },
   computed: {
@@ -145,7 +147,7 @@ export default {
     }
   },
   mounted() {
-    lottie.loadAnimation({
+    this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
       renderer: 'svg',
       loop: true,
@@ -163,6 +165,9 @@ export default {
     localStorage.removeItem('applyListScrollTop')
     localStorage.removeItem('nav_0_scrollTop')
     localStorage.removeItem('nav_1_scrollTop')
+    if (!this.lottieInstance) return
+    this.lottieInstance.destroy()
+    this.lottieInstance = null
   },
   methods: {
     getApplyList() {
@@ -172,29 +177,28 @@ export default {
         this.$axios.get('/admin/songList').then((res) => {
           if (res.data.code === 200 && res.data.data) {
             res.data.data.forEach((item) => {
-              if (item.status === 3) {
-                if (item.search_path === '网易云') {
-                  this.$musicApi
-                    .NetEaseCloudDetail(item.song_id)
-                    .then((detail) => {
-                      if (detail.data.songs.length !== 0) {
-                        this.applyList.push(this.getTemp(item, detail))
-                      }
-                    })
-                } else if (item.search_path === 'qq') {
-                  this.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
-                    if (detail.data.data.track_info.name) {
-                      this.applyList.push(
-                        this.getTemp(item, detail.data.data.track_info)
-                      )
+              if (item.search_path === '网易云') {
+                this.$musicApi
+                  .NetEaseCloudDetail(item.song_id)
+                  .then((detail) => {
+                    if (detail.data.songs.length !== 0) {
+                      this.applyList.push(this.getTemp(item, detail))
                     }
                   })
-                }
+              } else if (item.search_path === 'qq') {
+                this.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
+                  if (detail.data.data.track_info.name) {
+                    this.applyList.push(
+                      this.getTemp(item, detail.data.data.track_info)
+                    )
+                  }
+                })
               }
             })
           }
         })
       } else {
+        this.firstLoad = false
         Toast.loading({
           message: '加载中...',
           forbidClick: true,
@@ -231,6 +235,7 @@ export default {
                         resolve()
                       })
                   } else {
+                    // reject(new Error('未知来源'))
                     resolve()
                   }
                 })

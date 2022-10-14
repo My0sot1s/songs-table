@@ -82,6 +82,11 @@ export default {
       }
     })
   },
+  destroyed() {
+    if (!this.lottieInstance) return
+    this.lottieInstance.destroy()
+    this.lottieInstance = null
+  },
   methods: {
     toSelect() {
       this.$router.push('/selectmusic')

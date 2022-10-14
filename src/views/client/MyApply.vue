@@ -117,6 +117,11 @@ export default {
       animationData: empty
     })
   },
+  destroyed() {
+    if (!this.lottieInstance) return
+    this.lottieInstance.destroy()
+    this.lottieInstance = null
+  },
   methods: {
     getTemp(item, detail) {
       const temp = {}

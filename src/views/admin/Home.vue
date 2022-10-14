@@ -83,7 +83,9 @@ export default {
   },
   computed: {
     curDayList() {
-      return this.applyList.filter((item) => item.time)
+      return this.applyList.filter(
+        (item) => item.time === this.dateString.split(' ')[1]
+      )
     }
   },
   mounted() {
@@ -122,7 +124,7 @@ export default {
     //   }
     // })
 
-    lottie.loadAnimation({
+    this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
       renderer: 'svg',
       loop: true,
@@ -138,6 +140,9 @@ export default {
   },
   destroyed() {
     localStorage.removeItem('homeScrollTop')
+    if (!this.lottieInstance) return
+    this.lottieInstance.destroy()
+    this.lottieInstance = null
   },
   methods: {
     getApplyList() {
@@ -204,6 +209,7 @@ export default {
                           resolve()
                         })
                     } else {
+                      // reject(new Error('未知来源'))
                       resolve()
                     }
                   })

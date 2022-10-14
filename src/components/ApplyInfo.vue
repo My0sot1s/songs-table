@@ -2,7 +2,13 @@
   <div class="apply-info">
     <div class="body">
       <div class="image">
-        <van-image width="8vh" height="8vh" fit="fill" :src="imgUrl">
+        <van-image
+          width="8vh"
+          height="8vh"
+          fit="fill"
+          :src="imgUrl"
+          :lazy-load="lazeLoad"
+        >
           <template #loading>
             <van-loading type="spinner" size="20" />
           </template>
@@ -47,7 +53,11 @@ export default {
     time: String,
     state: Number,
     iconName: String,
-    campus: String
+    campus: String,
+    lazeLoad: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {

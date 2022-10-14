@@ -2,12 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Vant from 'vant'
+import Vant, { Lazyload } from 'vant'
 import 'vant/lib/index.css'
 import initAxios from './request'
 import musicApi from './musicApi'
 
 Vue.use(Vant)
+Vue.use(Lazyload)
 
 Vue.config.productionTip = false
 

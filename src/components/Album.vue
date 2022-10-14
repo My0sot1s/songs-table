@@ -2,7 +2,7 @@
   <!-- 首页方形唱片 -->
   <div>
     <div class="image">
-      <van-image width="15vh" height="15vh" fit="fill" :src="imgUrl">
+      <van-image width="15vh" height="15vh" fit="fill" :src="imgUrl" lazy-load>
         <template #loading>
           <van-loading type="spinner" size="20" />
         </template>
