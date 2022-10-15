@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :height="height">
     <NavBar
       fixed
       placeholder
@@ -15,8 +15,42 @@
 
 <script>
 import NavBar from '@/components/NavBar'
+const delay = 1000 / 60
 export default {
-  components: { NavBar }
+  components: { NavBar },
+  data() {
+    return {
+      bodyHeight: window.innerHeight,
+      heightTimeout: null
+    }
+  },
+  computed: {
+    height: {
+      get() {
+        return this.bodyHeight
+      },
+      set(val) {
+        if (this.heightTimeout) {
+          clearTimeout(this.heightTimeout)
+        }
+        this.heightTimeout = setTimeout(() => {
+          this.bodyHeight = val
+        }, delay)
+      }
+    }
+  },
+  mounted() {
+    this.onResize = this.onResize.bind(this)
+    window.addEventListener('resize', this.onResize)
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.onResize)
+  },
+  methods: {
+    onResize() {
+      this.height = window.innerHeight
+    }
+  }
 }
 </script>
 
