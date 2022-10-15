@@ -229,9 +229,6 @@ export default {
 .van-button {
   box-shadow: 0 0 5px #999;
 }
-.van-notice-bar {
-  position: fixed;
-}
 .van-search__content {
   background-color: rgb(250, 251, 253) !important;
 }
