@@ -1,6 +1,10 @@
 <template>
   <div id="ChooseMusic">
-    <van-overlay lock-scroll :show="showPick" @click="showPick = false">
+    <van-overlay
+      :lock-scroll="false"
+      :show="showPick"
+      @click="showPick = false"
+    >
       <SelectMusicList @confirmMusic="confirmMusic" />
     </van-overlay>
     <ApplyForm :musics="musics" @popUp="popUp" />
