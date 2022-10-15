@@ -9,6 +9,7 @@
       description=""
     />
     <van-list
+      v-if="this.musicList.length !== 0"
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
@@ -128,16 +129,15 @@ export default {
   margin: 22vw 2vw -2vw 2vw;
   padding: 8vw 7vw 0 7vw;
   border-radius: 4vw;
-  box-shadow: 0 0 5px #999;
   overflow: scroll;
   z-index: 1;
   max-height: 70vh;
   .van-search {
     padding: 0;
-    margin-bottom: 6vw;
     position: -webkit-sticky;
     position: sticky;
     top: 0 vw;
+    margin-bottom: 3vw;
     .van-search__content {
       background-color: rgb(250, 251, 253);
     }
@@ -145,11 +145,10 @@ export default {
   .van-list {
     max-height: 45vh;
     padding: 0 1vw 0 1vw;
-    border-top: 2px solid rgb(250, 251, 253);
     overflow: scroll;
+    border-top: 1px solid rgb(250, 251, 253);
   }
   .van-button {
-    box-shadow: 0 0 5px #999;
     margin: 2vw 11vw 10vw 11vw;
   }
 }
