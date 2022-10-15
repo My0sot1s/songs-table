@@ -1,5 +1,5 @@
 <template>
-  <van-form @submit="onSubmit">
+  <van-form @submit="onSubmit" :disabled="form.disabled">
     <van-notice-bar
       wrapable
       :scrollable="false"
@@ -12,7 +12,7 @@
       shape="round"
       class="search"
       readonly
-      @click="popUp(0)"
+      @click="!form.disabled && popUp(0)"
       action-textdisabled
       :placeholder="placeHolders[0]"
     />
@@ -20,7 +20,7 @@
       shape="round"
       class="search"
       readonly
-      @click="popUp(1)"
+      @click="!form.disabled && popUp(1)"
       action-textdisabled
       :placeholder="placeHolders[1]"
       v-if="false"
@@ -59,7 +59,7 @@
       readonly
       label="校区"
       placeholder="请选择你所在的校区"
-      @click="showschoolDistrict = true"
+      @click="!form.disabled && (showschoolDistrict = true)"
       :rules="[{ required: true, message: '' }]"
     />
     <van-popup v-model="showschoolDistrict" round position="bottom">
@@ -78,7 +78,7 @@
       :value="showingDate"
       label="送出日期"
       placeholder="点击选择日期"
-      @click="showCalendar = true"
+      @click="!form.disabled && (showCalendar = true)"
       :rules="[{ required: true, message: '' }]"
     />
     <van-calendar
@@ -98,7 +98,7 @@
       show-word-limit
       :rules="[{ required: true, message: '请输入寄语' }]"
     />
-    <div style="margin: 16px">
+    <div style="margin: 16px" v-if="!form.disabled">
       <van-button type="default" round block native-type="submit"
         >提交</van-button
       >
@@ -121,7 +121,8 @@ export default {
         phoneNum: '',
         schoolDistrict: '',
         broadcastDate: '',
-        blessingWords: ''
+        blessingWords: '',
+        disabled: false
       },
       showingDate: '',
       placeHolders: [],
@@ -151,7 +152,7 @@ export default {
   watch: {
     musics: {
       handler() {
-        this.form.songId = this.musics[0]?.songid.toString()
+        this.form.songId = this.musics[0]?.songmid.toString()
         this.form.searchPath = this.musics[0]?.searchPath
         const arr = ['请选择歌曲', '请选择备选歌曲']
         /* const a = ['首选：', '备选：'] */
@@ -177,15 +178,17 @@ export default {
     async onSubmit() {
       console.log(this.form)
       /* const notices = ['请选择首选歌曲', '请选择备选歌曲'] */
-      if (this.musics.length === 0) {
+      if (!this.form.songId && !this.form.searchPath) {
         Toast.fail('请选择歌曲')
         return
       }
       try {
         const res = await submitRequest(this.form)
-        if (res.status === 200) {
+        if (res.data.code === 200) {
           Toast.success('提交成功！')
           this.$router.replace('/home')
+        } else {
+          Toast.fail(res.data.msg)
         }
       } catch (err) {
         console.log(err.message)
@@ -208,9 +211,16 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
-      console.log(this.musics)
-    }, 10000)
+    const applyInfo = JSON.parse(localStorage.getItem('applyInfo'))
+    if (applyInfo) {
+      const { placeHolder, ...form } = applyInfo
+      this.placeHolders.splice(0, 1, placeHolder)
+      this.form = form
+      this.showingDate = this.formatDate(new Date(applyInfo.broadcastDate))
+    }
+  },
+  destroyed() {
+    localStorage.removeItem('applyInfo')
   }
 }
 </script>

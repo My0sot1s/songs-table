@@ -30,7 +30,7 @@
                 <van-icon color="#555" name="revoke" /><span>申请撤回</span>
               </div>
               <!-- 状态是已撤回或者未通过时显示重新提交,其它显示查看详情 -->
-              <div @click.stop="toForms(item.state)">
+              <div @click.stop="toForms(item.state, index)">
                 <van-icon color="#555" name="guide-o" /><span>{{
                   item.state === -1 || item.state === 2
                     ? '重新提交'
@@ -80,7 +80,7 @@ export default {
       this.curList = this.applyList.filter(
         (item) => val === -2 || item.state === val
       )
-      console.log(this.curList)
+      // console.log(this.curList)
     }
   },
   mounted() {
@@ -205,12 +205,45 @@ export default {
         })
     },
     /* 点击查看详情或重新提交时 */
-    toForms(state) {
-      if (state === -1 || state === 2) {
-        console.log('重新提交')
-      } else {
-        console.log('查看详情')
-      }
+    toForms(state, index) {
+      Toast.loading({
+        message: '请求中...',
+        forbidClick: true,
+        loadingType: 'spinner'
+      })
+      const disabled = !(state === -1 || state === 2)
+      this.$axios
+        .get(`/user/songDetails?id=${this.curList[index].id}`)
+        .then((res) => {
+          if (res.data.code === 200) {
+            const data = res.data.data[0]
+            localStorage.setItem(
+              'applyInfo',
+              JSON.stringify({
+                songId: data.song_id,
+                searchPath: data.search_path,
+                receiverName: data.receiver_name,
+                senderName: data.sender_name,
+                phoneNum: data.phone_num,
+                schoolDistrict: data.school_district,
+                broadcastDate: new Date(data.broadcast_date).getTime(),
+                blessingWords: data.blessing_words,
+                placeHolder:
+                  this.curList[index].songName +
+                  '-' +
+                  this.curList[index].singer,
+                disabled
+              })
+            )
+            Toast.clear()
+            this.$router.push('/selectMusic')
+          } else {
+            Toast.fail('res.data.msg')
+          }
+        })
+        .catch(() => {
+          Toast.fail('请求异常')
+        })
     }
   }
 }

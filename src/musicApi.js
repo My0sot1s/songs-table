@@ -38,7 +38,7 @@ data.track_info.album.mid 专辑id
 `https://y.gtimg.cn/music/photo_new/T002R300x300M000${mid}.jpg` 专辑封面
 */
 const QQMusicDetail = (ids) => {
-  ids = '001Nl0W80sBSwJ'
+  // ids = '004Z8Ihr0JIu5s'
   return axios({
     url: `http://124.222.111.191:3300/song?songmid=${ids}`,
     method: 'GET'

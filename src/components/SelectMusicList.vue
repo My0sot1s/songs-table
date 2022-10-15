@@ -79,7 +79,7 @@ export default {
             item.searchPath = 'qq'
             item.cover = `https://y.qq.com/music/photo_new/T002R300x300M000${item.albummid}_1.jpg?max_age=2592000`
           })
-          console.log(data.data)
+          // console.log(data.data.list)
           this.musicList.push(...data.data.list)
           this.loading = false
         } else {
@@ -94,7 +94,7 @@ export default {
           /* this.musicList.push(...data.result.songs) */
           function MusicObject(song) {
             this.name = song.name
-            this.songid = song.songid
+            this.songmid = song.id
             this.singer = [{ name: '' }]
             this.singer[0].name = song.ar[0].name
             this.albumname = song.al.name
@@ -104,7 +104,7 @@ export default {
           data.result.songs.forEach((song) => {
             this.musicList.push(new MusicObject(song))
           })
-          console.log(this.musicList)
+          // console.log(this.musicList)
           this.loading = false
           this.finished = true
         }
