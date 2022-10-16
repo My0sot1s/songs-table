@@ -24,7 +24,6 @@ export default {
 
 <style>
 .van-nav-bar {
-  border-bottom: 1px solid #bbb;
   z-index: 999 !important;
 }
 .van-nav-bar__left > * {
