@@ -2,8 +2,8 @@
 import axios from 'axios'
 import encrypt from '@/tools/encrypt.js'
 
-const QQMusicBaseUrl = 'http://124.222.111.191:3300'
-const NetEaseCloudBaseUrl = 'http://124.220.183.86:3000'
+const QQMusicBaseUrl = 'https://qqmusicapi.sends.cc'
+const NetEaseCloudBaseUrl = 'https://neteasecloudmusicapi.sends.cc'
 
 // 跨域了，啥用没有
 const QQsearchRequest = ({ s }) => {
