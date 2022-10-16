@@ -126,7 +126,7 @@ export default {
     getTemp(item, detail) {
       const temp = {}
       temp.id = item.ID
-      temp.time = formatDate(new Date(item.CreatedAt)).split(' ')[1]
+      temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
       temp.state = item.status
       if (item.search_path === '网易云') {
         temp.imgUrl = detail.data.songs[0].al.picUrl
