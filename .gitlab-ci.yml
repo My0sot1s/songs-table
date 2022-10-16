@@ -29,3 +29,4 @@ deploy:
     - echo "$SSH_HOST_KEY" > ~/.ssh/known_hosts
   script:
     - rsync -e 'ssh -p 4242' -atv --delete --progress ./dist  ubuntu@pangu.sends.cc:/opt/{}
+    - ssh -p 4242 ubuntu@pangu.sends.cc bash /home/ubuntu/Songs/run.sh
