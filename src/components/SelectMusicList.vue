@@ -24,6 +24,7 @@
       />
     </van-list>
     <van-button
+      round
       type="default"
       @click="confirm"
       v-if="this.musicList.length != 0"
@@ -67,6 +68,7 @@ export default {
       this.timer = setTimeout(async () => {
         if (this.value.length === 0) return
         if (refresh) {
+          this.finished = false
           this.pageNo = 1
           this.musicList = []
         }
@@ -149,7 +151,7 @@ export default {
     border-top: 1px solid rgb(250, 251, 253);
   }
   .van-button {
-    margin: 2vw 11vw 10vw 11vw;
+    margin: 2vw 5vw 10vw 5vw;
   }
 }
 </style>
