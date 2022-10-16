@@ -13,7 +13,7 @@
         :songName="item.songName"
         :singer="item.singer"
         :time="item.time"
-        :state="item.state"
+        :state="item.state + ''"
         iconName="delete-o"
         @click.native="curIndex = curIndex === index ? -1 : index"
         @action="delApply($event, index)"

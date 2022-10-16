@@ -13,12 +13,12 @@
         <div>
           <div class="song-name van-ellipsis">{{ songName }}</div>
           <div>
-            <span class="state" v-if="state">{{ getState(state) }}</span>
+            <span class="state" v-if="state">{{ STATE[state] }}</span>
             <span class="campus" v-if="campus">{{ campus }}</span>
             <van-icon
               size="2vh"
               :name="iconName"
-              @click.stop="$emit('action', state)"
+              @click.stop="$emit('action', Number(state))"
             />
           </div>
         </div>
@@ -58,11 +58,6 @@ export default {
         2: '未通过',
         3: '待播放'
       }
-    }
-  },
-  methods: {
-    getState(num) {
-      return this.STATE[num]
     }
   }
 }

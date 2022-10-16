@@ -81,7 +81,7 @@ function getTemp(item, detail, tempObj) {
   tempObj.id && (temp.id = item.ID)
   tempObj.time && (temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1])
   tempObj.campus && (temp.campus = item.school_district)
-  tempObj.state && (temp.state = item.status + '')
+  tempObj.state && (temp.state = item.status)
   if (item.search_path === '网易云') {
     temp.imgUrl = detail.data.songs[0].al.picUrl
     temp.songName = detail.data.songs[0].name

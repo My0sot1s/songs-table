@@ -30,7 +30,7 @@
           :songName="item.songName"
           :singer="item.singer"
           :time="item.time"
-          :state="item.state"
+          :state="item.state + ''"
           @click.native="toExamine(index)"
         />
       </div>
@@ -42,7 +42,7 @@
           :songName="item.songName"
           :singer="item.singer"
           :time="item.time"
-          :state="item.state"
+          :state="item.state + ''"
           iconName="ellipsis"
           @click.native="toExamine(index)"
           @action="
