@@ -60,6 +60,7 @@ import formatDate from '@/tools/FormatDate'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
 import { Dialog, Toast } from 'vant'
+import { getList } from '@/api'
 
 export default {
   name: 'adminHome',
@@ -91,39 +92,6 @@ export default {
   mounted() {
     this.dateString = formatDate(new Date())
 
-    // this.$axios.get('/admin/songList').then((res) => {
-    //   if (res.data.code === 200 && res.data.data) {
-    //     const tempList = []
-    //     const promiseList = []
-    //     res.data.data.forEach((item) => {
-    //       const promise = new Promise((resolve, reject) => {
-    //         this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
-    //           if (!detail.data.songs || detail.data.songs.length === 0) return
-    //           const temp = {}
-    //           temp.id = item.ID
-    //           temp.time = formatDate(new Date(item.broadcast_date)).split(
-    //             ' '
-    //           )[1]
-    //           temp.campus = item.school_district
-    //           temp.imgUrl = detail.data.songs[0].al.picUrl
-    //           temp.songName = detail.data.songs[0].name
-    //           temp.singer = detail.data.songs[0].ar[0].name
-    //           for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
-    //             temp.singer += ' ' + detail.data.songs[0].ar[i].name
-    //           }
-    //           tempList.push(temp)
-    //           resolve()
-    //         })
-    //       })
-    //       promiseList.push(promise)
-    //     })
-    //     /* 过程异步,导致顺序不固定，要配合缓存得先排序 */
-    //     Promise.allSettled(promiseList).then(() =>
-    //       this.applyList.push(...tempList)
-    //     )
-    //   }
-    // })
-
     this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
       renderer: 'svg',
@@ -146,123 +114,40 @@ export default {
   },
   methods: {
     getApplyList() {
+      const tempObj = {
+        id: true,
+        time: true,
+        campus: true,
+        state: false
+      }
       if (this.applyList.length === 0) {
-        this.$axios.get('/admin/songList').then((res) => {
-          if (res.data.code === 200 && res.data.data) {
-            res.data.data.forEach((item) => {
-              if (item.status === 3) {
-                if (item.search_path === '网易云') {
-                  this.$musicApi
-                    .NetEaseCloudDetail(item.song_id)
-                    .then((detail) => {
-                      if (detail.data.songs.length !== 0) {
-                        this.applyList.push(this.getTemp(item, detail))
-                      }
-                    })
-                } else if (item.search_path === 'qq') {
-                  this.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
-                    if (detail.data.data.track_info.name) {
-                      this.applyList.push(
-                        this.getTemp(item, detail.data.data.track_info)
-                      )
-                    }
-                  })
-                }
-              }
-            })
-          }
-        })
+        getList('/admin/songList', this.applyList, tempObj, 3)
       } else {
         Toast.loading({
           message: '加载中...',
           forbidClick: true,
           loadingType: 'spinner'
         })
-        this.$axios.get('/admin/songList').then((res) => {
-          if (res.data.code === 200 && res.data.data) {
-            let promise = Promise.resolve()
-            const tempList = []
-            res.data.data.forEach((item) => {
-              if (item.status === 3) {
-                promise = promise.then(() => {
-                  return new Promise((resolve) => {
-                    if (item.search_path === '网易云') {
-                      this.$musicApi
-                        .NetEaseCloudDetail(item.song_id)
-                        .then((detail) => {
-                          if (detail.data.songs.length === 0) {
-                            resolve()
-                          } else {
-                            tempList.push(this.getTemp(item, detail))
-                            resolve()
-                          }
-                        })
-                    } else if (item.search_path === 'qq') {
-                      this.$musicApi
-                        .QQMusicDetail(item.song_id)
-                        .then((detail) => {
-                          if (!detail.data.data.track_info.name) {
-                            resolve()
-                          } else {
-                            tempList.push(
-                              this.getTemp(item, detail.data.data.track_info)
-                            )
-                            resolve()
-                          }
-                        })
-                    } else {
-                      // reject(new Error('未知来源'))
-                      resolve()
-                    }
-                  })
-                })
+        getList('/admin/songList', this.applyList, tempObj, 3, true).then(
+          (res) => {
+            for (let i = 0; i < res.length; i++) {
+              if (
+                JSON.stringify(this.applyList[i]) !== JSON.stringify(res[i])
+              ) {
+                this.applyList.splice(i, 1, res[i])
               }
+            }
+            if (res.length < this.applyList.length) {
+              this.applyList.splice(res.length)
+            }
+            this.scrollTop = localStorage.getItem('homeScrollTop')
+            this.$nextTick(() => {
+              this.$refs.content.scrollTop = this.scrollTop || 0
             })
-            promise.then(() => {
-              for (let i = 0; i < tempList.length; i++) {
-                if (
-                  JSON.stringify(this.applyList[i]) !==
-                  JSON.stringify(tempList[i])
-                ) {
-                  this.applyList.splice(i, 1, tempList[i])
-                }
-              }
-              if (tempList.length < this.applyList.length) {
-                this.applyList.splice(tempList.length)
-              }
-              this.scrollTop = localStorage.getItem('homeScrollTop')
-              this.$nextTick(() => {
-                this.$refs.content.scrollTop = this.scrollTop || 0
-              })
-              Toast.clear()
-              // console.log(this.scrollTop, this.$refs.content.scrollTop)
-            })
+            Toast.clear()
           }
-        })
+        )
       }
-    },
-    getTemp(item, detail) {
-      const temp = {}
-      temp.id = item.ID
-      temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
-      temp.campus = item.school_district
-      if (item.search_path === '网易云') {
-        temp.imgUrl = detail.data.songs[0].al.picUrl
-        temp.songName = detail.data.songs[0].name
-        temp.singer = detail.data.songs[0].ar[0].name
-        for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
-          temp.singer += ' ' + detail.data.songs[0].ar[i].name
-        }
-      } else if (item.search_path === 'qq') {
-        temp.imgUrl = `https://y.gtimg.cn/music/photo_new/T002R300x300M000${detail.album.mid}.jpg`
-        temp.songName = detail.name
-        temp.singer = detail.singer[0].name
-        for (let i = 1; i < detail.singer.length; i++) {
-          temp.singer += ' ' + detail.singer[i].name
-        }
-      }
-
-      return temp
     },
     /* 选择日期后触发 */
     selDay(Date) {

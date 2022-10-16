@@ -98,6 +98,7 @@ import formatDate from '@/tools/FormatDate'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
+import { getList } from '@/api'
 
 export default {
   name: 'ApplyList',
@@ -170,32 +171,15 @@ export default {
   },
   methods: {
     getApplyList() {
+      const tempObj = {
+        id: true,
+        time: true,
+        campus: false,
+        state: true
+      }
       // 根据是否是第一次进入页面采取不同方法获取数据
       if (this.applyList.length === 0) {
-        // 过程同步，每获取一个便添加到页面，视觉上不会有长时间白屏，但不能在全部结束后进行处理，无法配合缓存
-        this.$axios.get('/admin/songList').then((res) => {
-          if (res.data.code === 200 && res.data.data) {
-            res.data.data.forEach((item) => {
-              if (item.search_path === '网易云') {
-                this.$musicApi
-                  .NetEaseCloudDetail(item.song_id)
-                  .then((detail) => {
-                    if (detail.data.songs.length !== 0) {
-                      this.applyList.push(this.getTemp(item, detail))
-                    }
-                  })
-              } else if (item.search_path === 'qq') {
-                this.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
-                  if (detail.data.data.track_info.name) {
-                    this.applyList.push(
-                      this.getTemp(item, detail.data.data.track_info)
-                    )
-                  }
-                })
-              }
-            })
-          }
-        })
+        getList('/admin/songList', this.applyList, tempObj)
       } else {
         // this.firstLoad = false
         Toast.loading({
@@ -204,86 +188,24 @@ export default {
           loadingType: 'spinner'
         })
         // 过程同步，初次加载会有短时间白屏，但可以配合缓存，在全部获取后只对不同的进行更新，避免重复渲染
-        this.$axios.get('/admin/songList').then((res) => {
-          if (res.data.code === 200 && res.data.data) {
-            let promise = Promise.resolve()
-            const tempList = []
-            res.data.data.forEach((item) => {
-              promise = promise.then(() => {
-                return new Promise((resolve, reject) => {
-                  if (item.search_path === '网易云') {
-                    this.$musicApi
-                      .NetEaseCloudDetail(item.song_id)
-                      .then((detail) => {
-                        if (detail.data.songs.length === 0) {
-                          resolve()
-                        } else {
-                          tempList.push(this.getTemp(item, detail))
-                          resolve()
-                        }
-                      })
-                  } else if (item.search_path === 'qq') {
-                    this.$musicApi
-                      .QQMusicDetail(item.song_id)
-                      .then((detail) => {
-                        if (!detail.data.data.track_info.name) {
-                          resolve()
-                        } else {
-                          tempList.push(
-                            this.getTemp(item, detail.data.data.track_info)
-                          )
-                          resolve()
-                        }
-                      })
-                  } else {
-                    resolve()
-                  }
-                })
-              })
-            })
-            promise.then(() => {
-              // diffList 只对不同元素进行替换，避免重复渲染和再次进入时出现白屏
-              for (let i = 0; i < tempList.length; i++) {
-                if (
-                  JSON.stringify(this.applyList[i]) !==
-                  JSON.stringify(tempList[i])
-                ) {
-                  this.applyList.splice(i, 1, tempList[i])
-                }
+        getList('/admin/songList', this.applyList, tempObj, false, true).then(
+          (res) => {
+            // 只对不同元素进行替换，避免重复渲染和再次进入时出现白屏
+            for (let i = 0; i < res.length; i++) {
+              if (
+                JSON.stringify(this.applyList[i]) !== JSON.stringify(res[i])
+              ) {
+                this.applyList.splice(i, 1, res[i])
               }
-              this.scrollTop = localStorage.getItem('applyListScrollTop')
-              this.$nextTick(() => {
-                this.$refs.content.scrollTop = this.scrollTop || 0
-              })
-              Toast.clear()
+            }
+            this.scrollTop = localStorage.getItem('applyListScrollTop')
+            this.$nextTick(() => {
+              this.$refs.content.scrollTop = this.scrollTop || 0
             })
+            Toast.clear()
           }
-        })
+        )
       }
-    },
-    // 对获取到的数据进行处理后赋值给temp
-    getTemp(item, detail) {
-      const temp = {}
-      temp.id = item.ID
-      temp.state = item.status
-      temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
-      if (item.search_path === '网易云') {
-        temp.imgUrl = detail.data.songs[0].al.picUrl
-        temp.songName = detail.data.songs[0].name
-        temp.singer = detail.data.songs[0].ar[0].name
-        for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
-          temp.singer += ' ' + detail.data.songs[0].ar[i].name
-        }
-      } else if (item.search_path === 'qq') {
-        temp.imgUrl = `https://y.gtimg.cn/music/photo_new/T002R300x300M000${detail.album.mid}.jpg`
-        temp.songName = detail.name
-        temp.singer = detail.singer[0].name
-        for (let i = 1; i < detail.singer.length; i++) {
-          temp.singer += ' ' + detail.singer[i].name
-        }
-      }
-
-      return temp
     },
     // 切换导航时对scroll进行缓存和赋值
     changeNav(index) {

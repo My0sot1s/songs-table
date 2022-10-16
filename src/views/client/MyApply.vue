@@ -48,10 +48,10 @@
 
 <script>
 import ApplyInfo from '@/components/ApplyInfo.vue'
-import formatDate from '@/tools/FormatDate'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
+import { getList } from '@/api'
 
 export default {
   components: {
@@ -76,38 +76,30 @@ export default {
     }
   },
   watch: {
-    'menu.state': function (val) {
-      this.curList = this.applyList.filter(
-        (item) => val === -2 || item.state === val
-      )
-      // console.log(this.curList)
+    'menu.state': {
+      handler: function (val) {
+        this.curList = this.applyList.filter(
+          (item) => val === -2 || item.state === val
+        )
+      },
+      immediate: true
+    },
+    applyList: {
+      handler: function (val) {
+        this.curList = val
+      },
+      immediate: true,
+      deep: true
     }
   },
   mounted() {
-    this.$axios
-      .get('/user/myApplication')
-      .then((res) => {
-        res.data.data.forEach((item) => {
-          if (item.search_path === '网易云') {
-            this.$musicApi.NetEaseCloudDetail(item.song_id).then((detail) => {
-              if (detail.data.songs.length !== 0) {
-                this.applyList.push(this.getTemp(item, detail))
-              }
-            })
-          } else if (item.search_path === 'qq') {
-            this.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
-              if (detail.data.data.track_info.name) {
-                this.applyList.push(
-                  this.getTemp(item, detail.data.data.track_info)
-                )
-              }
-            })
-          }
-        })
-      })
-      .finally(() => {
-        this.curList = this.applyList
-      })
+    const tempObj = {
+      id: true,
+      time: true,
+      campus: false,
+      state: true
+    }
+    getList('/user/myApplication', this.applyList, tempObj)
 
     this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
@@ -123,29 +115,6 @@ export default {
     this.lottieInstance = null
   },
   methods: {
-    getTemp(item, detail) {
-      const temp = {}
-      temp.id = item.ID
-      temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
-      temp.state = item.status
-      if (item.search_path === '网易云') {
-        temp.imgUrl = detail.data.songs[0].al.picUrl
-        temp.songName = detail.data.songs[0].name
-        temp.singer = detail.data.songs[0].ar[0].name
-        for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
-          temp.singer += ' ' + detail.data.songs[0].ar[i].name
-        }
-      } else if (item.search_path === 'qq') {
-        temp.imgUrl = `https://y.gtimg.cn/music/photo_new/T002R300x300M000${detail.album.mid}.jpg`
-        temp.songName = detail.name
-        temp.singer = detail.singer[0].name
-        for (let i = 1; i < detail.singer.length; i++) {
-          temp.singer += ' ' + detail.singer[i].name
-        }
-      }
-
-      return temp
-    },
     /* 点击删除图标时 */
     delApply(state, index) {
       this.curIndex = index

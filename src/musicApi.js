@@ -1,6 +1,10 @@
 // 封装请求api
 import axios from 'axios'
 import encrypt from '@/tools/encrypt.js'
+
+const QQMusicBaseUrl = 'http://124.222.111.191:3300'
+const NetEaseCloudBaseUrl = 'http://124.220.183.86:3000'
+
 // 跨域了，啥用没有
 const QQsearchRequest = ({ s }) => {
   const { params, encSecKey } = encrypt({ s })
@@ -17,7 +21,7 @@ const QQsearchRequest = ({ s }) => {
 
 const QQsearchMusic = ({ key, pageNo = 1, pageSize = 20, t = 0 }) =>
   axios({
-    baseURL: 'http://124.222.111.191:3300',
+    baseURL: QQMusicBaseUrl,
     url: '/search',
     method: 'GET',
     params: {
@@ -40,7 +44,7 @@ data.track_info.album.mid 专辑id
 const QQMusicDetail = (ids) => {
   // ids = '004Z8Ihr0JIu5s'
   return axios({
-    url: `http://124.222.111.191:3300/song?songmid=${ids}`,
+    url: `${QQMusicBaseUrl}/song?songmid=${ids}`,
     method: 'GET'
   })
 }
@@ -48,7 +52,7 @@ const QQMusicDetail = (ids) => {
 /* 网易云搜索歌曲 */
 const NetEaseCloudSearch = (keywords, limit = 15, offset = 0) => {
   return axios({
-    url: 'http://124.220.183.86:3000/search',
+    url: `${NetEaseCloudBaseUrl}/search`,
     method: 'get',
     params: {
       keywords,
@@ -67,7 +71,7 @@ data.songs[0].al.name是专辑名
 */
 const NetEaseCloudDetail = (ids) => {
   return axios({
-    url: 'http://124.220.183.86:3000/song/detail',
+    url: `${NetEaseCloudBaseUrl}/song/detail`,
     method: 'get',
     params: {
       ids
