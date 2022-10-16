@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { submitRequest } from '@/api.js'
+import { submitRequest, updateRequest } from '@/api.js'
 import { Toast } from 'vant'
 export default {
   props: ['musics'],
@@ -176,14 +176,20 @@ export default {
       return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
     },
     async onSubmit() {
-      console.log(this.form)
+      // console.log(this.form)
       /* const notices = ['请选择首选歌曲', '请选择备选歌曲'] */
       if (!this.form.songId && !this.form.searchPath) {
         Toast.fail('请选择歌曲')
         return
       }
       try {
-        const res = await submitRequest(this.form)
+        let res
+        if (this.form.id) {
+          res = await updateRequest(this.form)
+        } else {
+          res = await submitRequest(this.form)
+        }
+        // // console.log(res)
         if (res.data.code === 200) {
           Toast.success('提交成功！')
           this.$router.replace('/home')
@@ -191,7 +197,7 @@ export default {
           Toast.fail(res.data.msg)
         }
       } catch (err) {
-        console.log(err.message)
+        // console.log(err.message)
         Toast.fail(err.message)
       }
       /* for (let i = 0; i < 2; i++) {

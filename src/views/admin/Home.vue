@@ -185,28 +185,30 @@ export default {
             res.data.data.forEach((item) => {
               if (item.status === 3) {
                 promise = promise.then(() => {
-                  return new Promise((resolve, reject) => {
+                  return new Promise((resolve) => {
                     if (item.search_path === '网易云') {
                       this.$musicApi
                         .NetEaseCloudDetail(item.song_id)
                         .then((detail) => {
                           if (detail.data.songs.length === 0) {
-                            reject(new Error('empty songs'))
+                            resolve()
+                          } else {
+                            tempList.push(this.getTemp(item, detail))
+                            resolve()
                           }
-                          tempList.push(this.getTemp(item, detail))
-                          resolve()
                         })
                     } else if (item.search_path === 'qq') {
                       this.$musicApi
                         .QQMusicDetail(item.song_id)
                         .then((detail) => {
                           if (!detail.data.data.track_info.name) {
-                            reject(new Error('empty songs'))
+                            resolve()
+                          } else {
+                            tempList.push(
+                              this.getTemp(item, detail.data.data.track_info)
+                            )
+                            resolve()
                           }
-                          tempList.push(
-                            this.getTemp(item, detail.data.data.track_info)
-                          )
-                          resolve()
                         })
                     } else {
                       // reject(new Error('未知来源'))

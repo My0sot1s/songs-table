@@ -52,7 +52,7 @@ export default {
           } else if (item.search_path === 'qq') {
             this.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
               if (detail.data.data.track_info.name) {
-                this.todayList.push(this.getTemp(item, detail))
+                this.todayList.push(this.getTemp(item, detail.data.data.track_info))
               }
             })
           }

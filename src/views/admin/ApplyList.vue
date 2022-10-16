@@ -43,7 +43,6 @@
           :singer="item.singer"
           :time="item.time"
           :state="item.state"
-          :lazeLoad="!firstLoad"
           iconName="ellipsis"
           @click.native="toExamine(index)"
           @action="
@@ -120,8 +119,8 @@ export default {
         actions: [{ name: '重新审核' }]
       },
       scrollTop: 0,
-      showGoTop: false,
-      firstLoad: true
+      showGoTop: false
+      // firstLoad: true
     }
   },
   computed: {
@@ -198,7 +197,7 @@ export default {
           }
         })
       } else {
-        this.firstLoad = false
+        // this.firstLoad = false
         Toast.loading({
           message: '加载中...',
           forbidClick: true,
@@ -217,25 +216,26 @@ export default {
                       .NetEaseCloudDetail(item.song_id)
                       .then((detail) => {
                         if (detail.data.songs.length === 0) {
-                          reject(new Error('empty songs'))
+                          resolve()
+                        } else {
+                          tempList.push(this.getTemp(item, detail))
+                          resolve()
                         }
-                        tempList.push(this.getTemp(item, detail))
-                        resolve()
                       })
                   } else if (item.search_path === 'qq') {
                     this.$musicApi
                       .QQMusicDetail(item.song_id)
                       .then((detail) => {
                         if (!detail.data.data.track_info.name) {
-                          reject(new Error('empty songs'))
+                          resolve()
+                        } else {
+                          tempList.push(
+                            this.getTemp(item, detail.data.data.track_info)
+                          )
+                          resolve()
                         }
-                        tempList.push(
-                          this.getTemp(item, detail.data.data.track_info)
-                        )
-                        resolve()
                       })
                   } else {
-                    // reject(new Error('未知来源'))
                     resolve()
                   }
                 })

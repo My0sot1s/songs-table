@@ -220,6 +220,7 @@ export default {
             localStorage.setItem(
               'applyInfo',
               JSON.stringify({
+                id: this.curList[index].id,
                 songId: data.song_id,
                 searchPath: data.search_path,
                 receiverName: data.receiver_name,

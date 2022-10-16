@@ -201,7 +201,7 @@ export default {
   margin-bottom: 1.5vh;
 
   &-name {
-    margin-right: 15vw;
+    margin-right: 10vw;
   }
 }
 

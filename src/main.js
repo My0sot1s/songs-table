@@ -5,6 +5,7 @@ import store from './store'
 import initAxios from './request'
 import musicApi from './musicApi'
 import {
+  ActionSheet,
   Button,
   Icon,
   Image as VanImage,
@@ -29,6 +30,7 @@ import {
   TabbarItem
 } from 'vant'
 
+Vue.use(ActionSheet)
 Vue.use(Button)
 Vue.use(Icon)
 Vue.use(VanImage)
@@ -56,7 +58,7 @@ Vue.config.productionTip = false
 
 const navMap = new Map([
   [undefined, { leftArrow: false, navText: '点歌台' }],
-  ['Home', { leftArrow: true, navText: '点歌台' }],
+  ['Home', { leftArrow: false, navText: '点歌台' }],
   ['MyApply', { leftArrow: true, navText: '我的申请' }],
   ['SelectMusic', { leftArrow: true, navText: '点歌' }],
   ['Admin', { leftArrow: false, navText: '歌单列表' }],

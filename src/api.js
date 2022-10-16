@@ -6,3 +6,10 @@ export const submitRequest = (form) =>
     url: '/user/submit',
     data: form
   })
+
+export const updateRequest = (form) =>
+  axios({
+    method: 'POST',
+    url: '/user/update',
+    data: form
+  })

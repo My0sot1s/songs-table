@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :style="`height: ${document.body.clientHeight}'px'`">
+  <div id="app" :style="`height: ${height}'px'`">
     <NavBar
       fixed
       placeholder
@@ -22,7 +22,12 @@ window.onresize = () => {
   }
 }
 export default {
-  components: { NavBar }
+  components: { NavBar },
+  data() {
+    return {
+      height: document.body.clientHeight
+    }
+  }
 }
 </script>
 

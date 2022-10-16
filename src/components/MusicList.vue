@@ -5,9 +5,9 @@
       <slot></slot>
     </div>
     <div>
-      <div class="music-list-body">
+      <div>
         <!-- <transition-group tag="div" class="body"> -->
-        <div v-if="musicList.length !== 0">
+        <div class="music-list-body" v-if="musicList.length !== 0">
           <Album
             v-for="(item, index) in musicList"
             :key="index"

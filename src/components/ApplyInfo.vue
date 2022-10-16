@@ -7,7 +7,6 @@
           height="8vh"
           fit="fill"
           :src="imgUrl"
-          :lazy-load="lazeLoad"
         >
           <template #loading>
             <van-loading type="spinner" size="20" />
@@ -53,11 +52,7 @@ export default {
     time: String,
     state: Number,
     iconName: String,
-    campus: String,
-    lazeLoad: {
-      type: Boolean,
-      default: true
-    }
+    campus: String
   },
   data() {
     return {
