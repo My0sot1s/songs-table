@@ -19,6 +19,7 @@ const height = document.body.clientHeight
 window.onresize = () => {
   if (height > document.body.clientHeight) {
     document.body.style.height = height + 'px'
+    this.height = height
   }
 }
 export default {
