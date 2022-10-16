@@ -190,7 +190,7 @@ export default {
         // // console.log(res)
         if (res.data.code === 200) {
           Toast.success('提交成功！')
-          this.$router.replace('/home')
+          this.$router.replace('/myApply')
         } else {
           Toast.fail(res.data.msg)
         }
