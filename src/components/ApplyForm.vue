@@ -99,9 +99,7 @@
       :rules="[{ required: true, message: '请输入寄语' }]"
     />
     <div style="margin: 16px" v-if="!form.disabled">
-      <van-button type="default" round block native-type="submit"
-        >提交</van-button
-      >
+      <van-button type="info" round block native-type="submit">提交</van-button>
     </div>
   </van-form>
 </template>
@@ -232,9 +230,6 @@ export default {
 </script>
 
 <style>
-.van-button {
-  box-shadow: 0 0 5px #999;
-}
 .van-search__content {
   background-color: rgb(250, 251, 253) !important;
 }

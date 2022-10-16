@@ -37,7 +37,7 @@ export default {
   height: 16vw;
   margin: 3vw 0;
   padding: 0 4vw;
-  border-radius: 1vw;
+  border-radius: 2vw;
   box-shadow: 0 0 5px #999;
   display: flex;
   justify-content: space-between;

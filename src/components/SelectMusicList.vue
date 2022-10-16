@@ -128,7 +128,7 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: white;
-  margin: 22vw 2vw -2vw 2vw;
+  margin: 22vw 2vw 0 2vw;
   padding: 8vw 7vw 0 7vw;
   border-radius: 4vw;
   overflow: scroll;
@@ -145,13 +145,17 @@ export default {
     }
   }
   .van-list {
+    box-sizing: border-box;
     max-height: 45vh;
     padding: 0 1vw 0 1vw;
     overflow: scroll;
     border-top: 1px solid rgb(250, 251, 253);
+    border-bottom: 1px solid rgb(250, 251, 253);
   }
   .van-button {
-    margin: 2vw 5vw 10vw 5vw;
+    margin: 5vw 5vw;
+    background-color: rgb(250, 251, 253);
+    box-shadow: 0 0 5px #999;
   }
 }
 </style>
