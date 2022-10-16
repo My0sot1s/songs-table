@@ -38,7 +38,7 @@
       color="#3c9cff"
       :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
       :max-date="new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)"
-      confirm-text="选择"
+      :show-confirm="false"
       v-model="showCalendar"
       @confirm="selDay"
     />

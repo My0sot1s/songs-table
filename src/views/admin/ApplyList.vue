@@ -75,7 +75,7 @@
               dateString = ''
               showCalendar = false
             "
-            >全部日期</van-button
+            >所有时间</van-button
           >
         </div>
       </template>
