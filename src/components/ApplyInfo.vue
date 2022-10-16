@@ -2,12 +2,7 @@
   <div class="apply-info">
     <div class="body">
       <div class="image">
-        <van-image
-          width="8vh"
-          height="8vh"
-          fit="fill"
-          :src="imgUrl"
-        >
+        <van-image width="8vh" height="8vh" fit="fill" :src="imgUrl">
           <template #loading>
             <van-loading type="spinner" size="20" />
           </template>
@@ -18,7 +13,7 @@
         <div>
           <div class="song-name van-ellipsis">{{ songName }}</div>
           <div>
-            <span class="state" v-if="state">{{ grtState(state) }}</span>
+            <span class="state" v-if="state">{{ getState(state) }}</span>
             <span class="campus" v-if="campus">{{ campus }}</span>
             <van-icon
               size="2vh"
@@ -50,7 +45,7 @@ export default {
     songName: String,
     singer: String,
     time: String,
-    state: Number,
+    state: String,
     iconName: String,
     campus: String
   },
@@ -66,7 +61,7 @@ export default {
     }
   },
   methods: {
-    grtState(num) {
+    getState(num) {
       return this.STATE[num]
     }
   }
