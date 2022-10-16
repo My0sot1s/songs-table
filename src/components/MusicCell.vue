@@ -10,7 +10,7 @@
     />
     <div id="detail">
       <van-notice-bar color="black" :text="music.name" />
-      <van-notice-bar id="singer">{{ singer }}</van-notice-bar>
+      <van-notice-bar id="singer" :text="singer"></van-notice-bar>
     </div>
   </div>
 </template>
@@ -64,10 +64,11 @@ export default {
     justify-content: space-between;
     .van-notice-bar {
       background-color: inherit;
+      font-size: 4vw;
       padding: 0;
     }
     #singer {
-      color: #999;
+      color: rgb(128, 128, 128);
       font-size: 3vw;
     }
   }

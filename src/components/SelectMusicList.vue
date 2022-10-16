@@ -67,6 +67,7 @@ export default {
       this.timer = setTimeout(async () => {
         if (this.value.length === 0) return
         if (refresh) {
+          this.finished = false
           this.pageNo = 1
           this.musicList = []
         }
