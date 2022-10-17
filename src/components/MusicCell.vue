@@ -65,6 +65,7 @@ export default {
     justify-content: center;
     .van-notice-bar {
       padding: 0;
+      margin: 0;
       background-color: inherit;
     }
     #singer {
