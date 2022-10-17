@@ -47,7 +47,6 @@ export default {
     border-radius: 1vw;
   }
   #background {
-    background-color: rgb(239, 242, 247);
     position: absolute;
     left: 50%;
     top: 50%;
@@ -55,7 +54,7 @@ export default {
     width: 0;
     height: 0;
     z-index: 0;
-    transition: width 0.3s;
+    transition: width 300ms, background-color 300ms;
   }
   #detail {
     width: 60vw;
