@@ -9,11 +9,11 @@ const location = {
   isInWechat: window.navigator.userAgent.includes('MicroMessenger')
 }
 
-/* function wxLoginRedirect() {
+function wxLoginRedirect() {
   window.location.href = `https://apps.hqu.edu.cn/wechat-hqu/wechatauth.html?proxyTo=authoauth&sendUrl=/connect/oauth2/authorize?appid=wxfe035b066fb1158b&redirect_uri=${encodeURIComponent(
     `${location.origin}`
   )}&encode_flag=Y&response_type=code&scope=snsapi_userinfo#wechat_redirect`
-} */
+}
 
 const axios = theAxios.create({
   // headers: { 'content-Type': 'application/x-www-form-urlencoded' },
@@ -51,7 +51,7 @@ function initState() {
 
 const state = initState()
 
-/* function checkCode() {
+function checkCode() {
   return new Promise((resolve, reject) => {
     if (location.search) {
       const searchParams = new URLSearchParams(document.location.search)
@@ -77,16 +77,16 @@ const state = initState()
       resolve()
     }
   })
-} */
+}
 
-/* function checkToken() {
+function checkToken() {
   return new Promise((resolve, reject) => {
     if (!state.token) {
       wxLoginRedirect()
       reject(new Error('should_wx_login'))
     }
   })
-} */
+}
 
 // 请求拦截
 axios.interceptors.request.use(
@@ -112,7 +112,7 @@ axios.interceptors.response.use(
       const code = response.data.code.toString()
       if (['401', '440', '441'].includes(code)) {
         if (document.location.hash.includes('admin')) window.location.hash = '/admin'
-        /* else wxLoginRedirect() */
+        else wxLoginRedirect()
       }
     }
     return response
@@ -136,11 +136,11 @@ export default function initAxios(vue) {
     }
 
     /* 关闭授权就注释下面几行和响应拦截 */
-    /* if (!document.location.hash.includes('admin')) {
+    if (!document.location.hash.includes('admin')) {
       checkCode().then(checkToken).then(resolve())
     } else {
       resolve()
-    } */
+    }
   })
 }
 export const request = ({
