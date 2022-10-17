@@ -65,7 +65,6 @@ export default {
     justify-content: space-between;
     .van-notice-bar {
       background-color: inherit;
-      padding: 0;
     }
     #singer {
       color: rgb(128, 128, 128);
