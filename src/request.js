@@ -9,11 +9,11 @@ const location = {
   isInWechat: window.navigator.userAgent.includes('MicroMessenger')
 }
 
-/* function wxLoginRedirect() {
+function wxLoginRedirect() {
   window.location.href = `https://apps.hqu.edu.cn/wechat-hqu/wechatauth.html?proxyTo=authoauth&sendUrl=/connect/oauth2/authorize?appid=wxfe035b066fb1158b&redirect_uri=${encodeURIComponent(
     `${location.origin}`
   )}&encode_flag=Y&response_type=code&scope=snsapi_userinfo#wechat_redirect`
-} */
+}
 
 const axios = theAxios.create({
   // headers: { 'content-Type': 'application/x-www-form-urlencoded' },
@@ -56,7 +56,6 @@ function checkCode() {
     if (location.search) {
       const searchParams = new URLSearchParams(document.location.search)
       const wxCode = searchParams.get('code')
-
       if (wxCode) {
         axios
           .post('/user/login', { code: wxCode })
@@ -82,7 +81,7 @@ function checkCode() {
 function checkToken() {
   return new Promise((resolve, reject) => {
     if (!state.token) {
-      /* wxLoginRedirect() */
+      wxLoginRedirect()
       reject(new Error('should_wx_login'))
     }
   })
@@ -112,7 +111,7 @@ axios.interceptors.response.use(
       const code = response.data.code.toString()
       if (['401', '440', '441'].includes(code)) {
         if (document.location.hash.includes('admin')) window.location.hash = '/admin'
-        /* else wxLoginRedirect() */
+        else wxLoginRedirect()
       }
     }
     return response

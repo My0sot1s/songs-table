@@ -48,7 +48,6 @@ export default {
     box-shadow: 0 0 4px #999;
   }
   #background {
-    position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -58,7 +57,6 @@ export default {
     transition: width 300ms, background-color 300ms;
   }
   #detail {
-    box-sizing: border-box;
     width: 58vw;
     height: 11vw;
     display: flex;
@@ -68,8 +66,10 @@ export default {
       border: 1px solid black;
       padding: 0;
       background-color: inherit;
+      font-size: 4vw;
     }
     #singer {
+      font-size: 3vw;
       color: rgb(128, 128, 128);
     }
   }
