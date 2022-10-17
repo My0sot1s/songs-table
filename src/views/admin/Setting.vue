@@ -15,13 +15,59 @@
       <SelectMusicList @confirmMusic="confirmMusic" />
     </van-overlay>
     <TabBar />
+
+    <van-dialog
+      v-model="dialog.show"
+      :title="dialog.title"
+      :show-confirm-button="false"
+    >
+      <van-form @submit="submitMusic">
+        <div style="margin: 1.5vh 1vh">
+          <van-field
+            v-model="music.schoolDistrict"
+            is-link
+            readonly
+            label="校区"
+            placeholder="请选择你所在的校区"
+            @click="dialog.cascader.show = true"
+            :rules="[{ required: true, message: '' }]"
+          />
+        </div>
+        <div class="form-btns">
+          <van-button
+            class="form-btns-btn"
+            @click="dialog.show = false"
+            native-type="button"
+            >取消</van-button
+          >
+          <van-button
+            class="form-btns-btn"
+            native-type="submit"
+            :loading="loading"
+            loading-type="spinner"
+            >确定</van-button
+          >
+        </div>
+      </van-form>
+    </van-dialog>
+
+    <van-popup v-model="dialog.cascader.show" round position="bottom">
+      <van-cascader
+        active-color="#1989fa"
+        v-model="music.schoolDistrict"
+        title="请选择所在校区"
+        :options="dialog.cascader.options"
+        @close="dialog.cascader.show = false"
+        @finish="dialog.cascader.show = false"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import SelectMusicList from '@/components/SelectMusicList'
 import TabBar from '@/components/TabBar'
-import { Dialog, Toast } from 'vant'
+import { Toast } from 'vant'
 
 export default {
   components: {
@@ -30,34 +76,66 @@ export default {
   },
   data() {
     return {
-      showPick: false
+      music: {
+        songId: '',
+        broadcastDate: '',
+        searchPath: '',
+        schoolDistrict: ''
+      },
+      showPick: false,
+      dialog: {
+        show: false,
+        title: '',
+        cascader: {
+          show: false,
+          options: [
+            {
+              text: '厦门校区',
+              value: '厦门校区'
+            },
+            {
+              text: '泉州校区',
+              value: '泉州校区'
+            },
+            {
+              text: '龙舟池校区',
+              value: '龙舟池校区'
+            }
+          ]
+        }
+      },
+      loading: false
+    }
+  },
+  watch: {
+    'music.schoolDistrict': {
+      handler: function (newVal) {
+        if (newVal !== '') this.dialog.title = '将此歌添加到今日播放？'
+        else this.dialog.title = '请选择校区'
+      },
+      immediate: true
     }
   },
   methods: {
     confirmMusic(music) {
-      Dialog.confirm({
-        title: '将这首歌添加到今日播放？'
+      this.music.broadcastDate = new Date().getTime()
+      this.music.searchPath = music.searchPath
+      this.music.songId = music.songmid
+      this.dialog.show = true
+    },
+    submitMusic() {
+      Toast.clear()
+      this.loading = true
+      this.$axios.post('/admin/submit', this.music).then((res) => {
+        this.loading = false
+        if (res.data.code === 200) {
+          this.showPick = false
+          this.dialog.show = false
+          Toast.success('添加成功\n返回首页查看')
+        } else {
+          Toast.fail('添加失败\n请重试')
+        }
       })
-        .then(() => {
-          this.$axios
-            .post('/admin/submit', {
-              blessingWords: '-',
-              broadcastDate: new Date().getTime(),
-              searchPath: music.searchPath,
-              songId: music.songmid
-            })
-            .then((res) => {
-              if (res.data.code === 200) {
-                this.showPick = false
-                Toast.success('添加成功\n返回首页查看')
-              } else {
-                Toast.fail('添加失败\n请重试')
-              }
-            })
-        })
-        .catch(() => {
-          // on cancel
-        })
     }
   }
 }
@@ -75,5 +153,25 @@ export default {
   box-shadow: 0 0 10px #aaa;
   font-size: 2.2vh;
   color: #333;
+}
+
+.form-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &-btn {
+    height: 6vh;
+    width: 50%;
+    border: none;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    color: #ee0a24;
+  }
+
+  &-btn:first-child {
+    border-left: none;
+    color: #323233;
+  }
 }
 </style>

@@ -27,11 +27,13 @@ import {
   Sticky,
   NavBar,
   Tabbar,
-  TabbarItem
+  TabbarItem,
+  Dialog
 } from 'vant'
 
 Vue.use(ActionSheet)
 Vue.use(Button)
+Vue.use(Dialog)
 Vue.use(Icon)
 Vue.use(VanImage)
 Vue.use(Popup)
