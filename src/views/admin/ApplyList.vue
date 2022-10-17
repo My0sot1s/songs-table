@@ -201,8 +201,8 @@ export default {
             this.scrollTop = localStorage.getItem('applyListScrollTop')
             this.$nextTick(() => {
               this.$refs.content.scrollTop = this.scrollTop || 0
+              Toast.clear()
             })
-            Toast.clear()
           }
         )
       }
