@@ -10,7 +10,7 @@
     />
     <div id="detail">
       <van-notice-bar color="black" :text="music.name" />
-      <van-notice-bar id="singer" :text="singer"></van-notice-bar>
+      <van-notice-bar id="singer">test</van-notice-bar>
     </div>
   </div>
 </template>
@@ -48,13 +48,14 @@ export default {
   }
   #background {
     background-color: rgb(239, 242, 247);
-    border-radius: 1vw;
     position: absolute;
-    left: -105%;
-    width: 100%;
-    height: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
     z-index: 0;
-    transition: transform 0.3s;
+    transition: width 0.3s;
   }
   #detail {
     width: 60vw;

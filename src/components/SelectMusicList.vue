@@ -56,9 +56,11 @@ export default {
       this.index = index
       const cells = [...document.querySelectorAll('#background')]
       cells.forEach((e) => {
-        e.style.transform = ''
+        e.style.width = '0'
+        e.style.height = '0'
       })
-      cells[index].style.transform = 'translate(105%, 0)'
+      cells[index].style.width = '100vw'
+      cells[index].style.height = '100vw'
     },
     confirm() {
       this.$emit('confirmMusic', this.musicList[this.index])
