@@ -25,7 +25,7 @@
           <div class="from-name">
             <van-icon name="user-o" /><span>{{ applyInfo.from }}</span>
           </div>
-          <div class="from-phone">
+          <div class="from-phone" v-if="applyInfo.phone">
             <van-icon name="phone-o" /><span>{{ applyInfo.phone }}</span>
           </div>
         </div>

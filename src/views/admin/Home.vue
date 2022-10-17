@@ -143,8 +143,8 @@ export default {
             this.scrollTop = localStorage.getItem('homeScrollTop')
             this.$nextTick(() => {
               this.$refs.content.scrollTop = this.scrollTop || 0
+              Toast.clear()
             })
-            Toast.clear()
           }
         )
       }
@@ -192,7 +192,7 @@ export default {
         })
     },
     toExamine(index) {
-      const { id, imgUrl, songName, singer, time } = this.applyList[index]
+      const { id, imgUrl, songName, singer, time } = this.curDayList[index]
       localStorage.setItem(
         'musicInfo',
         JSON.stringify({
