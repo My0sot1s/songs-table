@@ -62,8 +62,9 @@ export default {
     height: 11vw;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     .van-notice-bar {
+      padding: 0;
       background-color: inherit;
     }
     #singer {
