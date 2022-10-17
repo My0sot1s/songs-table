@@ -10,7 +10,7 @@
     />
     <div id="detail">
       <van-notice-bar color="black" :text="music.name" />
-      <van-notice-bar id="singer">test</van-notice-bar>
+      <van-notice-bar id="singer" text="testtt" />
     </div>
   </div>
 </template>
