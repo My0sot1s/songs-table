@@ -4,13 +4,13 @@
     <van-image
       round
       error-icon="https://y.qq.com/music/photo_new/T002R300x300M0000030lak94GN5Ad_0.jpg"
-      width="9vw"
-      height="9vw"
+      width="11vw"
+      height="11vw"
       :src="music.cover"
     />
     <div id="detail">
-      <!-- <van-notice-bar color="black" :text="music.name" /> -->
-      <van-notice-bar id="singer" text="testtt" />
+      <van-notice-bar color="black" :text="music.name" />
+      <van-notice-bar id="singer" :text="singer" />
     </div>
   </div>
 </template>
@@ -34,7 +34,7 @@ export default {
 <style lang="less">
 #cell {
   position: relative;
-  height: 16vw;
+  height: 18vw;
   margin: 3vw 0;
   padding: 0 4vw;
   border-radius: 2vw;
@@ -57,8 +57,8 @@ export default {
     transition: width 300ms, background-color 300ms;
   }
   #detail {
-    width: 60vw;
-    height: 9vw;
+    width: 58vw;
+    height: 11vw;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
