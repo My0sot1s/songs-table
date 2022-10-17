@@ -20,7 +20,7 @@
 import MusicList from '@/components/MusicList'
 import lottie from 'lottie-web'
 import music from '@/assets/music.json'
-import { getList } from '@/api'
+/* import { getList } from '@/api' */
 
 export default {
   data() {
@@ -41,8 +41,8 @@ export default {
       animationData: music
     })
 
-    getList('/user/todaySongs', this.todayList, {})
-    getList('/user/comingSongs', this.laterList, {})
+    /* getList('/user/todaySongs', this.todayList, {})
+    getList('/user/comingSongs', this.laterList, {}) */
   },
   destroyed() {
     if (!this.lottieInstance) return

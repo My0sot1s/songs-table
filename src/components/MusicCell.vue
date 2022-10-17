@@ -45,6 +45,7 @@ export default {
   overflow: hidden;
   .van-image {
     border-radius: 1vw;
+    box-shadow: 0 0 4px #999;
   }
   #background {
     position: absolute;
