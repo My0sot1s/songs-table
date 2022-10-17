@@ -43,7 +43,7 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 body {
   background-color: rgb(250, 251, 253);
 }

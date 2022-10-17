@@ -58,14 +58,15 @@ export default {
     transition: width 300ms, background-color 300ms;
   }
   #detail {
+    box-sizing: border-box;
     width: 58vw;
     height: 11vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
     .van-notice-bar {
+      border: 1px solid black;
       padding: 0;
-      margin: 0;
       background-color: inherit;
     }
     #singer {
