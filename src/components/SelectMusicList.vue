@@ -138,6 +138,11 @@ export default {
       autoplay: true,
       animationData: search
     })
+  },
+  destroyed() {
+    if (!this.lottieInstance) return
+    this.lottieInstance.destroy()
+    this.lottieInstance = null
   }
 }
 </script>
