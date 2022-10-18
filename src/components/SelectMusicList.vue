@@ -4,12 +4,17 @@
       <van-search shape="round" v-model="value" placeholder="" />
     </van-form>
     <van-empty
-      v-if="this.musicList.length === 0"
+      v-show="this.musicList.length === 0 && !this.loading"
       image="search"
       description=""
     />
+    <div
+      ref="lottie"
+      id="lottie"
+      v-show="this.musicList.length === 0 && this.loading"
+    ></div>
     <van-list
-      v-if="this.musicList.length !== 0"
+      v-show="this.musicList.length !== 0"
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
@@ -35,6 +40,8 @@
 
 <script>
 import MusicCell from '@/components/MusicCell'
+import search from '@/assets/search.json'
+import lottie from 'lottie-web'
 
 export default {
   components: {
@@ -48,7 +55,8 @@ export default {
       loading: false,
       finished: false,
       musicList: [],
-      pageNo: 1
+      pageNo: 1,
+      animationData: search
     }
   },
   methods: {
@@ -74,6 +82,7 @@ export default {
           this.musicList = []
         }
         if (this.musicList.length === 0) {
+          this.loading = true
           // qq音乐接口
           const { data } = await this.$musicApi.QQsearchMusic({
             key: this.value,
@@ -120,6 +129,15 @@ export default {
     value: {
       handler: 'search'
     }
+  },
+  mounted() {
+    this.lottieInstance = lottie.loadAnimation({
+      container: this.$refs.lottie,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      animationData: search
+    })
   }
 }
 </script>

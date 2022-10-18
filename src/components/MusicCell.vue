@@ -34,7 +34,7 @@ export default {
 <style lang="less">
 #cell {
   position: relative;
-  height: 18vw;
+  height: 16vw;
   margin: 3vw 0;
   padding: 0 4vw;
   border-radius: 2vw;
@@ -48,23 +48,26 @@ export default {
     box-shadow: 0 0 4px #999;
   }
   #background {
+    position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    border-radius: 50%;
     width: 0;
     height: 0;
     z-index: 0;
-    transition: width 300ms, background-color 300ms;
+    transition: width 500ms, height 500ms, background-color 500ms;
   }
   #detail {
     width: 58vw;
     height: 11vw;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     .van-notice-bar {
-      border: 1px solid black;
-      padding: 0;
+      height: 0px; /* 真机和开发者工具样式不一致，在真机上加这个，取代默认高度 */
+      flex: auto;
+      padding: 0 !important;
       background-color: inherit;
       font-size: 4vw;
     }
