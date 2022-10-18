@@ -50,7 +50,7 @@ const QQMusicDetail = (ids) => {
 }
 
 /* 网易云搜索歌曲 */
-const NetEaseCloudSearch = (keywords, limit = 15, offset = 0) => {
+const NetEaseCloudSearch = ({ keywords, limit = 15, offset = 0 }) => {
   return axios({
     url: `${NetEaseCloudBaseUrl}/search`,
     method: 'get',
