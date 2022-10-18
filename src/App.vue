@@ -34,7 +34,12 @@ export default {
 
 <style lang="less">
 *::-webkit-scrollbar {
+  display: none;
   width: 0 !important;
+}
+* {
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
 }
 hr {
   height: 1px;
