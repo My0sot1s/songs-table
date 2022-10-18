@@ -111,7 +111,7 @@ axios.interceptors.response.use(
       const code = response.data.code.toString()
       if (['401', '440', '441'].includes(code)) {
         if (document.location.hash.includes('admin')) window.location.hash = '/admin'
-        /* else wxLoginRedirect() */
+        else wxLoginRedirect()
       }
     }
     return response
