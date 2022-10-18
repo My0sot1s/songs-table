@@ -35,6 +35,11 @@
         />
       </div>
       <div v-show="curNav === 1">
+        <!-- <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+        > -->
         <ApplyInfo
           v-for="(item, index) in curDayProcessedList"
           :key="index"
@@ -50,6 +55,7 @@
             curIndex = index
           "
         />
+        <!-- </van-list> -->
       </div>
       <div ref="lottie" v-show="showEmpty"></div>
     </div>
@@ -108,7 +114,7 @@ export default {
   },
   data() {
     return {
-      applyList: [],
+      // applyList: [],
       dateString: '',
       /* 当前导航 0：待处理，1：已处理 */
       curNav: 0,
@@ -120,20 +126,21 @@ export default {
         actions: [{ name: '重新审核' }]
       },
       scrollTop: 0,
-      showGoTop: false
-      // firstLoad: true
+      showGoTop: false,
+      loading: false,
+      finished: false
     }
   },
   computed: {
     curDayPendingList() {
-      return this.applyList.filter(
+      return this.$store.state.applyList.filter(
         (item) =>
           (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
           item.state === 1
       )
     },
     curDayProcessedList() {
-      return this.applyList.filter(
+      return this.$store.state.applyList.filter(
         (item) =>
           (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
           (item.state === 2 || item.state === 3)
@@ -171,47 +178,24 @@ export default {
   },
   methods: {
     getApplyList() {
-      const tempObj = {
-        id: true,
-        time: true,
-        campus: false,
-        state: true
-      }
       // 根据是否是第一次进入页面采取不同方法获取数据
-      if (this.applyList.length === 0) {
-        getList('/admin/songList', this.applyList, tempObj)
-      } else {
-        // this.firstLoad = false
+      if (this.$store.state.applyList.length === 0) {
         Toast.loading({
           message: '加载中...',
           forbidClick: true,
-          loadingType: 'spinner'
+          loadingType: 'spinner',
+          duration: 0
         })
-
+        getList('/admin/songList', this.$store.state.applyList, this).then(
+          (res) => {
+            Toast.clear()
+          }
+        )
+      } else {
         this.scrollTop = localStorage.getItem('applyListScrollTop')
         this.$nextTick(() => {
           this.$refs.content.scrollTop = this.scrollTop || 0
         })
-        // 过程同步，初次加载会有短时间白屏，但可以配合缓存，在全部获取后只对不同的进行更新，避免重复渲染
-        getList('/admin/songList', this.applyList, tempObj, false, true).then(
-          (res) => {
-            // 只对不同元素进行替换，避免重复渲染和再次进入时出现白屏
-            for (let i = 0; i < res.length; i++) {
-              if (
-                JSON.stringify(this.applyList[i]) !== JSON.stringify(res[i])
-              ) {
-                this.applyList.splice(i, 1, res[i])
-              }
-            }
-            Toast.clear()
-
-            // this.scrollTop = localStorage.getItem('applyListScrollTop')
-            // this.$nextTick(() => {
-            //   this.$refs.content.scrollTop = this.scrollTop || 0
-            //   Toast.clear()
-            // })
-          }
-        )
       }
     },
     // 切换导航时对scroll进行缓存和赋值
@@ -263,20 +247,23 @@ export default {
       Toast.loading({
         message: '请求中...',
         forbidClick: true,
-        loadingType: 'spinner'
+        loadingType: 'spinner',
+        duration: 0
       })
       const state = this.curDayProcessedList[this.curIndex].state
-      let url = ''
-      if (state === 2) url = '/admin/pass'
-      else if (state === 3) url = '/admin/noPass'
+      let M = ''
+      if (state === 2) M = 'pass'
+      else if (state === 3) M = 'noPass'
       this.$axios
-        .post(url, {
+        .post(`/admin/${M}`, {
           id: this.curDayProcessedList[this.curIndex].id
         })
         .then((res) => {
           if (res.data.code === 200) {
-            this.curDayProcessedList[this.curIndex].state = state === 2 ? 3 : 2
-            this.$forceUpdate()
+            this.$store.commit(
+              `${M}Apply`,
+              this.curDayProcessedList[this.curIndex].id
+            )
             Toast.clear()
             Toast.success('更改成功')
           } else {

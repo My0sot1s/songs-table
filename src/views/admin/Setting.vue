@@ -24,7 +24,7 @@
       <van-form @submit="submitMusic">
         <div style="margin: 1.5vh 1vh">
           <van-field
-            v-model="music.schoolDistrict"
+            v-model="apply.schoolDistrict"
             is-link
             readonly
             label="校区"
@@ -54,7 +54,7 @@
     <van-popup v-model="dialog.cascader.show" round position="bottom">
       <van-cascader
         active-color="#1989fa"
-        v-model="music.schoolDistrict"
+        v-model="apply.schoolDistrict"
         title="请选择所在校区"
         :options="dialog.cascader.options"
         @close="dialog.cascader.show = false"
@@ -66,6 +66,7 @@
 
 <script>
 import SelectMusicList from '@/components/SelectMusicList'
+import formatDate from '@/tools/FormatDate'
 import TabBar from '@/components/TabBar'
 import { Toast } from 'vant'
 
@@ -76,11 +77,16 @@ export default {
   },
   data() {
     return {
-      music: {
+      apply: {
         songId: '',
         broadcastDate: '',
         searchPath: '',
         schoolDistrict: ''
+      },
+      music: {
+        imgUrl: '',
+        singer: '',
+        songName: ''
       },
       showPick: false,
       dialog: {
@@ -118,17 +124,30 @@ export default {
   },
   methods: {
     confirmMusic(music) {
-      this.music.broadcastDate = new Date().getTime()
-      this.music.searchPath = music.searchPath
-      this.music.songId = music.songmid
+      this.apply.broadcastDate = new Date().getTime()
+      this.apply.searchPath = music.searchPath
+      this.apply.songId = music.songmid
+      this.music.imgUrl = music.cover
+      this.music.songName = music.songname
+      this.music.singer = music.singer[0].name
+      for (let i = 1; i < music.singer.length; i++) {
+        this.music.singer += ' ' + music.singer[i].name
+      }
       this.dialog.show = true
     },
     submitMusic() {
       Toast.clear()
       this.loading = true
-      this.$axios.post('/admin/submit', this.music).then((res) => {
+      this.$axios.post('/admin/submit', this.apply).then((res) => {
         this.loading = false
         if (res.data.code === 200) {
+          this.$store.commit('pushApply', {
+            campus: this.apply.schoolDistrict,
+            id: res.data.data.id,
+            state: 3,
+            time: formatDate(new Date(this.apply.broadcastDate)).split(' ')[1],
+            ...this.music
+          })
           this.showPick = false
           this.dialog.show = false
           Toast.success('添加成功\n返回首页查看')

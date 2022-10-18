@@ -93,13 +93,7 @@ export default {
     }
   },
   mounted() {
-    const tempObj = {
-      id: true,
-      time: true,
-      campus: false,
-      state: true
-    }
-    getList('/user/myApplication', this.applyList, tempObj)
+    getList('/user/myApplication', this.applyList)
 
     this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
@@ -178,7 +172,8 @@ export default {
       Toast.loading({
         message: '请求中...',
         forbidClick: true,
-        loadingType: 'spinner'
+        loadingType: 'spinner',
+        duration: 0
       })
       const disabled = !(state === -1 || state === 2)
       this.$axios

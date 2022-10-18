@@ -70,7 +70,7 @@ export default {
   },
   data() {
     return {
-      applyList: [],
+      // applyList: [],
       curIndex: Number,
       dateString: '',
       showCalendar: false,
@@ -84,8 +84,9 @@ export default {
   },
   computed: {
     curDayList() {
-      return this.applyList.filter(
-        (item) => item.time === this.dateString.split(' ')[1]
+      return this.$store.state.applyList.filter(
+        (item) =>
+          item.time === this.dateString.split(' ')[1] && item.state === 3
       )
     }
   },
@@ -114,47 +115,23 @@ export default {
   },
   methods: {
     getApplyList() {
-      const tempObj = {
-        id: true,
-        time: true,
-        campus: true,
-        state: false
-      }
-      if (this.applyList.length === 0) {
-        getList('/admin/songList', this.applyList, tempObj, 3)
-      } else {
+      if (this.$store.state.applyList.length === 0) {
         Toast.loading({
           message: '加载中...',
           forbidClick: true,
-          loadingType: 'spinner'
+          loadingType: 'spinner',
+          duration: 0
         })
-
+        getList('/admin/songList', this.$store.state.applyList, this).then(
+          () => {
+            Toast.clear()
+          }
+        )
+      } else {
         this.scrollTop = localStorage.getItem('homeScrollTop')
         this.$nextTick(() => {
           this.$refs.content.scrollTop = this.scrollTop || 0
         })
-
-        getList('/admin/songList', this.applyList, tempObj, 3, true).then(
-          (res) => {
-            for (let i = 0; i < res.length; i++) {
-              if (
-                JSON.stringify(this.applyList[i]) !== JSON.stringify(res[i])
-              ) {
-                this.applyList.splice(i, 1, res[i])
-              }
-            }
-            if (res.length < this.applyList.length) {
-              this.applyList.splice(res.length)
-            }
-            Toast.clear()
-
-            // this.scrollTop = localStorage.getItem('homeScrollTop')
-            // this.$nextTick(() => {
-            //   this.$refs.content.scrollTop = this.scrollTop || 0
-            //   Toast.clear()
-            // })
-          }
-        )
       }
     },
     /* 选择日期后触发 */
@@ -179,7 +156,8 @@ export default {
       Toast.loading({
         message: '请求中...',
         forbidClick: true,
-        loadingType: 'spinner'
+        loadingType: 'spinner',
+        duration: 0
       })
       this.$axios
         .post('/admin/noPass', {
@@ -187,8 +165,7 @@ export default {
         })
         .then((res) => {
           if (res.data.code === 200) {
-            this.curDayList.splice(this.curIndex, 1)
-            this.$forceUpdate()
+            this.$store.commit('noPassApply', this.curDayList[this.curIndex].id)
             Toast.clear()
             Toast.success('取消成功')
           } else {

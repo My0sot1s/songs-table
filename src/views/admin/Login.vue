@@ -45,7 +45,8 @@ export default {
       Toast.loading({
         message: '登录中...',
         forbidClick: true,
-        loadingType: 'spinner'
+        loadingType: 'spinner',
+        duration: 0
       })
       this.$axios
         .post('/admin/login', {

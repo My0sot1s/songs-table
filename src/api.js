@@ -16,18 +16,9 @@ export const updateRequest = (form) =>
     data: form
   })
 
-/*
- url: 请求地址
- list： 组件实例对象的data中对应的list
- tempObj: 获取的项目所包含的属性
- stateCondition： 是否进行状态筛选，传入false或状态值
- returnOnEnd： 在结束后返回还是每获取一个便添加到页面
- */
-export const getList = (url, list, tempObj, stateCondition, returnOnEnd) => {
+export const getList = (url, list, that) => {
   return new Promise((resolve) => {
     let promise = Promise.resolve()
-    const tempList = []
-    const curList = returnOnEnd ? tempList : list
 
     axios({
       method: 'GET',
@@ -35,53 +26,58 @@ export const getList = (url, list, tempObj, stateCondition, returnOnEnd) => {
     }).then(async (res) => {
       if (res.data.code === 200 && res.data.data) {
         res.data.data.forEach((item) => {
-          if (!stateCondition || item.status === stateCondition) {
-            promise = promise.then(() => {
-              return new Promise((resolve) => {
-                if (item.search_path === '网易云') {
-                  Vue.prototype.$musicApi
-                    .NetEaseCloudDetail(item.song_id)
-                    .then((detail) => {
-                      if (detail.data.songs.length === 0) {
-                        resolve()
-                      } else {
-                        curList.push(getTemp(item, detail, tempObj))
-                        resolve()
-                      }
-                    })
-                } else if (item.search_path === 'qq') {
-                  Vue.prototype.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
-                    if (!detail.data.data.track_info.name) {
+          promise = promise.then(() => {
+            return new Promise((resolve) => {
+              if (item.search_path === '网易云') {
+                Vue.prototype.$musicApi
+                  .NetEaseCloudDetail(item.song_id)
+                  .then((detail) => {
+                    if (detail.data.songs.length === 0) {
                       resolve()
                     } else {
-                      curList.push(
-                        getTemp(item, detail.data.data.track_info, tempObj)
-                      )
+                      const temp = getTemp(item, detail)
+                      if (that) {
+                        that.$store.commit('pushApply', temp)
+                      } else {
+                        list.push(temp)
+                      }
                       resolve()
                     }
                   })
-                } else {
-                  resolve()
-                }
-              })
+              } else if (item.search_path === 'qq') {
+                Vue.prototype.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
+                  if (!detail.data.data.track_info.name) {
+                    resolve()
+                  } else {
+                    const temp = getTemp(item, detail.data.data.track_info)
+                    if (that) {
+                      that.$store.commit('pushApply', temp)
+                    } else {
+                      list.push(temp)
+                    }
+                    resolve()
+                  }
+                })
+              } else {
+                resolve()
+              }
             })
-          }
+          })
         })
         return await promise
       }
     }).then(() => {
-      // console.log(curList)
-      resolve(curList)
+      resolve(list)
     })
   })
 }
 
-function getTemp(item, detail, tempObj) {
+function getTemp(item, detail) {
   const temp = {}
-  tempObj.id && (temp.id = item.ID)
-  tempObj.time && (temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1])
-  tempObj.campus && (temp.campus = item.school_district)
-  tempObj.state && (temp.state = item.status)
+  temp.id = item.ID
+  temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
+  temp.campus = item.school_district
+  temp.state = item.status
   if (item.search_path === '网易云') {
     temp.imgUrl = detail.data.songs[0].al.picUrl
     temp.songName = detail.data.songs[0].name

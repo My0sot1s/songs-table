@@ -41,8 +41,8 @@ export default {
       animationData: music
     })
 
-    getList('/user/todaySongs', this.todayList, {})
-    getList('/user/comingSongs', this.laterList, {})
+    getList('/user/todaySongs', this.todayList)
+    getList('/user/comingSongs', this.laterList)
   },
   destroyed() {
     if (!this.lottieInstance) return

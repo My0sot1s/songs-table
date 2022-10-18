@@ -89,7 +89,8 @@ export default {
           Toast.loading({
             message: '请求中...',
             forbidClick: true,
-            loadingType: 'spinner'
+            loadingType: 'spinner',
+            duration: 0
           })
           this.$axios
             .post('/admin/noPass', {
@@ -97,6 +98,7 @@ export default {
             })
             .then((res) => {
               if (res.data.code === 200) {
+                this.$store.commit('noPassApply', this.applyInfo.id)
                 Toast.clear()
                 this.$router.replace('/admin/applyList')
               } else {
@@ -119,7 +121,8 @@ export default {
           Toast.loading({
             message: '请求中...',
             forbidClick: true,
-            loadingType: 'spinner'
+            loadingType: 'spinner',
+            duration: 0
           })
           this.$axios
             .post('/admin/pass', {
@@ -127,6 +130,7 @@ export default {
             })
             .then((res) => {
               if (res.data.code === 200) {
+                this.$store.commit('passApply', this.applyInfo.id)
                 Toast.clear()
                 this.$router.replace('/admin/applyList')
               } else {
