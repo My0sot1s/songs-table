@@ -128,6 +128,12 @@ export default {
           forbidClick: true,
           loadingType: 'spinner'
         })
+
+        this.scrollTop = localStorage.getItem('homeScrollTop')
+        this.$nextTick(() => {
+          this.$refs.content.scrollTop = this.scrollTop || 0
+        })
+
         getList('/admin/songList', this.applyList, tempObj, 3, true).then(
           (res) => {
             for (let i = 0; i < res.length; i++) {
@@ -140,11 +146,13 @@ export default {
             if (res.length < this.applyList.length) {
               this.applyList.splice(res.length)
             }
-            this.scrollTop = localStorage.getItem('homeScrollTop')
-            this.$nextTick(() => {
-              this.$refs.content.scrollTop = this.scrollTop || 0
-              Toast.clear()
-            })
+            Toast.clear()
+
+            // this.scrollTop = localStorage.getItem('homeScrollTop')
+            // this.$nextTick(() => {
+            //   this.$refs.content.scrollTop = this.scrollTop || 0
+            //   Toast.clear()
+            // })
           }
         )
       }

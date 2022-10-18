@@ -187,6 +187,11 @@ export default {
           forbidClick: true,
           loadingType: 'spinner'
         })
+
+        this.scrollTop = localStorage.getItem('applyListScrollTop')
+        this.$nextTick(() => {
+          this.$refs.content.scrollTop = this.scrollTop || 0
+        })
         // 过程同步，初次加载会有短时间白屏，但可以配合缓存，在全部获取后只对不同的进行更新，避免重复渲染
         getList('/admin/songList', this.applyList, tempObj, false, true).then(
           (res) => {
@@ -198,11 +203,13 @@ export default {
                 this.applyList.splice(i, 1, res[i])
               }
             }
-            this.scrollTop = localStorage.getItem('applyListScrollTop')
-            this.$nextTick(() => {
-              this.$refs.content.scrollTop = this.scrollTop || 0
-              Toast.clear()
-            })
+            Toast.clear()
+
+            // this.scrollTop = localStorage.getItem('applyListScrollTop')
+            // this.$nextTick(() => {
+            //   this.$refs.content.scrollTop = this.scrollTop || 0
+            //   Toast.clear()
+            // })
           }
         )
       }
