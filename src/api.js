@@ -28,14 +28,29 @@ export const getList = (url, list, that) => {
         res.data.data.forEach((item) => {
           promise = promise.then(() => {
             return new Promise((resolve) => {
-              if (item.search_path === '网易云') {
-                Vue.prototype.$musicApi
-                  .NetEaseCloudDetail(item.song_id)
-                  .then((detail) => {
-                    if (detail.data.songs.length === 0) {
+              if (!that || (that && inTime(item.broadcast_date))) {
+                if (item.search_path === '网易云') {
+                  Vue.prototype.$musicApi
+                    .NetEaseCloudDetail(item.song_id)
+                    .then((detail) => {
+                      if (detail.data.songs.length === 0) {
+                        resolve()
+                      } else {
+                        const temp = getTemp(item, detail)
+                        if (that) {
+                          that.$store.commit('pushApply', temp)
+                        } else {
+                          list.push(temp)
+                        }
+                        resolve()
+                      }
+                    })
+                } else if (item.search_path === 'qq') {
+                  Vue.prototype.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
+                    if (!detail.data.data.track_info.name) {
                       resolve()
                     } else {
-                      const temp = getTemp(item, detail)
+                      const temp = getTemp(item, detail.data.data.track_info)
                       if (that) {
                         that.$store.commit('pushApply', temp)
                       } else {
@@ -44,20 +59,9 @@ export const getList = (url, list, that) => {
                       resolve()
                     }
                   })
-              } else if (item.search_path === 'qq') {
-                Vue.prototype.$musicApi.QQMusicDetail(item.song_id).then((detail) => {
-                  if (!detail.data.data.track_info.name) {
-                    resolve()
-                  } else {
-                    const temp = getTemp(item, detail.data.data.track_info)
-                    if (that) {
-                      that.$store.commit('pushApply', temp)
-                    } else {
-                      list.push(temp)
-                    }
-                    resolve()
-                  }
-                })
+                } else {
+                  resolve()
+                }
               } else {
                 resolve()
               }
@@ -95,4 +99,11 @@ function getTemp(item, detail) {
   }
 
   return temp
+}
+
+function inTime(time) {
+  const later = new Date().getTime() + 7 * 24 * 3600 * 1000
+  const before = new Date().getTime() - 7 * 24 * 3600 * 1000
+  const flag = new Date(time).getTime() <= later && new Date(time).getTime() >= before
+  return flag
 }
