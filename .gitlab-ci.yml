@@ -30,6 +30,6 @@ deploy:
     - ssh-keyscan -p 4242 pangu.sends.cc >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - rsync -e 'ssh -p 4242' -atv --delete --progress ./dist  ubuntu@pangu.sends.cc:/opt/songs/frontend/
+    - rsync -e 'ssh -p 4242' -atv --delete --progress ./dist  ubuntu@pangu.sends.cc:/home/ubuntu/tmp/songs/frontend
     - ssh -p 4242 ubuntu@pangu.sends.cc bash /home/ubuntu/Songs/run.sh
 
