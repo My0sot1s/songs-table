@@ -22,8 +22,12 @@ deploy:
   before_script:
     - sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     - apk update && apk add openssh-client rsync
-    - echo "$RSYNC_PWD" > /rsyncd.pass
-    - chmod 600 /rsyncd.pass
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - echo "$SSH_HOST_KEY" > ~/.ssh/known_hosts
   script:
-    - rsync --port=8773 -avz -I --password-file=/rsyncd.pass --delete --progress ./dist rsync@pangu.sends.cc::songs
+    - rsync -e 'ssh -p 4242' -atv --delete --progress ./dist  ubuntu@pangu.sends.cc:/opt/songs/frontend/
     - ssh -p 4242 ubuntu@pangu.sends.cc bash /home/ubuntu/Songs/run.sh
+
