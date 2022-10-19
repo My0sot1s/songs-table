@@ -27,6 +27,8 @@ deploy:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - ssh-keyscan -p 4242 pangu.sends.cc >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
     - rsync -e 'ssh -p 4242' -atv --delete --progress ./dist  ubuntu@pangu.sends.cc:/opt/songs/frontend/
     - ssh -p 4242 ubuntu@pangu.sends.cc bash /home/ubuntu/Songs/run.sh
