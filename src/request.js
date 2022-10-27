@@ -69,7 +69,8 @@ function checkCode() {
           })
           .catch((err) => console.log(err))
           .finally(() => {
-            window.location.replace('/')
+            window.location.replace(`/${localStorage.getItem('_hash')}`)
+            localStorage.removeItem('_hash')
           })
       }
     } else {
@@ -81,8 +82,11 @@ function checkCode() {
 function checkToken() {
   return new Promise((resolve, reject) => {
     if (!state.token) {
+      localStorage.setItem('_hash', document.location.hash)
       wxLoginRedirect()
       reject(new Error('should_wx_login'))
+    } else {
+      resolve()
     }
   })
 }
@@ -111,7 +115,10 @@ axios.interceptors.response.use(
       const code = response.data.code.toString()
       if (['401', '440', '441'].includes(code)) {
         if (document.location.hash.includes('admin')) window.location.hash = '/admin'
-        else wxLoginRedirect()
+        else {
+          localStorage.setItem('_hash', document.location.hash)
+          wxLoginRedirect()
+        }
       }
     }
     return response
@@ -136,7 +143,7 @@ export default function initAxios(vue) {
 
     /* 关闭授权就注释下面几行和响应拦截 */
     if (!document.location.hash.includes('admin')) {
-      checkCode().then(checkToken).then(resolve())
+      checkCode().then(checkToken).then(resolve)
     } else {
       resolve()
     }
