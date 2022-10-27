@@ -4,10 +4,10 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '/user': {
-        target: 'http://175.178.162.207:9090'
+        target: 'https://songs.sends.cc'
       },
       '/admin': {
-        target: 'http://175.178.162.207:9090'
+        target: 'https://songs.sends.cc'
       }
     }
   }
