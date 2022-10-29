@@ -83,6 +83,16 @@ export const getList = (url, list, that) => {
   })
 }
 
+export const reject = (reason, id) =>
+  axios({
+    method: 'POST',
+    url: '/admin/noPass',
+    body: {
+      id,
+      reason
+    }
+  })
+
 function getTemp(item, detail) {
   const temp = {}
   temp.id = item.ID

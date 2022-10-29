@@ -77,8 +77,8 @@
       readonly
       label="校区"
       placeholder="请选择你所在的校区"
-      @click="!form.disabled && (showschoolDistrict = true)"
       :rules="[{ required: true, message: '' }]"
+      @click="onlyAmoy"
     />
     <van-popup v-model="showschoolDistrict" round position="bottom">
       <van-cascader
@@ -124,7 +124,7 @@
 
 <script>
 import { submitRequest, updateRequest } from '@/api.js'
-import { Toast } from 'vant'
+import { Toast, Dialog } from 'vant'
 export default {
   props: ['musics'],
   data() {
@@ -135,7 +135,7 @@ export default {
         receiverName: '',
         senderName: '',
         phoneNum: '',
-        schoolDistrict: '',
+        schoolDistrict: '厦门校区',
         broadcastDate: '',
         blessingWords: '',
         disabled: false
@@ -230,6 +230,12 @@ export default {
     },
     popUp(index) {
       this.$emit('popUp', index)
+    },
+    onlyAmoy() {
+      Dialog.alert({
+        message: '目前只支持厦门校区点歌哦',
+        confirmButtonColor: '#1989fa'
+      })
     }
   },
   mounted() {

@@ -44,19 +44,37 @@
     </div>
 
     <div class="btn1" v-if="applyInfo.showBtn">
-      <div @click="reject">驳回</div>
+      <div @click="showReject">驳回</div>
       <div @click="pass" class="btn2">通过</div>
     </div>
+
+    <van-dialog
+      @confirm="reject"
+      v-model="rejectDialog"
+      title="驳回理由"
+      show-cancel-button
+    >
+      <van-field
+        v-model="reason"
+        rows="3"
+        autosize
+        type="textarea"
+        placeholder="请输入驳回理由"
+      />
+    </van-dialog>
   </div>
 </template>
 
 <script>
 import { Dialog, Toast } from 'vant'
+import { reject } from '@/api'
 
 export default {
   data() {
     return {
-      applyInfo: {}
+      applyInfo: {},
+      rejectDialog: false,
+      reason: ''
     }
   },
   mounted() {
@@ -82,37 +100,44 @@ export default {
     })
   },
   methods: {
-    reject() {
-      Dialog.confirm({
-        title: '确认驳回请求？'
+    showReject() {
+      this.rejectDialog = true
+    },
+    async reject() {
+      Toast.loading({
+        message: '请求中...',
+        forbidClick: true,
+        loadingType: 'spinner',
+        duration: 0
       })
-        .then(() => {
-          Toast.loading({
-            message: '请求中...',
-            forbidClick: true,
-            loadingType: 'spinner',
-            duration: 0
-          })
-          this.$axios
-            .post('/admin/noPass', {
-              id: this.applyInfo.id
-            })
-            .then((res) => {
-              if (res.data.code === 200) {
-                this.$store.commit('noPassApply', this.applyInfo.id)
-                Toast.clear()
-                this.$router.replace('/admin/applyList')
-              } else {
-                Toast.fail(res.data.msg)
-              }
-            })
-            .catch(() => {
-              Toast.fail('请求异常')
-            })
+      try {
+        const res = await reject(this.id, this.reason)
+        if (res.data.code === 200) {
+          this.$store.commit('noPassApply', this.applyInfo.id)
+          Toast.clear()
+          this.$router.replace('/admin/applyList')
+        } else {
+          Toast.fail(res.data.msg)
+        }
+      } catch (err) {
+        Toast.fail(err.message)
+      }
+      /* this.$axios
+        .post('/admin/noPass', {
+          id: this.applyInfo.id
+        })
+        .then((res) => {
+          if (res.data.code === 200) {
+            this.$store.commit('noPassApply', this.applyInfo.id)
+            Toast.clear()
+            this.$router.replace('/admin/applyList')
+          } else {
+            Toast.fail(res.data.msg)
+          }
         })
         .catch(() => {
-          // on cancel
-        })
+          Toast.fail('请求异常')
+        }) */
     },
     pass() {
       Dialog.confirm({
