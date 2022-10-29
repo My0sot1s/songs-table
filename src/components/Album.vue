@@ -1,6 +1,6 @@
 <template>
   <!-- 首页方形唱片 -->
-  <div>
+  <div @click="toListen">
     <div class="image">
       <van-image width="15vh" height="15vh" fit="fill" :src="imgUrl">
         <template #loading>
@@ -19,12 +19,18 @@ export default {
   props: {
     imgUrl: String,
     songName: String,
-    singer: String
+    singer: String,
+    listenUrl: String
+  },
+  methods: {
+    toListen() {
+      window.location.href = this.listenUrl
+    }
   }
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .image {
   width: 15vh;
   height: 15vh;

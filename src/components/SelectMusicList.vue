@@ -88,6 +88,7 @@ export default {
             key: this.value,
             pageNo: this.pageNo
           })
+          console.log(data)
           data.data.list.forEach((item) => {
             item.searchPath = 'qq'
             item.cover = `https://y.qq.com/music/photo_new/T002R300x300M000${item.albummid}_1.jpg?max_age=2592000`

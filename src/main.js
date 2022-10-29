@@ -28,7 +28,9 @@ import {
   NavBar,
   Tabbar,
   TabbarItem,
-  Dialog
+  Dialog,
+  Swipe,
+  SwipeItem
 } from 'vant'
 
 Vue.use(ActionSheet)
@@ -55,12 +57,18 @@ Vue.use(Sticky)
 Vue.use(NavBar)
 Vue.use(Tabbar)
 Vue.use(TabbarItem)
+Vue.use(Swipe)
+Vue.use(SwipeItem)
 
 Vue.config.productionTip = false
 
-window.addEventListener('popstate', function(e) {
-  router.isBack = true
-}, false)
+window.addEventListener(
+  'popstate',
+  function (e) {
+    router.isBack = true
+  },
+  false
+)
 
 const navMap = new Map([
   [undefined, { leftArrow: false, navText: '点歌台' }],

@@ -14,6 +14,7 @@
             :imgUrl="item.imgUrl"
             :songName="item.songName"
             :singer="item.singer"
+            :listenUrl="item.listenUrl"
           />
         </div>
         <div v-else>
@@ -39,6 +40,9 @@ export default {
   },
   components: {
     Album
+  },
+  mounted() {
+    console.log(this.musicList)
   }
 }
 </script>
@@ -68,4 +72,5 @@ export default {
     }
   }
 }
-</style>>
+</style>
+>

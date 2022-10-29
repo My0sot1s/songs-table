@@ -55,8 +55,5 @@ body {
 }
 .van-form {
   background-color: white;
-  .van-notice-bar {
-    text-indent: 6vw;
-  }
 }
 </style>

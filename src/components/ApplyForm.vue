@@ -1,9 +1,27 @@
 <template>
   <van-form @submit="onSubmit" :disabled="form.disabled">
     <van-notice-bar
+      color="#1989fa"
+      background="#ecf9ff"
+      left-icon="volume-o"
+      :style="`margin: 2vw 0`"
+      :scrollable="false"
+    >
+      <van-swipe
+        vertical
+        class="notice-swipe"
+        :autoplay="3000"
+        :show-indicators="false"
+      >
+        <van-swipe-item>提示：周五只能点粤语歌哦</van-swipe-item>
+        <van-swipe-item>提示：周日只能点英文歌哦</van-swipe-item>
+      </van-swipe>
+    </van-notice-bar>
+    <van-notice-bar
       wrapable
       :scrollable="false"
       :text="notice"
+      :style="`text-indent: 6vw`"
       color="black"
       background="inherit"
     ></van-notice-bar>
@@ -232,5 +250,9 @@ export default {
 <style>
 .van-search__content {
   background-color: rgb(250, 251, 253) !important;
+}
+.notice-swipe {
+  height: 40px;
+  line-height: 40px;
 }
 </style>
