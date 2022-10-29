@@ -58,6 +58,10 @@ Vue.use(TabbarItem)
 
 Vue.config.productionTip = false
 
+window.addEventListener('popstate', function(e) {
+  router.isBack = true
+}, false)
+
 const navMap = new Map([
   [undefined, { leftArrow: false, navText: '点歌台' }],
   ['Home', { leftArrow: false, navText: '点歌台' }],

@@ -7,9 +7,11 @@
       :navText="this.$store.state.navText"
       :leftArrow="this.$store.state.leftArrow"
     />
-    <keep-alive include="ApplyList,adminHome">
-      <router-view />
-    </keep-alive>
+    <transition :name="transitionName">
+      <keep-alive include="ApplyList,adminHome">
+        <router-view />
+      </keep-alive>
+    </transition>
   </div>
 </template>
 
@@ -26,7 +28,19 @@ export default {
   components: { NavBar },
   data() {
     return {
-      height: document.body.clientHeight
+      height: document.body.clientHeight,
+      transitionName: 'slide-right'
+    }
+  },
+  watch: {
+    $route(to, from) {
+      const isBack = this.$router.isBack
+      if (isBack) {
+        this.transitionName = 'slide-right'
+      } else {
+        this.transitionName = 'slide-left'
+      }
+      this.$router.isBack = false
     }
   }
 }
@@ -74,5 +88,25 @@ hr {
 
 .van-nav-bar__arrow {
   font-size: 2.6vh !important;
+}
+
+.slide-left-enter,
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.slide-left-leave-to,
+.slide-right-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: 0.5s;
+  position: absolute;
 }
 </style>
