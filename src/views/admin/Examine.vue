@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="image">
+    <div class="image" @click="toListen">
       <van-image width="20vh" height="20vh" fit="fill" :src="applyInfo.imgUrl">
         <template #loading>
           <van-loading type="spinner" size="20" />
@@ -61,6 +61,7 @@ export default {
   },
   mounted() {
     const musicInfo = JSON.parse(localStorage.getItem('musicInfo'))
+    console.log(musicInfo)
     this.$axios.get(`/admin/songDetails?id=${musicInfo.id}`).then((res) => {
       if (res.data.code === 200) {
         const resInfo = res.data.data[0]
@@ -144,12 +145,16 @@ export default {
         .catch(() => {
           // on cancel
         })
+    },
+    toListen() {
+      console.log(this.applyInfo.listenUrl)
+      location.href = this.applyInfo.listenUrl
     }
   }
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .examine {
   overflow: auto;
 }

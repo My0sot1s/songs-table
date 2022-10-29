@@ -224,7 +224,7 @@ export default {
         })
     },
     toExamine(index) {
-      const { id, imgUrl, songName, singer, time } =
+      const { id, imgUrl, songName, singer, time, listenUrl } =
         this.curNav === 0
           ? this.curDayPendingList[index]
           : this.curDayProcessedList[index]
@@ -237,7 +237,8 @@ export default {
           imgUrl,
           songName,
           singer,
-          time
+          time,
+          listenUrl
         })
       )
       this.$router.push('/admin/examine')
@@ -287,7 +288,7 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .admin-content {
   margin-bottom: 5vh;
   overflow: scroll;
