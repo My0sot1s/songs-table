@@ -79,7 +79,7 @@ export default {
   },
   mounted() {
     const musicInfo = JSON.parse(localStorage.getItem('musicInfo'))
-    console.log(musicInfo)
+    /* console.log(musicInfo) */
     this.$axios.get(`/admin/songDetails?id=${musicInfo.id}`).then((res) => {
       if (res.data.code === 200) {
         const resInfo = res.data.data[0]
@@ -112,7 +112,7 @@ export default {
       })
       try {
         const res = await reject(this.applyInfo.id, this.reason)
-        console.log(res)
+        /* console.log(res) */
         if (res.data.code === 200) {
           this.$store.commit('noPassApply', this.applyInfo.id)
           Toast.clear()
@@ -174,7 +174,7 @@ export default {
         })
     },
     toListen() {
-      console.log(this.applyInfo.listenUrl)
+      /* console.log(this.applyInfo.listenUrl) */
       location.href = this.applyInfo.listenUrl
     }
   }

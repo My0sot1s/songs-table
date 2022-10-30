@@ -126,7 +126,7 @@ export default {
                 id: this.curList[index].id
               })
               .then((res) => {
-                console.log(res)
+                /* console.log(res) */
                 if (res.data.code === 200) {
                   this.curList.splice(index, 1)
                   this.curIndex = -1

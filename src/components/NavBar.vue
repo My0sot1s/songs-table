@@ -13,7 +13,7 @@ export default {
   props: ['navText', 'leftArrow'],
   methods: {
     onClickLeft() {
-      console.log('返回')
+      /* console.log('返回') */
     },
     back() {
       this.$router.back()

@@ -105,7 +105,7 @@ export default {
             offset: 15 * (this.pageNo - 1)
           })
           this.pageNo++
-          console.log(data.result.songs)
+          /* console.log(data.result.songs) */
           /* this.musicList.push(...data.result.songs) */
           function MusicObject(song) {
             this.name = song.name
