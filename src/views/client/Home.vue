@@ -48,7 +48,7 @@ export default {
       localStorage.setItem('limitDay', true)
       Dialog({ message: this.limitReason })
     } else {
-      localStorage.setItem('limitDay', true)
+      localStorage.setItem('limitDay', false)
     }
     getList('/user/todaySongs', this.todayList)
     getList('/user/comingSongs', this.laterList)
