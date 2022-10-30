@@ -1,12 +1,7 @@
 <template>
   <div id="app" :style="`height: ${height}'px'`">
-    <NavBar
-      fixed
-      placeholder
-      v-if="this.$store.state.navText"
-      :navText="this.$store.state.navText"
-      :leftArrow="this.$store.state.leftArrow"
-    />
+    <NavBar fixed placeholder v-if="this.$store.state.navText" :navText="this.$store.state.navText"
+      :leftArrow="this.$store.state.leftArrow" />
     <transition :name="transitionName">
       <keep-alive include="ApplyList,adminHome">
         <router-view />
@@ -42,6 +37,9 @@ export default {
       }
       this.$router.isBack = false
     }
+  },
+  beforeDestroy() {
+    localStorage.removeItem('oldIndex')
   }
 }
 </script>
@@ -51,10 +49,12 @@ export default {
   display: none;
   width: 0 !important;
 }
+
 * {
   -ms-overflow-style: none;
   overflow: -moz-scrollbars-none;
 }
+
 hr {
   height: 1px;
   background-color: #ccc;
@@ -71,7 +71,7 @@ hr {
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
 
-  & > div {
+  &>div {
     display: flex;
     align-items: center;
   }
@@ -106,7 +106,7 @@ hr {
 .slide-left-leave-active,
 .slide-right-enter-active,
 .slide-right-leave-active {
-  transition: 0.5s;
+  transition: 0.3s;
   position: absolute;
 }
 </style>

@@ -2,30 +2,24 @@
   <div>
     <div ref="content" class="admin-content" @scroll="handelScroll">
       <!-- <div class="admin-header">歌单列表</div> -->
-      <van-sticky offset-top="6vh">
+      <van-sticky :offset-top="offsetTop">
         <div class="admin-navBar">
           <div class="title">歌单</div>
           <div class="time" @click="showCalendar = true">
             <div class="time-date">{{ dateString }}</div>
-            <div><van-icon size="3.5vh" name="calendar-o" /></div>
+            <div>
+              <van-icon size="3.5vh" name="calendar-o" />
+            </div>
           </div>
         </div>
       </van-sticky>
 
       <div v-for="(item, index) in curDayList" :key="item.id">
-        <ApplyInfo
-          :imgUrl="item.imgUrl"
-          :songName="item.songName"
-          :singer="item.singer"
-          :time="item.time"
-          :campus="item.campus"
-          iconName="ellipsis"
-          @click.native="toExamine(index)"
-          @action="
-            actionSheet.show = true
+        <ApplyInfo :imgUrl="item.imgUrl" :songName="item.songName" :singer="item.singer" :time="item.time"
+          :campus="item.campus" iconName="ellipsis" @click.native="toExamine(index)" @action="
+  actionSheet.show = true
             curIndex = index
-          "
-        />
+          " />
       </div>
       <div ref="lottie" v-show="curDayList.length === 0"></div>
     </div>
@@ -34,22 +28,11 @@
       <van-icon name="back-top" />
     </div>
     <TabBar />
-    <van-calendar
-      color="#3c9cff"
-      :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
-      :max-date="new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)"
-      :show-confirm="false"
-      v-model="showCalendar"
-      @confirm="selDay"
-    />
-    <van-action-sheet
-      v-model="actionSheet.show"
-      :actions="actionSheet.actions"
-      cancel-text="取消"
-      close-on-click-action
-      close-on-popstate
-      @select="selAction"
-    />
+    <van-calendar color="#3c9cff" :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
+      :max-date="new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)" :show-confirm="false" v-model="showCalendar"
+      @confirm="selDay" />
+    <van-action-sheet v-model="actionSheet.show" :actions="actionSheet.actions" cancel-text="取消" close-on-click-action
+      close-on-popstate @select="selAction" />
   </div>
 </template>
 
@@ -79,7 +62,8 @@ export default {
         actions: [{ name: '取消播送这首歌' }]
       },
       scrollTop: 0,
-      showGoTop: false
+      showGoTop: false,
+      offsetTop: '0'
     }
   },
   computed: {
@@ -102,9 +86,13 @@ export default {
     })
   },
   activated() {
+    setTimeout(() => {
+      this.offsetTop = '6vh'
+    }, 400)
     this.getApplyList()
   },
   deactivated() {
+    this.offsetTop = '0'
     localStorage.setItem('homeScrollTop', this.scrollTop)
   },
   destroyed() {
