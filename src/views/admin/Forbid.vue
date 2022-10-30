@@ -47,8 +47,8 @@ export default {
     },
     onConfirm(date) {
       this.showCalendar = false
-      this.startTime = [...date][0].getTime()
-      this.endTime = [...date][1].getTime()
+      this.startTime = [...date][1].getTime()
+      this.endTime = [...date][0].getTime()
       const [start, end] = date
       this.show = false
       this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`

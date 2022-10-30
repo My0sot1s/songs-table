@@ -15,11 +15,19 @@
       </van-sticky>
 
       <div v-for="(item, index) in curDayList" :key="item.id">
-        <ApplyInfo :imgUrl="item.imgUrl" :songName="item.songName" :singer="item.singer" :time="item.time"
-          :campus="item.campus" iconName="ellipsis" @click.native="toExamine(index)" @action="
-  actionSheet.show = true
+        <ApplyInfo
+          :imgUrl="item.imgUrl"
+          :songName="item.songName"
+          :singer="item.singer"
+          :time="item.time"
+          :campus="item.campus"
+          iconName="ellipsis"
+          @click.native="toExamine(index)"
+          @action="
+            actionSheet.show = true
             curIndex = index
-          " />
+          "
+        />
       </div>
       <div ref="lottie" v-show="curDayList.length === 0"></div>
     </div>
@@ -28,11 +36,22 @@
       <van-icon name="back-top" />
     </div>
     <TabBar />
-    <van-calendar color="#3c9cff" :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
-      :max-date="new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)" :show-confirm="false" v-model="showCalendar"
-      @confirm="selDay" />
-    <van-action-sheet v-model="actionSheet.show" :actions="actionSheet.actions" cancel-text="取消" close-on-click-action
-      close-on-popstate @select="selAction" />
+    <van-calendar
+      color="#3c9cff"
+      :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
+      :max-date="new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)"
+      :show-confirm="false"
+      v-model="showCalendar"
+      @confirm="selDay"
+    />
+    <van-action-sheet
+      v-model="actionSheet.show"
+      :actions="actionSheet.actions"
+      cancel-text="取消"
+      close-on-click-action
+      close-on-popstate
+      @select="selAction"
+    />
   </div>
 </template>
 
@@ -165,7 +184,8 @@ export default {
         })
     },
     toExamine(index) {
-      const { id, imgUrl, songName, singer, time } = this.curDayList[index]
+      const { id, imgUrl, songName, singer, time, listenUrl } =
+        this.curDayList[index]
       localStorage.setItem(
         'musicInfo',
         JSON.stringify({
@@ -174,7 +194,8 @@ export default {
           imgUrl,
           songName,
           singer,
-          time
+          time,
+          listenUrl
         })
       )
       this.$router.push('/admin/examine')
@@ -192,7 +213,7 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .admin-content {
   margin-bottom: 5vh;
   overflow: scroll;
