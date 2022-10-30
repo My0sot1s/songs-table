@@ -153,11 +153,12 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: white;
-  margin: 22vw 2vw 0 2vw;
+  margin: 30vw 2vw 0 2vw;
   padding: 8vw 7vw 0 7vw;
   border-radius: 4vw;
   overflow: scroll;
   z-index: 1;
+  min-height: 50vh;
   max-height: 70vh;
   .van-search {
     padding: 0;
