@@ -43,10 +43,10 @@ export default {
       animationData: music
     })
     const res = await getLimitDay()
-    this.limitReason = res.data.reason
+    this.limitReason = res.data?.reason
     if ((this.limitReason ?? '') !== '') {
       localStorage.setItem('limitDay', true)
-      Dialog({ message: this.limitReason })
+      Dialog({ message: res.msg })
     } else {
       localStorage.setItem('limitDay', false)
     }
