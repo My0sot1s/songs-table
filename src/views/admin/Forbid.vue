@@ -63,6 +63,7 @@ export default {
           )
           if (data.code === 200) {
             Toast.success('提交成功')
+            this.$router.replace('/admin/setting')
           } else {
             Toast.fail(data.message)
           }
