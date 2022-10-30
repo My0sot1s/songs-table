@@ -20,19 +20,21 @@
 import MusicList from '@/components/MusicList'
 import lottie from 'lottie-web'
 import music from '@/assets/music.json'
-import { getList } from '@/api'
+import { getList, getLimitDay } from '@/api'
+import { Dialog } from 'vant'
 
 export default {
   data() {
     return {
       todayList: [],
-      laterList: []
+      laterList: [],
+      limitReason: ''
     }
   },
   components: {
     MusicList
   },
-  mounted() {
+  async mounted() {
     this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
       renderer: 'svg',
@@ -40,7 +42,14 @@ export default {
       autoplay: true,
       animationData: music
     })
-
+    const res = await getLimitDay()
+    this.limitReason = res.data.reason
+    if ((this.limitReason ?? '') !== '') {
+      localStorage.setItem('limitDay', true)
+      Dialog({ message: this.limitReason })
+    } else {
+      localStorage.setItem('limitDay', true)
+    }
     getList('/user/todaySongs', this.todayList)
     getList('/user/comingSongs', this.laterList)
   },
@@ -52,6 +61,15 @@ export default {
   methods: {
     toSelect() {
       this.$router.push('/selectmusic')
+    }
+  },
+  beforeRouteLeave: (to, from, next) => {
+    console.log(localStorage.limitDay)
+    if (localStorage.limitDay === 'false') {
+      next()
+    } else {
+      Dialog({ message: '今天不能点歌哦' })
+      next(false)
     }
   }
 }

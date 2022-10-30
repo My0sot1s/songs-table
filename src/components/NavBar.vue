@@ -16,18 +16,7 @@ export default {
       console.log('返回')
     },
     back() {
-      if (this.$store.state.leftArrow) {
-        if (
-          this.$route.name === 'MyApply' ||
-          this.$route.name === 'SelectMusic'
-        ) {
-          // 重新登陆后back会回到带有code的地址
-          this.$router.isBack = true
-          this.$router.replace('/home')
-        } else {
-          this.$router.back()
-        }
-      }
+      this.$router.back()
     }
   }
 }

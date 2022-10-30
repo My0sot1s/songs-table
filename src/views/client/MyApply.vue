@@ -6,23 +6,35 @@
       </van-dropdown-menu>
     </van-sticky>
     <div>
-      <ApplyInfo v-for="(item, index) in curList" :key="item.id" :imgUrl="item.imgUrl" :songName="item.songName"
-        :singer="item.singer" :time="item.time" :state="item.state + ''" iconName="delete-o"
-        @click.native="curIndex = curIndex === index ? -1 : index" @action="delApply($event, index)">
+      <ApplyInfo
+        v-for="(item, index) in curList"
+        :key="item.id"
+        :imgUrl="item.imgUrl"
+        :songName="item.songName"
+        :singer="item.singer"
+        :time="item.time"
+        :state="item.state + ''"
+        iconName="delete-o"
+        @click.native="curIndex = curIndex === index ? -1 : index"
+        @action="delApply($event, index)"
+      >
         <template #footer>
           <!-- 当前点击且未结束时显示 -->
           <div class="footer" v-show="curIndex === index && item.state !== 0">
             <div :class="{ 'flex-end': item.state === -1 || item.state === 2 }">
               <!-- 状态不是已撤回或者未通过时显示 -->
-              <div v-if="!(item.state === -1 || item.state === 2)" @click.stop="withdraw(index)">
+              <div
+                v-if="!(item.state === -1 || item.state === 2)"
+                @click.stop="withdraw(index)"
+              >
                 <van-icon color="#555" name="revoke" /><span>申请撤回</span>
               </div>
               <!-- 状态是已撤回或者未通过时显示重新提交,其它显示查看详情 -->
               <div @click.stop="toForms(item.state, index)">
                 <van-icon color="#555" name="guide-o" /><span>{{
-                    item.state === -1 || item.state === 2
-                      ? '重新提交'
-                      : '查看详情'
+                  item.state === -1 || item.state === 2
+                    ? '查看详情'
+                    : '查看详情'
                 }}</span>
               </div>
             </div>
@@ -188,7 +200,9 @@ export default {
                   this.curList[index].songName +
                   '-' +
                   this.curList[index].singer,
-                disabled
+                disabled,
+                reason: data.no_pass_reason,
+                btn: (data.no_pass_reason ?? '') !== '' ? '重新提交' : '提交'
               })
             )
             Toast.clear()
@@ -209,7 +223,7 @@ export default {
 .footer {
   border-top: 1px solid #ccc;
 
-  &>div {
+  & > div {
     padding: 2vh;
     display: flex;
     justify-content: space-between;

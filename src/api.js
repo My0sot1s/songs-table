@@ -83,14 +83,20 @@ export const getList = (url, list, that) => {
   })
 }
 
-export const reject = (reason, id) =>
+export const reject = (id, reason) =>
   axios({
     method: 'POST',
     url: '/admin/noPass',
-    body: {
+    data: {
       id,
-      reason
+      noPassReason: reason
     }
+  })
+
+export const getLimitDay = () =>
+  axios({
+    method: 'GET',
+    url: '/user/isLimitDay'
   })
 
 function getTemp(item, detail) {
@@ -100,7 +106,6 @@ function getTemp(item, detail) {
   temp.campus = item.school_district
   temp.state = item.status
   if (item.search_path === '网易云') {
-    console.log('detail=', detail)
     temp.listenUrl = `https://music.163.com/#/song?id=${detail.data.songs[0].id}`
     temp.imgUrl = detail.data.songs[0].al.picUrl
     temp.songName = detail.data.songs[0].name
@@ -109,7 +114,6 @@ function getTemp(item, detail) {
       temp.singer += ' ' + detail.data.songs[0].ar[i].name
     }
   } else if (item.search_path === 'qq') {
-    console.log('detail=', detail)
     temp.listenUrl = `https://y.qq.com/n/ryqq/songDetail/${detail.mid}`
     temp.imgUrl = `https://y.gtimg.cn/music/photo_new/T002R300x300M000${detail.album.mid}.jpg`
     temp.songName = detail.name

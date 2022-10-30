@@ -7,6 +7,7 @@
       v-show="this.musicList.length === 0 && !this.loading"
       image="search"
       description=""
+      class="empty"
     />
     <div
       ref="lottie"
@@ -150,6 +151,7 @@ export default {
 
 <style lang="less" scoped>
 #selectMusicList {
+  position: relative;
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -169,6 +171,12 @@ export default {
     .van-search__content {
       background-color: rgb(250, 251, 253);
     }
+  }
+  .empty {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
   .van-list {
     box-sizing: border-box;

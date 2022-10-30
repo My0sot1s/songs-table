@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .apply-info {
   width: 80vw;
   margin: 2vh auto;

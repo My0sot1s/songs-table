@@ -1,6 +1,7 @@
 <template>
   <van-form @submit="onSubmit" :disabled="form.disabled">
     <van-notice-bar
+      v-show="!form.disabled"
       color="#1989fa"
       background="#ecf9ff"
       left-icon="volume-o"
@@ -18,6 +19,7 @@
       </van-swipe>
     </van-notice-bar>
     <van-notice-bar
+      v-show="!(form.reason ?? '') !== '' && !form.disabled"
       wrapable
       :scrollable="false"
       :text="notice"
@@ -25,6 +27,13 @@
       color="black"
       background="inherit"
     ></van-notice-bar>
+    <van-notice-bar
+      v-show="form.reason ?? '' !== ''"
+      color="#ee0a24"
+      wrapable
+      :scrollable="false"
+      :text="'驳回理由：' + form.reason"
+    />
     <van-divider />
     <van-search
       shape="round"
@@ -117,7 +126,9 @@
       :rules="[{ required: true, message: '请输入寄语' }]"
     />
     <div style="margin: 16px" v-if="!form.disabled">
-      <van-button type="info" round block native-type="submit">提交</van-button>
+      <van-button type="info" round block native-type="submit">{{
+        form.btn || '提交'
+      }}</van-button>
     </div>
   </van-form>
 </template>
