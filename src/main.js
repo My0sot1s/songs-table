@@ -7,6 +7,7 @@ import musicApi from './musicApi'
 import {
   ActionSheet,
   Button,
+  Cell,
   Icon,
   Image as VanImage,
   Popup,
@@ -35,6 +36,7 @@ import {
 
 Vue.use(ActionSheet)
 Vue.use(Button)
+Vue.use(Cell)
 Vue.use(Dialog)
 Vue.use(Icon)
 Vue.use(VanImage)
@@ -79,7 +81,8 @@ const navMap = new Map([
   ['AdminHome', { leftArrow: false, navText: '歌单列表' }],
   ['Setting', { leftArrow: false, navText: '管理' }],
   ['ApplyList', { leftArrow: false, navText: '申请列表' }],
-  ['Examine', { leftArrow: true, navText: '申请详情' }]
+  ['Examine', { leftArrow: true, navText: '申请详情' }],
+  ['Forbid', { leftArrow: true, navText: '禁止点歌时间段' }]
 ])
 
 router.beforeEach((to, from, next) => {

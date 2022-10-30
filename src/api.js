@@ -99,6 +99,17 @@ export const getLimitDay = () =>
     url: '/user/isLimitDay'
   })
 
+export const limitTime = (endTime, reason, startTime) =>
+  axios({
+    method: 'POST',
+    url: 'admin/limitTime',
+    data: {
+      endTime,
+      reason,
+      startTime
+    }
+  })
+
 function getTemp(item, detail) {
   const temp = {}
   temp.id = item.ID

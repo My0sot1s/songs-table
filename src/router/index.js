@@ -8,6 +8,7 @@ import Login from '@/views/admin/Login'
 import AdminHome from '@/views/admin/Home'
 import ApplyList from '@/views/admin/ApplyList'
 import Setting from '@/views/admin/Setting'
+import Forbid from '@/views/admin/Forbid'
 import Examine from '@/views/admin/Examine'
 
 Vue.use(VueRouter)
@@ -56,6 +57,11 @@ const routes = [
     name: 'Setting',
     path: '/admin/setting',
     component: Setting
+  },
+  {
+    name: 'Forbid',
+    path: '/admin/forbid',
+    component: Forbid
   },
   {
     name: 'Examine',

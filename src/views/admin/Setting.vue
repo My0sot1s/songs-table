@@ -2,34 +2,64 @@
   <div>
     <div class="body">
       <div @click="showPick = true">添加备选歌曲</div>
-      <div>特殊时间点歌规则</div>
+      <div @click="$router.push('/admin/forbid')">禁止点歌时间段</div>
       <div>使用帮助</div>
       <div>意见与反馈</div>
     </div>
 
-    <van-overlay :lock-scroll="false" :show="showPick" @click="showPick = false">
+    <van-overlay
+      :lock-scroll="false"
+      :show="showPick"
+      @click="showPick = false"
+    >
       <SelectMusicList @confirmMusic="confirmMusic" />
     </van-overlay>
     <TabBar />
 
-    <van-dialog v-model="dialog.show" :title="dialog.title" :show-confirm-button="false">
+    <van-dialog
+      v-model="dialog.show"
+      :title="dialog.title"
+      :show-confirm-button="false"
+    >
       <van-form @submit="submitMusic">
         <div style="margin: 1.5vh 1vh">
-          <van-field v-model="apply.schoolDistrict" is-link readonly label="校区" placeholder="请选择你所在的校区"
-            @click="dialog.cascader.show = true" :rules="[{ required: true, message: '' }]" />
+          <van-field
+            v-model="apply.schoolDistrict"
+            is-link
+            readonly
+            label="校区"
+            placeholder="请选择你所在的校区"
+            @click="dialog.cascader.show = true"
+            :rules="[{ required: true, message: '' }]"
+          />
         </div>
         <div class="form-btns">
-          <van-button class="form-btns-btn" @click="dialog.show = false" native-type="button">取消</van-button>
-          <van-button class="form-btns-btn" native-type="submit" :loading="loading" loading-type="spinner">确定
+          <van-button
+            class="form-btns-btn"
+            @click="dialog.show = false"
+            native-type="button"
+            >取消</van-button
+          >
+          <van-button
+            class="form-btns-btn"
+            native-type="submit"
+            :loading="loading"
+            loading-type="spinner"
+            >确定
           </van-button>
         </div>
       </van-form>
     </van-dialog>
 
     <van-popup v-model="dialog.cascader.show" round position="bottom">
-      <van-cascader active-color="#1989fa" v-model="apply.schoolDistrict" title="请选择所在校区"
-        :options="dialog.cascader.options" @close="dialog.cascader.show = false"
-        @finish="dialog.cascader.show = false" />
+      <van-cascader
+        active-color="#1989fa"
+        v-model="apply.schoolDistrict"
+        title="请选择所在校区"
+        :options="dialog.cascader.options"
+        @close="dialog.cascader.show = false"
+        @finish="dialog.cascader.show = false"
+      />
     </van-popup>
   </div>
 </template>
@@ -58,7 +88,10 @@ export default {
         singer: '',
         songName: ''
       },
+      showCalendar: false,
       showPick: false,
+      showTime: false,
+      date: '',
       dialog: {
         show: false,
         title: '',
@@ -130,7 +163,7 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .body {
   height: 91vh;
 }
