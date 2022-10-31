@@ -22,9 +22,25 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
 .van-nav-bar {
   z-index: 999 !important;
+}
+
+.van-nav-bar {
+  height: 45px;
+  .van-nav-bar__content {
+    height: 45px !important;
+  }
+  .van-nav-bar__left {
+    height: 45px !important;
+    .van-nav-bar__arrow {
+      font-size: 5vw !important;
+    }
+    .van-nav-bar__text {
+      font-size: 5vw !important;
+    }
+  }
 }
 
 .van-nav-bar__left > * {
