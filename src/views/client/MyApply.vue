@@ -92,7 +92,7 @@ export default {
       animationData: empty
     })
 
-    this.offsetTop = '44.8px'
+    this.offsetTop = '44.9px'
   },
   destroyed() {
     if (!this.lottieInstance) return

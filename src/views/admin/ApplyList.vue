@@ -129,7 +129,7 @@ export default {
   },
   activated() {
     setTimeout(() => {
-      this.offsetTop = '44.8px'
+      this.offsetTop = '44.9px'
     }, 400)
     this.getApplyList()
   },
