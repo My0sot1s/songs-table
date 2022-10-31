@@ -14,8 +14,10 @@
         :autoplay="3000"
         :show-indicators="false"
       >
-        <van-swipe-item>提示：周五只能点英文歌哦</van-swipe-item>
-        <van-swipe-item>提示：周日只能点粤语歌哦</van-swipe-item>
+        <van-swipe-item>周五为英语点歌台，点歌请用英文噢~</van-swipe-item>
+        <van-swipe-item
+          >周日为粤语点歌台，我们将用粤语送出你的祝福~</van-swipe-item
+        >
       </van-swipe>
     </van-notice-bar>
     <van-notice-bar

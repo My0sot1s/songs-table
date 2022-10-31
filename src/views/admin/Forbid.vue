@@ -56,7 +56,14 @@ export default {
       if (this.firstTime) {
         this.firstTime = false
       } else {
-        this.limitTime(!val)
+        if (
+          (this.startTime ?? '') !== '' &&
+          (this.endTime ?? '') !== '' &&
+          this.startTime !== 1 &&
+          this.endTime !== 2
+        ) {
+          this.limitTime(!val)
+        }
       }
     }
   },
@@ -100,7 +107,7 @@ export default {
           (this.endTime ?? '') !== '' &&
           this.checked
         ) {
-          limitTime()
+          this.limitTime(false)
         } else {
           Toast.fail('请填写时间段')
         }
@@ -113,15 +120,17 @@ export default {
     try {
       const { data } = await limitInfo()
       console.log(data)
-      if (this.startTime !== 1 && this.endTime !== 2) {
-        this.checked = true
-      }
       this.startTime = data.data.startTime
       this.reason = data.data.reason
       this.endTime = data.data.endTime
-      this.date = `${this.formatDate(
-        new Date(this.startTime)
-      )} - ${this.formatDate(new Date(this.endTime))}`
+      if (this.startTime !== 1 && this.endTime !== 2) {
+        this.checked = true
+        this.date = `${this.formatDate(
+          new Date(this.startTime)
+        )} - ${this.formatDate(new Date(this.endTime))}`
+      } else {
+        this.date = '暂无'
+      }
     } catch (err) {
       Toast.fail(err.message)
     }
