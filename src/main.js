@@ -31,7 +31,8 @@ import {
   TabbarItem,
   Dialog,
   Swipe,
-  SwipeItem
+  SwipeItem,
+  Switch
 } from 'vant'
 
 Vue.use(ActionSheet)
@@ -61,6 +62,7 @@ Vue.use(Tabbar)
 Vue.use(TabbarItem)
 Vue.use(Swipe)
 Vue.use(SwipeItem)
+Vue.use(Switch)
 
 Vue.config.productionTip = false
 

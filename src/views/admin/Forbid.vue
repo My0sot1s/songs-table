@@ -1,11 +1,18 @@
 <template>
   <div id="forbid">
     <van-divider />
+    <van-cell center title="启用规则">
+      <template #right-icon>
+        <van-switch v-model="checked" size="24" />
+      </template>
+    </van-cell>
+    <van-divider />
     <van-form @submit="onSubmit">
       <van-cell
-        title="选择日期区间"
+        :style="`color: ${checked ? 'black' : '#c8c9cc'}`"
+        title="日期区间"
         :value="date"
-        @click.stop="showCalendar = true"
+        @click.stop="showCalendar = checked"
       />
       <van-calendar
         color="#1989fa"
@@ -15,6 +22,7 @@
         @confirm="onConfirm"
       />
       <van-field
+        :disabled="!this.checked"
         v-model="reason"
         rows="3"
         autosize
@@ -23,14 +31,14 @@
         placeholder="请输入原因"
         :rules="[{ required: true, message: '' }]"
       />
-      <van-button type="info" round native-type="submit">提交</van-button>
+      <van-button type="info" round native-type="submit">修改</van-button>
     </van-form>
   </div>
 </template>
 
 <script>
 import { Toast } from 'vant'
-import { limitTime } from '@/api'
+import { limitTime, limitInfo } from '@/api'
 export default {
   data() {
     return {
@@ -38,7 +46,18 @@ export default {
       startTime: '',
       endTime: '',
       showCalendar: false,
-      reason: ''
+      reason: '',
+      checked: false,
+      firstTime: true
+    }
+  },
+  watch: {
+    async checked(val) {
+      if (this.firstTime) {
+        this.firstTime = false
+      } else {
+        this.limitTime(!val)
+      }
     }
   },
   methods: {
@@ -47,32 +66,64 @@ export default {
     },
     onConfirm(date) {
       this.showCalendar = false
-      this.startTime = [...date][1].getTime()
-      this.endTime = [...date][0].getTime()
+      this.startTime = [...date][0].getTime()
+      this.endTime = [...date][1].getTime()
       const [start, end] = date
       this.show = false
       this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`
     },
+    async limitTime(disable) {
+      Toast.loading({
+        message: '加载中...',
+        forbidClick: true
+      })
+      let res
+      try {
+        if (disable) {
+          res = await limitTime(1, this.reason, 2)
+        } else {
+          res = await limitTime(this.startTime, this.reason, this.endTime)
+        }
+        if (res.data.code === 200) {
+          Toast.success('修改成功')
+        } else {
+          Toast.fail(res.data.message)
+        }
+      } catch (err) {
+        Toast.fail(err.message)
+      }
+    },
     async onSubmit() {
-      if ((this.startTime ?? '') !== '' && (this.endTime ?? '') !== '') {
-        try {
-          const { data } = await limitTime(
-            this.startTime,
-            this.reason,
-            this.endTime
-          )
-          if (data.code === 200) {
-            Toast.success('提交成功')
-            this.$router.replace('/admin/setting')
-          } else {
-            Toast.fail(data.message)
-          }
-        } catch (err) {
-          Toast.fail(err.message)
+      if (this.checked) {
+        if (
+          (this.startTime ?? '') !== '' &&
+          (this.endTime ?? '') !== '' &&
+          this.checked
+        ) {
+          limitTime()
+        } else {
+          Toast.fail('请填写时间段')
         }
       } else {
-        Toast.fail('请填写时间段')
+        Toast.fail('请先启用规则')
       }
+    }
+  },
+  async created() {
+    try {
+      const { data } = await limitInfo()
+      console.log(data)
+      if (this.startTime !== 1 && this.endTime !== 2) {
+        this.checked = true
+      }
+      this.startTime = data.data.startTime
+      this.reason = data.data.reason
+      this.endTime = data.data.endTime
+      this.date = `${this.formatDate(
+        new Date(this.startTime)
+      )} - ${this.formatDate(new Date(this.endTime))}`
+    } catch (err) {
+      Toast.fail(err.message)
     }
   }
 }
