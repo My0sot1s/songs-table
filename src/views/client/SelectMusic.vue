@@ -51,7 +51,7 @@ body {
   /* background-color: inherit !important; */
   overflow: scroll;
   z-index: 1;
-  padding-bottom: 1vw;
+  /* padding-bottom: 1vw; */
 }
 .van-form {
   background-color: white;

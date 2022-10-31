@@ -27,6 +27,7 @@ export default {
   z-index: 999 !important;
 }
 
+//适配软键盘弹出
 .van-nav-bar {
   height: 45px;
   .van-nav-bar__content {

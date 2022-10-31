@@ -1,7 +1,12 @@
 <template>
   <div id="app" :style="`height: ${height}'px'`">
-    <NavBar fixed placeholder v-if="this.$store.state.navText" :navText="this.$store.state.navText"
-      :leftArrow="this.$store.state.leftArrow" />
+    <NavBar
+      fixed
+      placeholder
+      v-if="this.$store.state.navText"
+      :navText="this.$store.state.navText"
+      :leftArrow="this.$store.state.leftArrow"
+    />
     <transition :name="transitionName">
       <keep-alive include="ApplyList,adminHome">
         <router-view />
@@ -12,13 +17,6 @@
 
 <script>
 import NavBar from '@/components/NavBar'
-const height = document.body.clientHeight
-window.onresize = () => {
-  if (height > document.body.clientHeight) {
-    document.body.style.height = height + 'px'
-    this.height = height
-  }
-}
 export default {
   components: { NavBar },
   data() {
@@ -71,7 +69,7 @@ hr {
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
 
-  &>div {
+  & > div {
     display: flex;
     align-items: center;
   }

@@ -159,7 +159,6 @@ export default {
   padding: 8vw 7vw 0 7vw;
   border-radius: 4vw;
   overflow: scroll;
-  z-index: 1;
   min-height: 50vh;
   max-height: 70vh;
   .van-search {
