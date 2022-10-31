@@ -129,7 +129,7 @@ export default {
   },
   activated() {
     setTimeout(() => {
-      this.offsetTop = '6vh'
+      this.offsetTop = '44.8px'
     }, 400)
     this.getApplyList()
   },
@@ -259,12 +259,20 @@ export default {
 
 <style lang="less" scoped>
 .admin-content {
-  margin-bottom: 5vh;
   overflow: scroll;
-  height: 85vh;
+  height: calc(90vh - 45px);
+
+  @supports (bottom: env(safe-area-inset-bottom)) {
+    & {
+      height: calc(90vh - 45px - constant(safe-area-inset-bottom));
+      height: calc(90vh - 45px - env(safe-area-inset-bottom));
+    }
+  }
 }
 
 .admin-navBar {
+  height: 3.4vh;
+
   .nav {
     margin-left: 6vw;
     font-size: 2.1vh;
@@ -306,5 +314,11 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 3vh;
+
+  @supports (bottom: env(safe-area-inset-bottom)) {
+    & {
+      bottom: calc(12vh + env(safe-area-inset-bottom));
+    }
+  }
 }
 </style>

@@ -15,19 +15,11 @@
       </van-sticky>
 
       <div v-for="(item, index) in curDayList" :key="item.id">
-        <ApplyInfo
-          :imgUrl="item.imgUrl"
-          :songName="item.songName"
-          :singer="item.singer"
-          :time="item.time"
-          :campus="item.campus"
-          iconName="ellipsis"
-          @click.native="toExamine(index)"
-          @action="
-            actionSheet.show = true
+        <ApplyInfo :imgUrl="item.imgUrl" :songName="item.songName" :singer="item.singer" :time="item.time"
+          :campus="item.campus" iconName="ellipsis" @click.native="toExamine(index)" @action="
+  actionSheet.show = true
             curIndex = index
-          "
-        />
+          " />
       </div>
       <div ref="lottie" v-show="curDayList.length === 0"></div>
     </div>
@@ -36,22 +28,11 @@
       <van-icon name="back-top" />
     </div>
     <TabBar />
-    <van-calendar
-      color="#3c9cff"
-      :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
-      :max-date="new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)"
-      :show-confirm="false"
-      v-model="showCalendar"
-      @confirm="selDay"
-    />
-    <van-action-sheet
-      v-model="actionSheet.show"
-      :actions="actionSheet.actions"
-      cancel-text="取消"
-      close-on-click-action
-      close-on-popstate
-      @select="selAction"
-    />
+    <van-calendar color="#3c9cff" :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
+      :max-date="new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)" :show-confirm="false" v-model="showCalendar"
+      @confirm="selDay" />
+    <van-action-sheet v-model="actionSheet.show" :actions="actionSheet.actions" cancel-text="取消" close-on-click-action
+      close-on-popstate @select="selAction" />
   </div>
 </template>
 
@@ -106,7 +87,7 @@ export default {
   },
   activated() {
     setTimeout(() => {
-      this.offsetTop = '6vh'
+      this.offsetTop = '44.8px'
     }, 400)
     this.getApplyList()
   },
@@ -215,9 +196,15 @@ export default {
 
 <style lang="less" scoped>
 .admin-content {
-  margin-bottom: 5vh;
   overflow: scroll;
-  height: 85vh;
+  height: calc(90vh - 45px);
+
+  @supports (bottom: env(safe-area-inset-bottom)) {
+    & {
+      height: calc(90vh - 45px - constant(safe-area-inset-bottom));
+      height: calc(90vh - 45px - env(safe-area-inset-bottom));
+    }
+  }
 }
 
 .admin-navBar {
@@ -253,5 +240,11 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 3vh;
+
+  @supports (bottom: env(safe-area-inset-bottom)) {
+    & {
+      bottom: calc(12vh + env(safe-area-inset-bottom));
+    }
+  }
 }
 </style>
