@@ -1,7 +1,12 @@
 <template>
   <div id="app" :style="`height: ${height}'px'`">
-    <NavBar fixed placeholder v-if="this.$store.state.navText" :navText="this.$store.state.navText"
-      :leftArrow="this.$store.state.leftArrow" />
+    <NavBar
+      fixed
+      placeholder
+      v-if="this.$store.state.navText"
+      :navText="this.$store.state.navText"
+      :leftArrow="this.$store.state.leftArrow"
+    />
     <transition :name="transitionName">
       <keep-alive include="ApplyList,adminHome">
         <router-view />
@@ -33,6 +38,23 @@ export default {
   },
   beforeDestroy() {
     localStorage.removeItem('oldIndex')
+  },
+  mounted() {
+    if (
+      window.innerWidth > window.innerHeight &&
+      this.$route.path !== '/error'
+    ) {
+      this.$router.push('/error')
+    } else {
+      if (this.$route.path === '/error') {
+        this.$router.back()
+      }
+    }
+    window.addEventListener('onresize', () => {
+      if (window.innerWidth > window.innerHeight) {
+        this.$router.push('/error')
+      }
+    })
   }
 }
 </script>
@@ -64,7 +86,7 @@ hr {
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
 
-  &>div {
+  & > div {
     display: flex;
     align-items: center;
   }

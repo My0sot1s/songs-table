@@ -10,6 +10,7 @@ import ApplyList from '@/views/admin/ApplyList'
 import Setting from '@/views/admin/Setting'
 import Forbid from '@/views/admin/Forbid'
 import Examine from '@/views/admin/Examine'
+import Error from '@/views/client/Error'
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,11 @@ const routes = [
     name: 'Home',
     path: '/home',
     component: Home
+  },
+  {
+    name: 'Error',
+    path: '/error',
+    component: Error
   },
   {
     name: 'MyApply',
