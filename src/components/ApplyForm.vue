@@ -205,6 +205,10 @@ export default {
       return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
     },
     async onSubmit() {
+      if (localStorage.limitDay === 'true') {
+        Toast.fail('今天不可以点歌哦')
+        return
+      }
       // console.log(this.form)
       /* const notices = ['请选择首选歌曲', '请选择备选歌曲'] */
       if (!this.form.songId && !this.form.searchPath) {
@@ -252,6 +256,9 @@ export default {
     }
   },
   mounted() {
+    if (localStorage.limitDay === 'true') {
+      Toast.fail('今天不可以点歌哦')
+    }
     const applyInfo = JSON.parse(localStorage.getItem('applyInfo'))
     if (applyInfo) {
       const { placeHolder, ...form } = applyInfo

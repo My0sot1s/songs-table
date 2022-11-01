@@ -65,9 +65,10 @@ export default {
   },
   beforeRouteLeave: (to, from, next) => {
     /* console.log(localStorage.limitDay) */
-    if (localStorage.limitDay === 'false') {
+    if (localStorage.limitDay === 'false' || to.path === '/myApply') {
       next()
     } else {
+      console.log(to)
       Dialog({ message: '今天不能点歌哦' })
       next(false)
     }
