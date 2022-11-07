@@ -14,7 +14,6 @@
     >
       <SelectMusicList @confirmMusic="confirmMusic" />
     </van-overlay>
-    <TabBar />
 
     <van-dialog
       v-model="dialog.show"
@@ -67,13 +66,11 @@
 <script>
 import SelectMusicList from '@/components/SelectMusicList'
 import formatDate from '@/tools/FormatDate'
-import TabBar from '@/components/TabBar'
 import { Toast } from 'vant'
 
 export default {
   components: {
-    SelectMusicList,
-    TabBar
+    SelectMusicList
   },
   data() {
     return {

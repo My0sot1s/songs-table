@@ -12,13 +12,17 @@
         <router-view class="view" />
       </keep-alive>
     </transition>
+    <TabBar
+      v-if="$route.path.includes('admin') && !$route.path.includes('login')"
+    />
   </div>
 </template>
 
 <script>
 import NavBar from '@/components/NavBar'
+import TabBar from '@/components/TabBar'
 export default {
-  components: { NavBar },
+  components: { NavBar, TabBar },
   data() {
     return {
       height: document.body.clientHeight,
@@ -70,13 +74,7 @@ export default {
   overflow: -moz-scrollbars-none;
 }
 
-#app {
-  display: flex;
-}
-
 .view {
-  position: relative;
-  top: 45px; // 空出导航栏的位置
   box-sizing: border-box;
   width: 100vw; // transition翻页时保持宽度，让按钮不乱跳
   height: 100%; // transition翻页时保持高度，让按钮不乱跳

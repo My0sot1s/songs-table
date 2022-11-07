@@ -65,7 +65,6 @@
     <div class="goTop" v-show="showGoTop" @click="goTop">
       <van-icon name="back-top" />
     </div>
-    <TabBar />
     <van-calendar
       color="#3c9cff"
       :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
@@ -101,7 +100,6 @@
 
 <script>
 import ApplyInfo from '@/components/ApplyInfo'
-import TabBar from '@/components/TabBar'
 import formatDate from '@/tools/FormatDate'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
@@ -111,7 +109,6 @@ import { getList } from '@/api'
 export default {
   name: 'ApplyList',
   components: {
-    TabBar,
     ApplyInfo
   },
   data() {
@@ -296,11 +293,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/* .admin-content {
-  box-sizing: border-box;
-  width: 100vw;
-} */
-
 .admin-navBar {
   height: 3.4vh;
 
