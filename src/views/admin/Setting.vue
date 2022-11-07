@@ -165,7 +165,9 @@ export default {
 
 <style lang="less" scoped>
 .body {
-  height: 91vh;
+  box-sizing: border-box;
+  height: calc(100vh - 69px);
+  width: 100vw;
 }
 
 .body div {

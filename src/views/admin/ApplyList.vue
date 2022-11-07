@@ -5,8 +5,13 @@
       <van-sticky :offset-top="offsetTop">
         <div class="admin-navBar">
           <div>
-            <div class="nav" v-for="(nav, index) in ['待处理', '已处理']" :key="index"
-              :class="{ 'active-nav': curNav === index }" @click="changeNav(index)">
+            <div
+              class="nav"
+              v-for="(nav, index) in ['待处理', '已处理']"
+              :key="index"
+              :class="{ 'active-nav': curNav === index }"
+              @click="changeNav(index)"
+            >
               {{ nav }}
             </div>
           </div>
@@ -20,9 +25,16 @@
       </van-sticky>
 
       <div v-show="curNav === 0">
-        <ApplyInfo v-for="(item, index) in curDayPendingList" :key="item.id" :imgUrl="item.imgUrl"
-          :songName="item.songName" :singer="item.singer" :time="item.time" :state="item.state + ''"
-          @click.native="toExamine(index)" />
+        <ApplyInfo
+          v-for="(item, index) in curDayPendingList"
+          :key="item.id"
+          :imgUrl="item.imgUrl"
+          :songName="item.songName"
+          :singer="item.singer"
+          :time="item.time"
+          :state="item.state + ''"
+          @click.native="toExamine(index)"
+        />
       </div>
       <div v-show="curNav === 1">
         <!-- <van-list
@@ -30,12 +42,21 @@
           :finished="finished"
           finished-text="没有更多了"
         > -->
-        <ApplyInfo v-for="(item, index) in curDayProcessedList" :key="index" :imgUrl="item.imgUrl"
-          :songName="item.songName" :singer="item.singer" :time="item.time" :state="item.state + ''" iconName="ellipsis"
-          @click.native="toExamine(index)" @action="
-  actionSheet.show = true
+        <ApplyInfo
+          v-for="(item, index) in curDayProcessedList"
+          :key="index"
+          :imgUrl="item.imgUrl"
+          :songName="item.songName"
+          :singer="item.singer"
+          :time="item.time"
+          :state="item.state + ''"
+          iconName="ellipsis"
+          @click.native="toExamine(index)"
+          @action="
+            actionSheet.show = true
             curIndex = index
-          " />
+          "
+        />
         <!-- </van-list> -->
       </div>
       <div ref="lottie" v-show="showEmpty"></div>
@@ -45,19 +66,36 @@
       <van-icon name="back-top" />
     </div>
     <TabBar />
-    <van-calendar color="#3c9cff" :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
-      :max-date="new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)" v-model="showCalendar" @select="selDay">
+    <van-calendar
+      color="#3c9cff"
+      :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
+      :max-date="new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)"
+      v-model="showCalendar"
+      @select="selDay"
+    >
       <template #footer>
         <div class="calendar-footer">
-          <van-button class="calendar-btn" round color="#3c9cff" @click="
-  dateString = ''
-            showCalendar = false
-          ">所有时间</van-button>
+          <van-button
+            class="calendar-btn"
+            round
+            color="#3c9cff"
+            @click="
+              dateString = ''
+              showCalendar = false
+            "
+            >所有时间</van-button
+          >
         </div>
       </template>
     </van-calendar>
-    <van-action-sheet v-model="actionSheet.show" :actions="actionSheet.actions" cancel-text="取消" close-on-click-action
-      close-on-popstate @select="selAction" />
+    <van-action-sheet
+      v-model="actionSheet.show"
+      :actions="actionSheet.actions"
+      cancel-text="取消"
+      close-on-click-action
+      close-on-popstate
+      @select="selAction"
+    />
   </div>
 </template>
 
@@ -268,6 +306,12 @@ export default {
       height: calc(90vh - 45px - env(safe-area-inset-bottom));
     }
   }
+}
+
+.admin-content {
+  box-sizing: border-box;
+  height: calc(100vh - 46px);
+  width: 100vw;
 }
 
 .admin-navBar {

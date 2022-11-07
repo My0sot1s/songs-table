@@ -85,6 +85,8 @@ export default {
 
 .content {
   padding: 3vw;
+  box-sizing: border-box;
+  width: 100vw; //transition翻页时保持宽度，让按钮不乱跳
   // overflow: auto;
 }
 
