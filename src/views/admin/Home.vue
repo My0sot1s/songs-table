@@ -214,23 +214,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.admin-content {
-  overflow: scroll;
-  height: calc(90vh - 45px);
 
-  @supports (bottom: env(safe-area-inset-bottom)) {
-    & {
-      height: calc(90vh - 45px - constant(safe-area-inset-bottom));
-      height: calc(90vh - 45px - env(safe-area-inset-bottom));
-    }
-  }
-}
-
-.admin-content {
+/* .admin-content {
   box-sizing: border-box;
-  height: calc(100vh - 46px);
   width: 100vw;
-}
+} */
 
 .admin-navBar {
   .title {

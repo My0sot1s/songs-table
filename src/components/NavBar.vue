@@ -2,7 +2,7 @@
   <van-nav-bar
     @click-left="back()"
     fixed
-    placeholder
+    :placeholder="true"
     :left-text="navText"
     :left-arrow="leftArrow"
   />

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="login">
     <van-form @submit="onSubmit">
       <van-field
         v-model="username"
@@ -70,5 +70,9 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
+#login {
+  box-sizing: border-box;
+  width: 100vw;
+}
 </style>

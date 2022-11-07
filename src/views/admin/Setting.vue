@@ -164,11 +164,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.body {
-  box-sizing: border-box;
-  height: calc(100vh - 69px);
-  width: 100vw;
-}
 
 .body div {
   display: flex;

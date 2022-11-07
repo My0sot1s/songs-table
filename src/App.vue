@@ -9,7 +9,7 @@
     />
     <transition :name="transitionName">
       <keep-alive include="ApplyList,adminHome">
-        <router-view />
+        <router-view class="view" />
       </keep-alive>
     </transition>
   </div>
@@ -68,6 +68,18 @@ export default {
 * {
   -ms-overflow-style: none;
   overflow: -moz-scrollbars-none;
+}
+
+#app {
+  display: flex;
+}
+
+.view {
+  position: relative;
+  top: 45px; // 空出导航栏的位置
+  box-sizing: border-box;
+  width: 100vw; // transition翻页时保持宽度，让按钮不乱跳
+  height: 100%; // transition翻页时保持高度，让按钮不乱跳
 }
 
 hr {
