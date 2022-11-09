@@ -74,7 +74,6 @@ function checkCode() {
           })
       }
     } else {
-      alert('找不到学号，请绑定桑梓微助手！')
       resolve()
     }
   })
@@ -84,6 +83,7 @@ function checkToken() {
   return new Promise((resolve, reject) => {
     if (!state.token) {
       localStorage.setItem('_hash', document.location.hash)
+      alert('找不到学号，请绑定桑梓微助手！')
       wxLoginRedirect()
       reject(new Error('should_wx_login'))
     } else {
