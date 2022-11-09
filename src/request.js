@@ -74,6 +74,7 @@ function checkCode() {
           })
       }
     } else {
+      alert('找不到学号，请绑定桑梓微助手！')
       resolve()
     }
   })
