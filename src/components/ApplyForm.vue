@@ -151,7 +151,8 @@ export default {
         schoolDistrict: '厦门校区',
         broadcastDate: '',
         blessingWords: '',
-        disabled: false
+        disabled: false,
+        songName: ''
       },
       showingDate: '',
       placeHolders: [],
@@ -181,6 +182,7 @@ export default {
   watch: {
     musics: {
       handler() {
+        this.form.songName = this.musics[0]?.name
         this.form.songId = this.musics[0]?.songmid.toString()
         this.form.searchPath = this.musics[0]?.searchPath
         const arr = ['请选择歌曲', '请选择备选歌曲']

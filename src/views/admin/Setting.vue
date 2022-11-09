@@ -78,7 +78,8 @@ export default {
         songId: '',
         broadcastDate: '',
         searchPath: '',
-        schoolDistrict: ''
+        schoolDistrict: '',
+        songName: ''
       },
       music: {
         imgUrl: '',
@@ -127,6 +128,7 @@ export default {
       this.apply.broadcastDate = new Date().getTime()
       this.apply.searchPath = music.searchPath
       this.apply.songId = music.songmid
+      this.apply.songName = music.name
       this.music.imgUrl = music.cover
       this.music.songName = music.songname
       this.music.singer = music.singer[0].name
@@ -161,7 +163,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .body div {
   display: flex;
   align-items: center;
