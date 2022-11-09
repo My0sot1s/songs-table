@@ -68,7 +68,7 @@
       placeholder="请输入你的姓名"
       :rules="[{ required: true, message: '' }]"
     />
-    <van-field
+    <!-- <van-field
       v-model="form.phoneNum"
       placeholder="请输入你的手机号"
       type="tel"
@@ -81,7 +81,7 @@
           message: '请填写正确的手机号'
         }
       ]"
-    />
+    /> -->
     <van-field
       v-model="form.schoolDistrict"
       is-link
@@ -147,7 +147,7 @@ export default {
         searchPath: '',
         receiverName: '',
         senderName: '',
-        phoneNum: '',
+        /* phoneNum: '', */
         schoolDistrict: '厦门校区',
         broadcastDate: '',
         blessingWords: '',
