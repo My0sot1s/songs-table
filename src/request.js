@@ -64,7 +64,9 @@ function checkCode() {
               setToken(res.data.data.token)
               resolve()
             } else {
-              if (res.msg === '找不到学号，请绑定桑梓微助手！') alert(res.msg)
+              if (res.data.msg === '找不到学号，请绑定桑梓微助手！') {
+                alert(res.data.msg)
+              }
               reject(res.data)
             }
           })
@@ -99,7 +101,9 @@ axios.interceptors.request.use(
     if (!document.location.hash.includes('admin') && state.token) {
       config.headers.token = state.token
     } else if (document.location.hash.includes('admin')) {
-      if (!state.adminToken) state.adminToken = localStorage.getItem('admin_token')
+      if (!state.adminToken) {
+        state.adminToken = localStorage.getItem('admin_token')
+      }
       config.headers.token = state.adminToken
     }
     return config
@@ -115,8 +119,9 @@ axios.interceptors.response.use(
     if (response.data.code) {
       const code = response.data.code.toString()
       if (['401', '440', '441'].includes(code)) {
-        if (document.location.hash.includes('admin')) window.location.hash = '/admin'
-        else {
+        if (document.location.hash.includes('admin')) {
+          window.location.hash = '/admin'
+        } else {
           localStorage.setItem('_hash', document.location.hash)
           wxLoginRedirect()
         }
