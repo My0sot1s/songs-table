@@ -1,73 +1,25 @@
 <template>
   <van-form @submit="onSubmit" :disabled="form.disabled">
-    <van-notice-bar
-      v-show="!form.disabled"
-      color="#1989fa"
-      background="#ecf9ff"
-      left-icon="volume-o"
-      :style="`margin: 2vw 0`"
-      :scrollable="false"
-    >
-      <van-swipe
-        vertical
-        class="notice-swipe"
-        :autoplay="3000"
-        :show-indicators="false"
-      >
+    <van-notice-bar v-show="!form.disabled" color="#1989fa" background="#ecf9ff" left-icon="volume-o"
+      :style="`margin: 2vw 0`" :scrollable="false">
+      <van-swipe vertical class="notice-swipe" :autoplay="3000" :show-indicators="false">
         <van-swipe-item>周五为英语点歌台，点歌请用英文噢~</van-swipe-item>
-        <van-swipe-item
-          >周日为粤语点歌台，我们将用粤语送出你的祝福~</van-swipe-item
-        >
+        <van-swipe-item>周日为粤语点歌台，我们将用粤语送出你的祝福~</van-swipe-item>
       </van-swipe>
     </van-notice-bar>
-    <van-notice-bar
-      v-show="!(form.reason ?? '') !== '' && !form.disabled"
-      wrapable
-      :scrollable="false"
-      :text="notice"
-      :style="`text-indent: 6vw`"
-      color="black"
-      background="inherit"
-    ></van-notice-bar>
-    <van-notice-bar
-      v-show="form.reason ?? '' !== ''"
-      color="#ee0a24"
-      wrapable
-      :scrollable="false"
-      :text="'驳回理由：' + form.reason"
-    />
+    <van-notice-bar v-show="!(form.reason ?? '') !== '' && !form.disabled" wrapable :scrollable="false" :text="notice"
+      :style="`text-indent: 6vw`" color="black" background="inherit"></van-notice-bar>
+    <van-notice-bar v-show="form.reason ?? '' !== ''" color="#ee0a24" wrapable :scrollable="false"
+      :text="'驳回理由：' + form.reason" />
     <van-divider />
-    <van-search
-      shape="round"
-      class="search"
-      readonly
-      @click="!form.disabled && popUp(0)"
-      action-textdisabled
-      :placeholder="placeHolders[0]"
-    />
-    <van-search
-      shape="round"
-      class="search"
-      readonly
-      @click="!form.disabled && popUp(1)"
-      action-textdisabled
-      :placeholder="placeHolders[1]"
-      v-if="false"
-    />
-    <van-field
-      maxlength="12"
-      v-model="form.receiverName"
-      label="To"
-      placeholder="你希望将这首歌送给谁"
-      :rules="[{ required: true, message: '' }]"
-    />
-    <van-field
-      maxlength="12"
-      v-model="form.senderName"
-      label="姓名"
-      placeholder="请输入你的姓名"
-      :rules="[{ required: true, message: '' }]"
-    />
+    <van-search shape="round" class="search" readonly @click="!form.disabled && popUp(0)" action-textdisabled
+      :placeholder="placeHolders[0]" />
+    <van-search shape="round" class="search" readonly @click="!form.disabled && popUp(1)" action-textdisabled
+      :placeholder="placeHolders[1]" v-if="false" />
+    <van-field maxlength="12" v-model="form.receiverName" label="To" placeholder="你希望将这首歌送给谁"
+      :rules="[{ required: true, message: '' }]" />
+    <van-field maxlength="12" v-model="form.senderName" label="姓名" placeholder="请输入你的姓名"
+      :rules="[{ required: true, message: '' }]" />
     <!-- <van-field
       v-model="form.phoneNum"
       placeholder="请输入你的手机号"
@@ -82,54 +34,20 @@
         }
       ]"
     /> -->
-    <van-field
-      v-model="form.schoolDistrict"
-      is-link
-      readonly
-      label="校区"
-      placeholder="请选择你所在的校区"
-      :rules="[{ required: true, message: '' }]"
-      @click="onlyAmoy"
-    />
+    <van-field v-model="form.schoolDistrict" is-link readonly label="校区" placeholder="请选择你所在的校区"
+      :rules="[{ required: true, message: '' }]" @click="onlyAmoy" />
     <van-popup v-model="showschoolDistrict" round position="bottom">
-      <van-cascader
-        active-color="#1989fa"
-        v-model="form.schoolDistrict"
-        title="请选择所在校区"
-        :options="options"
-        @close="showschoolDistrict = false"
-        @finish="showschoolDistrict = false"
-      />
+      <van-cascader active-color="#1989fa" v-model="form.schoolDistrict" title="请选择所在校区" :options="options"
+        @close="showschoolDistrict = false" @finish="showschoolDistrict = false" />
     </van-popup>
-    <van-field
-      readonly
-      clickable
-      :value="showingDate"
-      label="送出日期"
-      placeholder="点击选择日期"
-      @click="!form.disabled && (showCalendar = true)"
-      :rules="[{ required: true, message: '' }]"
-    />
-    <van-calendar
-      :show-confirm="false"
-      color="#1989fa"
-      v-model="showCalendar"
-      @confirm="onConfirm"
-    />
-    <van-field
-      v-model="form.blessingWords"
-      rows="2"
-      autosize
-      label="寄语"
-      type="textarea"
-      maxlength="200"
-      placeholder=""
-      show-word-limit
-      :rules="[{ required: true, message: '请输入寄语' }]"
-    />
+    <van-field readonly clickable :value="showingDate" label="送出日期" placeholder="点击选择日期"
+      @click="!form.disabled && (showCalendar = true)" :rules="[{ required: true, message: '' }]" />
+    <van-calendar :show-confirm="false" color="#1989fa" v-model="showCalendar" @confirm="onConfirm" />
+    <van-field v-model="form.blessingWords" rows="2" autosize label="寄语" type="textarea" maxlength="200" placeholder=""
+      show-word-limit :rules="[{ required: true, message: '请输入寄语' }]" />
     <div style="margin: 16px" v-if="!form.disabled">
       <van-button type="info" round block native-type="submit">{{
-        form.btn || '提交'
+          form.btn || '提交'
       }}</van-button>
     </div>
   </van-form>
@@ -157,7 +75,7 @@ export default {
       showingDate: '',
       placeHolders: [],
       notice:
-        '欢迎来到华侨大学点歌台！如果你有想听的歌，或者想要送出的祝福，请认真填写下面的表格，我们会在每天晚上的6：20 - 6：40将歌曲送出。要记得留下电话号码我们才能够在有需要的时候联系你们哦。',
+        '欢迎来到华侨大学点歌台！如果你有想听的歌，或者想要送出的祝福，请认真填写下面的表格，我们会在每天晚上的6：20 - 6：40将歌曲送出。',
       showschoolDistrict: false,
       fieldValue: '',
       cascaderValue: '',
@@ -279,6 +197,7 @@ export default {
 .van-search__content {
   background-color: rgb(250, 251, 253) !important;
 }
+
 .notice-swipe {
   height: 40px;
   line-height: 40px;
