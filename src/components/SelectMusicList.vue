@@ -14,21 +14,25 @@
       id="lottie"
       v-show="this.musicList.length === 0 && this.loading"
     ></div>
-    <van-list
-      v-show="this.musicList.length !== 0"
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="search(false)"
-    >
-      <MusicCell
-        ref="cells"
-        v-for="(music, index) in musicList"
-        :key="music.songid"
-        :music="music"
-        @click.native="select(index)"
-      />
-    </van-list>
+    <div id="list">
+      <div class="mask"></div>
+      <van-list
+        v-show="this.musicList.length !== 0"
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="search(false)"
+      >
+        <MusicCell
+          ref="cells"
+          v-for="(music, index) in musicList"
+          :key="music.songid"
+          :music="music"
+          @click.native="select(index)"
+        />
+      </van-list>
+      <div class="mask" id="bottom-mask"></div>
+    </div>
     <van-button
       round
       type="default"
@@ -177,6 +181,29 @@ export default {
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: -1;
+  }
+  #list {
+    position: relative;
+  }
+  .mask {
+    width: 100%;
+    height: 3vw;
+    background-image: linear-gradient(
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.6) 60%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    position: absolute;
+    z-index: 1;
+  }
+  #bottom-mask {
+    bottom: 0;
+    background-image: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.6) 60%,
+      rgba(255, 255, 255, 0) 100%
+    );
   }
   .van-list {
     box-sizing: border-box;
