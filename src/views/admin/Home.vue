@@ -51,6 +51,15 @@
       close-on-popstate
       @select="selAction"
     />
+
+    <van-loading
+      class="loading"
+      size="40px"
+      color="#0094ff"
+      vertical
+      v-if="$store.state.showLoading"
+      >加载中...</van-loading
+    >
   </div>
 </template>
 
@@ -121,15 +130,18 @@ export default {
   methods: {
     getApplyList() {
       if (this.$store.state.applyList.length === 0) {
-        Toast.loading({
-          message: '加载中...',
-          forbidClick: true,
-          loadingType: 'spinner',
-          duration: 0
-        })
+        // Toast.loading({
+        //   message: '加载中...',
+        //   forbidClick: true,
+        //   loadingType: 'spinner',
+        //   duration: 0
+        // })
+        this.$store.commit('setShowLoading', true)
         getList('/admin/songList', this.$store.state.applyList, this).then(
           () => {
-            Toast.clear()
+            // Toast.clear()
+            this.$store.commit('setShowLoading', false)
+            Toast.success('加载完成')
           }
         )
       } else {
@@ -263,5 +275,12 @@ export default {
       bottom: calc(12vh + env(safe-area-inset-bottom));
     }
   }
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

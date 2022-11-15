@@ -59,6 +59,7 @@
     <div class="goTop" v-show="showGoTop" @click="goTop">
       <van-icon name="back-top" />
     </div>
+
     <van-calendar
       color="#3c9cff"
       :min-date="new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)"
@@ -81,6 +82,7 @@
         </div>
       </template>
     </van-calendar>
+
     <van-action-sheet
       v-model="actionSheet.show"
       :actions="actionSheet.actions"
@@ -89,6 +91,15 @@
       close-on-popstate
       @select="selAction"
     />
+
+    <van-loading
+      class="loading"
+      size="40px"
+      color="#0094ff"
+      vertical
+      v-if="$store.state.showLoading"
+      >加载中...</van-loading
+    >
   </div>
 </template>
 
@@ -178,15 +189,18 @@ export default {
     getApplyList() {
       // 根据是否是第一次进入页面采取不同方法获取数据
       if (this.$store.state.applyList.length === 0) {
-        Toast.loading({
-          message: '加载中...',
-          forbidClick: true,
-          loadingType: 'spinner',
-          duration: 0
-        })
+        // Toast.loading({
+        //   message: '加载中...',
+        //   forbidClick: true,
+        //   loadingType: 'spinner',
+        //   duration: 0
+        // })
+        this.$store.commit('setShowLoading', true)
         getList('/admin/songList', this.$store.state.applyList, this).then(
           (res) => {
-            Toast.clear()
+            // Toast.clear()
+            this.$store.commit('setShowLoading', false)
+            Toast.success('加载完成')
           }
         )
       } else {
@@ -349,5 +363,12 @@ export default {
       bottom: calc(12vh + env(safe-area-inset-bottom));
     }
   }
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

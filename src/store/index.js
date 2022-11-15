@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     navText: '',
     leftArrow: false,
-    applyList: []
+    applyList: [],
+    showLoading: false
   },
   getters: {},
   mutations: {
@@ -37,6 +38,9 @@ export default new Vuex.Store({
     },
     pushApply(state, apply) {
       state.applyList.push(apply)
+    },
+    setShowLoading(state, show) {
+      state.showLoading = show
     }
   },
   actions: {},
