@@ -53,6 +53,7 @@ const state = initState()
 
 function checkCode() {
   return new Promise((resolve, reject) => {
+    let flag = false
     if (location.search) {
       const searchParams = new URLSearchParams(document.location.search)
       const wxCode = searchParams.get('code')
@@ -65,16 +66,19 @@ function checkCode() {
               resolve()
             } else {
               if (res.data.msg === '找不到学号，请绑定桑梓微助手！') {
+                flag = true
                 alert(res.data.msg)
-                window.open('http://wx.sends.cc/temporary/proxy')
+                window.location.href = 'http://wx.sends.cc/temporary/proxy'
               }
               reject(res.data)
             }
           })
           .catch((err) => console.log(err))
           .finally(() => {
-            window.location.replace(`/${localStorage.getItem('_hash')}`)
-            localStorage.removeItem('_hash')
+            if (!flag) {
+              window.location.replace(`/${localStorage.getItem('_hash')}`)
+              localStorage.removeItem('_hash')
+            }
           })
       }
     } else {
