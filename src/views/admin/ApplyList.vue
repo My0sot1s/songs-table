@@ -7,13 +7,21 @@
           <div>
             <div
               class="nav"
-              v-for="(nav, index) in ['待处理', '已处理']"
+              v-for="(nav, index) in ['待处理', curState]"
               :key="index"
               :class="{ 'active-nav': curNav === index }"
               @click="changeNav(index)"
             >
               {{ nav }}
             </div>
+
+            <van-dropdown-menu v-show="curNav === 1" active-color="#1989fa">
+              <van-dropdown-item
+                title=" "
+                v-model="menu.state"
+                :options="menu.states"
+              />
+            </van-dropdown-menu>
           </div>
           <div class="time" @click="showCalendar = true">
             <div>{{ dateString || '所有时间' }}</div>
@@ -133,6 +141,16 @@ export default {
       showGoTop: false,
       loading: false,
       finished: false,
+      menu: {
+        state: -2,
+        states: [
+          { text: '已处理', value: -2 },
+          { text: '已撤回', value: -1 },
+          { text: '已结束', value: 0 },
+          { text: '未通过', value: 2 },
+          { text: '待播放', value: 3 }
+        ]
+      },
       offsetTop: '0'
     }
   },
@@ -148,7 +166,8 @@ export default {
       return this.$store.state.applyList.filter(
         (item) =>
           (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
-          item.state !== 1
+          ((this.menu.state === -2 && item.state !== 1) ||
+            item.state === this.menu.state)
       )
     },
     showEmpty() {
@@ -156,6 +175,11 @@ export default {
         (this.curNav === 0 && this.curDayPendingList.length === 0) ||
         (this.curNav === 1 && this.curDayProcessedList.length === 0)
       )
+    },
+    curState() {
+      return this.menu.states.filter((item) => {
+        return item.value === this.menu.state
+      })[0].text
     }
   },
   mounted() {
@@ -370,5 +394,13 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+</style>
+
+<style>
+.van-dropdown-menu__bar {
+  background-color: transparent;
+  box-shadow: none;
+  transform: translateX(-10px);
 }
 </style>
