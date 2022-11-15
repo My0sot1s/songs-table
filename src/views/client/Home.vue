@@ -8,9 +8,9 @@
           </router-link>
         </template>
       </MusicList>
-      <hr />
+      <van-divider :hairline="false" />
       <MusicList title="即将到来" :musicList="laterList"></MusicList>
-      <hr />
+      <van-divider :hairline="false" />
     </div>
     <div ref="lottie" @click="toSelect()" class="lottie-btn"></div>
   </div>
@@ -45,8 +45,8 @@ export default {
     const res = await getLimitDay()
     this.limitReason = res.data.data?.reason
     if ((this.limitReason ?? '') !== '') {
-      localStorage.setItem('limitDay', true)
-      Dialog({ message: this.limitReason })
+      /* localStorage.setItem('limitDay', true) */
+      Dialog({ message: this.limitReason, confirmButtonColor: '#1989fa' })
     } else {
       localStorage.setItem('limitDay', false)
     }

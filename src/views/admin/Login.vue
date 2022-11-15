@@ -37,9 +37,6 @@ export default {
       login: false
     }
   },
-  mounted() {
-    Toast.setDefaultOptions({ duration: 800 })
-  },
   methods: {
     onSubmit() {
       Toast.loading({
@@ -56,6 +53,8 @@ export default {
         .then((res) => {
           if (res.data.code === 200) {
             localStorage.setItem('admin_token', res.data.data.token)
+            localStorage.setItem('username', this.username)
+            localStorage.setItem('psw', this.password)
             Toast.clear()
             this.$router.replace('/admin/home')
           } else {
@@ -65,6 +64,14 @@ export default {
         .catch(() => {
           Toast.fail('请求异常')
         })
+    }
+  },
+  mounted() {
+    Toast.setDefaultOptions({ duration: 800 })
+    if (localStorage.getItem('username') && localStorage.getItem('psw')) {
+      this.username = localStorage.getItem('username')
+      this.password = localStorage.getItem('psw')
+      this.onSubmit()
     }
   }
 }

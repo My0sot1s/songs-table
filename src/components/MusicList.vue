@@ -55,7 +55,6 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 2vh;
 
     & > div {
       margin-left: 1vw;
@@ -67,6 +66,7 @@ export default {
     display: flex;
     flex-direction: row;
     overflow: auto;
+    padding-top: 2vh;
     &::-webkit-scrollbar {
       display: none;
     }
