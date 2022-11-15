@@ -188,7 +188,7 @@ export default {
               'applyInfo',
               JSON.stringify({
                 id: this.curList[index].id,
-                songName: data.songName,
+                songName: data.song_name,
                 songId: data.song_id,
                 searchPath: data.search_path,
                 receiverName: data.receiver_name,

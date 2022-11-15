@@ -207,6 +207,7 @@ export default {
       return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
     },
     async onSubmit() {
+      console.log(this.form)
       Toast.loading({
         forbidClick: true
       })
