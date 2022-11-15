@@ -2,7 +2,7 @@
   <div class="apply-info">
     <div class="body">
       <div class="image">
-        <van-image width="8vh" height="8vh" fit="fill" :src="imgUrl">
+        <van-image lazy-load width="8vh" height="8vh" fit="fill" :src="imgUrl">
           <template #loading>
             <van-loading type="spinner" size="20" />
           </template>
