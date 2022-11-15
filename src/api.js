@@ -18,103 +18,68 @@ export const updateRequest = (form) =>
 
 export const getList = (url, list, that) => {
   return new Promise((resolve) => {
-    let promise = Promise.resolve()
+    const promiseList = []
 
     axios({
       method: 'GET',
       url
-    })
-      .then(async (res) => {
-        if (res.data.code === 200 && res.data.data) {
-          res.data.data.forEach((item) => {
-            promise = promise.then(() => {
-              return new Promise((resolve) => {
-                if (!that || (that && inTime(item.broadcast_date))) {
-                  if (item.search_path === '网易云') {
-                    Vue.prototype.$musicApi
-                      .NetEaseCloudDetail(item.song_id)
-                      .then((detail) => {
-                        if (detail.data.songs.length === 0) {
-                          resolve()
-                        } else {
-                          const temp = getTemp(item, detail)
-                          if (that) {
-                            that.$store.commit('pushApply', temp)
-                          } else {
-                            list.push(temp)
-                          }
-                          resolve()
-                        }
-                      })
-                  } else if (item.search_path === 'qq') {
-                    Vue.prototype.$musicApi
-                      .QQMusicDetail(item.song_id)
-                      .then((detail) => {
-                        if (!detail.data.data.track_info.name) {
-                          resolve()
-                        } else {
-                          const temp = getTemp(
-                            item,
-                            detail.data.data.track_info
-                          )
-                          if (that) {
-                            that.$store.commit('pushApply', temp)
-                          } else {
-                            list.push(temp)
-                          }
-                          resolve()
-                        }
-                      })
-                  } else {
-                    resolve()
-                  }
-                } else {
-                  resolve()
-                }
-              })
-            })
+    }).then(async (res) => {
+      if (res.data.code === 200 && res.data.data) {
+        res.data.data.forEach((item) => {
+          const promise = new Promise((resolve) => {
+            if (!that || (that && inTime(item.broadcast_date))) {
+              if (item.search_path === '网易云') {
+                Vue.prototype.$musicApi
+                  .NetEaseCloudDetail(item.song_id)
+                  .then((detail) => {
+                    if (detail.data.songs.length === 0) {
+                      resolve()
+                    } else {
+                      const temp = getTemp(item, detail)
+                      if (that) {
+                        that.$store.commit('pushApply', temp)
+                      } else {
+                        list.push(temp)
+                      }
+                      resolve()
+                    }
+                  })
+              } else if (item.search_path === 'qq') {
+                Vue.prototype.$musicApi
+                  .QQMusicDetail(item.song_id)
+                  .then((detail) => {
+                    if (!detail.data.data.track_info.name) {
+                      resolve()
+                    } else {
+                      const temp = getTemp(
+                        item,
+                        detail.data.data.track_info
+                      )
+                      if (that) {
+                        that.$store.commit('pushApply', temp)
+                      } else {
+                        list.push(temp)
+                      }
+                      resolve()
+                    }
+                  })
+              } else {
+                resolve()
+              }
+            } else {
+              resolve()
+            }
           })
-          return await promise
-        }
-      })
-      .then(() => {
-        resolve(list)
-      })
+          promiseList.push(promise)
+        })
+
+        Promise.all(promiseList).then(res => {
+          resolve()
+        })
+      }
+    })
   })
 }
-
-export const reject = (id, reason) =>
-  axios({
-    method: 'POST',
-    url: '/admin/noPass',
-    data: {
-      id,
-      noPassReason: reason
-    }
-  })
-
-export const getLimitDay = () =>
-  axios({
-    method: 'GET',
-    url: '/user/isLimitDay'
-  })
-
-export const limitTime = (startTime, reason, endTime) =>
-  axios({
-    method: 'POST',
-    url: 'admin/limitTime',
-    data: {
-      startTime,
-      reason,
-      endTime
-    }
-  })
-
-export const limitInfo = () =>
-  axios({
-    method: 'GET',
-    url: 'admin/limitInfo'
-  })
 
 function getTemp(item, detail) {
   const temp = {}
@@ -150,3 +115,36 @@ function inTime(time) {
     new Date(time).getTime() <= later && new Date(time).getTime() >= before
   return flag
 }
+
+export const reject = (id, reason) =>
+  axios({
+    method: 'POST',
+    url: '/admin/noPass',
+    data: {
+      id,
+      noPassReason: reason
+    }
+  })
+
+export const getLimitDay = () =>
+  axios({
+    method: 'GET',
+    url: '/user/isLimitDay'
+  })
+
+export const limitTime = (startTime, reason, endTime) =>
+  axios({
+    method: 'POST',
+    url: 'admin/limitTime',
+    data: {
+      startTime,
+      reason,
+      endTime
+    }
+  })
+
+export const limitInfo = () =>
+  axios({
+    method: 'GET',
+    url: 'admin/limitInfo'
+  })
