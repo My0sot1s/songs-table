@@ -16,6 +16,7 @@
             <span class="state" v-if="state">{{ STATE[state] }}</span>
             <span class="campus" v-if="campus">{{ campus }}</span>
             <van-icon
+              v-if="iconName"
               size="2vh"
               :name="iconName"
               @click.stop="$emit('action', Number(state))"

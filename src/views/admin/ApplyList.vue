@@ -37,11 +37,6 @@
         />
       </div>
       <div v-show="curNav === 1">
-        <!-- <van-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-        > -->
         <ApplyInfo
           v-for="(item, index) in curDayProcessedList"
           :key="index"
@@ -50,14 +45,13 @@
           :singer="item.singer"
           :time="item.time"
           :state="item.state + ''"
-          iconName="ellipsis"
+          :iconName="item.state === 2 || item.state === 3 ? 'ellipsis' : ''"
           @click.native="toExamine(index)"
           @action="
             actionSheet.show = true
             curIndex = index
           "
         />
-        <!-- </van-list> -->
       </div>
       <div ref="lottie" v-show="showEmpty"></div>
     </div>
@@ -143,7 +137,7 @@ export default {
       return this.$store.state.applyList.filter(
         (item) =>
           (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
-          (item.state === 2 || item.state === 3)
+          item.state !== 1
       )
     },
     showEmpty() {
@@ -293,6 +287,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.admin-content {
+  overflow: scroll;
+  height: calc(100vh - 94.9px);
+
+  @supports (bottom: env(safe-area-inset-bottom)) {
+    & {
+      height: calc(100vh - 94.9px - constant(safe-area-inset-bottom));
+      height: calc(100vh - 94.9px - env(safe-area-inset-bottom));
+    }
+  }
+}
+
 .admin-navBar {
   height: 3.4vh;
 

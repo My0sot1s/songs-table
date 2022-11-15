@@ -20,8 +20,8 @@
           :songName="item.songName"
           :singer="item.singer"
           :time="item.time"
-          :campus="item.campus"
-          iconName="ellipsis"
+          :campus="item.state === 3 ? item.campus : '已结束'"
+          :iconName="item.state === 3 ? 'ellipsis' : ''"
           @click.native="toExamine(index)"
           @action="
             actionSheet.show = true
@@ -86,7 +86,8 @@ export default {
     curDayList() {
       return this.$store.state.applyList.filter(
         (item) =>
-          item.time === this.dateString.split(' ')[1] && item.state === 3
+          item.time === this.dateString.split(' ')[1] &&
+          (item.state === 3 || item.state === 0)
       )
     }
   },
@@ -211,6 +212,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.admin-content {
+  overflow: scroll;
+  height: calc(100vh - 94.9px);
+
+  @supports (bottom: env(safe-area-inset-bottom)) {
+    & {
+      height: calc(100vh - 94.9px - constant(safe-area-inset-bottom));
+      height: calc(100vh - 94.9px - env(safe-area-inset-bottom));
+    }
+  }
+}
+
 .admin-navBar {
   .title {
     font-size: 2.1vh;
