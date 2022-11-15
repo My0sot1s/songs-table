@@ -8,9 +8,9 @@
           </router-link>
         </template>
       </MusicList>
-      <hr />
+      <van-divider :hairline="false"/>
       <MusicList title="即将到来" :musicList="laterList"></MusicList>
-      <hr />
+      <van-divider :hairline="false"/>
     </div>
     <div ref="lottie" @click="toSelect()" class="lottie-btn"></div>
   </div>
