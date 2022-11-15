@@ -20,6 +20,7 @@
                 title=" "
                 v-model="menu.state"
                 :options="menu.states"
+                @change="goTop"
               />
             </van-dropdown-menu>
           </div>
@@ -317,8 +318,10 @@ export default {
       this.showGoTop = this.scrollTop > 200
     },
     goTop() {
-      this.scrollTop = 0
-      this.$refs.content.scrollTop = 0
+      if (this.scrollTop !== 0) {
+        this.scrollTop = 0
+        this.$refs.content.scrollTop = 0
+      }
     }
   }
 }
@@ -402,5 +405,10 @@ export default {
   background-color: transparent;
   box-shadow: none;
   transform: translateX(-10px);
+  height: 3.4vh;
+}
+
+.van-dropdown-menu__title::after {
+  border-color: transparent transparent #333 #333;
 }
 </style>
