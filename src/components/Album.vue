@@ -2,7 +2,14 @@
   <!-- 首页方形唱片 -->
   <div @click="toListen">
     <div class="image">
-      <van-image width="15vh" height="15vh" fit="fill" :src="imgUrl">
+      <van-image
+        radius="10px"
+        show-loading
+        width="15vh"
+        height="15vh"
+        fit="fill"
+        :src="imgUrl"
+      >
         <template #loading>
           <van-loading type="spinner" size="20" />
         </template>
@@ -34,12 +41,11 @@ export default {
 .image {
   width: 15vh;
   height: 15vh;
-  border-radius: 10px;
   margin-right: 3vw;
+  border-radius: 10px;
   // border: 1px solid rgb(221, 221, 221);
   box-shadow: 0 0 5px #999;
   overflow: hidden;
-
   & ~ div {
     margin-top: 1vh;
   }
