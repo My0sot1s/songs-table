@@ -45,7 +45,7 @@ export default {
     const res = await getLimitDay()
     this.limitReason = res.data.data?.reason
     if ((this.limitReason ?? '') !== '') {
-      localStorage.setItem('limitDay', true)
+      /* localStorage.setItem('limitDay', true) */
       Dialog({ message: this.limitReason })
     } else {
       localStorage.setItem('limitDay', false)
