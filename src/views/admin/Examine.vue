@@ -113,7 +113,7 @@ export default {
       try {
         const res = await reject(this.applyInfo.id, this.reason)
         /* console.log(res) */
-        if (res.data.code === 200) {
+        if (res.data.code === 200 || res.data.code === 406) {
           this.$store.commit('noPassApply', this.applyInfo.id)
           Toast.clear()
           Toast.success('驳回成功')
@@ -157,7 +157,7 @@ export default {
               id: this.applyInfo.id
             })
             .then((res) => {
-              if (res.data.code === 200) {
+              if (res.data.code === 200 || res.data.code === 406) {
                 this.$store.commit('passApply', this.applyInfo.id)
                 Toast.clear()
                 this.$router.replace('/admin/applyList')

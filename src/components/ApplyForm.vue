@@ -229,7 +229,7 @@ export default {
           res = await submitRequest(this.form)
         }
         // // console.log(res)
-        if (res.data.code === 200) {
+        if (res.data.code === 200 || res.data.code === 406) {
           Toast.success('提交成功！')
           this.$router.replace('/myApply')
         } else {
