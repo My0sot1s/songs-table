@@ -53,7 +53,6 @@ const state = initState()
 
 function checkCode() {
   return new Promise((resolve, reject) => {
-    let flag = false
     if (location.search) {
       const searchParams = new URLSearchParams(document.location.search)
       const wxCode = searchParams.get('code')
@@ -66,7 +65,6 @@ function checkCode() {
               resolve()
             } else {
               if (res.data.msg === '找不到学号，请绑定桑梓微助手！') {
-                flag = true
                 alert(res.data.msg)
                 window.location.href = 'http://wx.sends.cc/temporary/proxy'
               }
@@ -75,10 +73,7 @@ function checkCode() {
           })
           .catch((err) => console.log(err))
           .finally(() => {
-            if (!flag) {
-              window.location.replace(`/${localStorage.getItem('_hash')}`)
-              localStorage.removeItem('_hash')
-            }
+            window.location.replace('/')
           })
       }
     } else {
@@ -90,7 +85,6 @@ function checkCode() {
 function checkToken() {
   return new Promise((resolve, reject) => {
     if (!state.token) {
-      localStorage.setItem('_hash', document.location.hash)
       wxLoginRedirect()
       reject(new Error('should_wx_login'))
     } else {
@@ -127,7 +121,6 @@ axios.interceptors.response.use(
         if (document.location.hash.includes('admin')) {
           window.location.hash = '/admin'
         } else {
-          localStorage.setItem('_hash', document.location.hash)
           wxLoginRedirect()
         }
       }
@@ -152,7 +145,6 @@ export default function initAxios(vue) {
       return resolve()
     }
 
-    /* 关闭授权就注释下面几行和响应拦截 */
     if (!document.location.hash.includes('admin')) {
       checkCode().then(checkToken).then(resolve)
     } else {
