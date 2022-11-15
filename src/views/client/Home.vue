@@ -8,9 +8,9 @@
           </router-link>
         </template>
       </MusicList>
-      <van-divider :hairline="false"/>
+      <van-divider :hairline="false" />
       <MusicList title="即将到来" :musicList="laterList"></MusicList>
-      <van-divider :hairline="false"/>
+      <van-divider :hairline="false" />
     </div>
     <div ref="lottie" @click="toSelect()" class="lottie-btn"></div>
   </div>
@@ -46,7 +46,7 @@ export default {
     this.limitReason = res.data.data?.reason
     if ((this.limitReason ?? '') !== '') {
       /* localStorage.setItem('limitDay', true) */
-      Dialog({ message: this.limitReason })
+      Dialog({ message: this.limitReason, confirmButtonColor: '#1989fa' })
     } else {
       localStorage.setItem('limitDay', false)
     }
