@@ -66,7 +66,7 @@ function checkCode() {
             } else {
               if (res.data.msg === '找不到学号，请绑定桑梓微助手！') {
                 alert(res.data.msg)
-                location.href = 'http://wx.sends.cc/temporary/proxy'
+                window.open('http://wx.sends.cc/temporary/proxy')
               }
               reject(res.data)
             }
