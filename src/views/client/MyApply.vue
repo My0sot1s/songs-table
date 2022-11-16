@@ -38,7 +38,7 @@
       </ApplyInfo>
     </div>
 
-    <van-dropdown-menu id="dropMenu" active-color="#1989fa">
+    <van-dropdown-menu v-show="applyList.length !== 0" active-color="#1989fa">
       <van-dropdown-item v-model="menu.state" :options="menu.states" />
     </van-dropdown-menu>
 

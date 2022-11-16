@@ -408,6 +408,3 @@ export default {
   border-color: transparent transparent #333 #333;
 }
 </style>
-
-<style>
-</style>
