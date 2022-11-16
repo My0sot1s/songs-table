@@ -15,6 +15,7 @@
             :songName="item.songName"
             :singer="item.singer"
             :listenUrl="item.listenUrl"
+            :showTime="showTime"
           >
             <template #time v-if="showTime">{{ item.time }}</template>
           </Album>

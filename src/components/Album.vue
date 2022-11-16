@@ -15,10 +15,12 @@
         </template>
       </van-image>
     </div>
-    <div class="detail">
+    <div class="detail" :class="{ shorter: !showTime }">
       <van-notice-bar color="black" :text="songName" />
       <van-notice-bar class="singer" :text="singer || '佚名'" />
-      <van-notice-bar class="time" color="gray"><slot name="time" /></van-notice-bar>
+      <van-notice-bar class="time" color="gray" v-if="showTime">
+        <slot name="time" />
+      </van-notice-bar>
     </div>
   </div>
 </template>
@@ -29,7 +31,11 @@ export default {
     imgUrl: String,
     songName: String,
     singer: String,
-    listenUrl: String
+    listenUrl: String,
+    showTime: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     toListen() {
@@ -72,5 +78,9 @@ export default {
   .time {
     font-size: 1.5vh;
   }
+}
+
+.shorter {
+  height: 6vh;
 }
 </style>
