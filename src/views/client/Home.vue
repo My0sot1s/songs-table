@@ -1,15 +1,15 @@
 <template>
   <div>
-    <!-- <van-notice-bar
+    <van-notice-bar
+      v-if="this.limitReason"
       color="#1989fa"
       background="#ecf9ff"
       left-icon="volume-o"
       :style="`margin: 2vw 0`"
-      scrollable
       mode="closeable"
       :text="this.limitReason"
     >
-    </van-notice-bar> -->
+    </van-notice-bar>
     <div class="content">
       <MusicList title="今日歌单" :musicList="todayList">
         <template #default>
@@ -54,14 +54,27 @@ export default {
     })
     const res = await getLimitDay()
     this.limitReason = res.data.data?.reason
-    if ((this.limitReason ?? '') !== '') {
-      Dialog({ message: this.limitReason, confirmButtonColor: '#1989fa' })
-    }
+
     getList('/user/todaySongs', this.todayList)
     getList('/user/comingSongs', this.laterList).then(() => {
       this.laterList.sort((a, b) => {
         return a.time.split('-')[2] - b.time.split('-')[2]
       })
+      // 如果十分钟内提示过了且限制原因没有改变则不再提示
+      if (
+        (this.limitReason ?? '') !== '' &&
+        (new Date().getTime() - (localStorage.homeToastTime || 0) >
+          1000 * 10 * 60 ||
+          localStorage.limitReason !== this.limitReason)
+      ) {
+        Dialog({
+          message: this.limitReason,
+          confirmButtonColor: '#1989fa'
+        }).then(() => {
+          localStorage.setItem('homeToastTime', new Date().getTime())
+          localStorage.setItem('limitReason', this.limitReason)
+        })
+      }
     })
   },
   destroyed() {

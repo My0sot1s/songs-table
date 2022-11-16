@@ -75,8 +75,8 @@ window.addEventListener(
 )
 
 const navMap = new Map([
-  [undefined, { leftArrow: false, navText: '点歌台' }],
-  ['Home', { leftArrow: false, navText: '点歌台' }],
+  [undefined, { leftArrow: false, navText: '' }],
+  ['Home', { leftArrow: false, navText: '' }],
   ['MyApply', { leftArrow: true, navText: '我的申请' }],
   ['SelectMusic', { leftArrow: true, navText: '点歌' }],
   ['Admin', { leftArrow: false, navText: '歌单列表' }],

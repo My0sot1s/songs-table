@@ -19,7 +19,7 @@
             <template #time v-if="showTime">{{ item.time }}</template>
           </Album>
         </div>
-        <div v-else>
+        <div class="music-list-body" v-else>
           <Album
             imgUrl="https://y.qq.com/music/photo_new/T002R300x300M0000030lak94GN5Ad_0.jpg"
             songName="暂无歌曲"
