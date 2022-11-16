@@ -13,12 +13,13 @@
         <template #loading>
           <van-loading type="spinner" size="20" />
         </template>
-        <template #error>加载失败</template>
       </van-image>
     </div>
-    <div class="song-name van-ellipsis">{{ songName }}</div>
-    <div class="singer van-ellipsis">{{ singer || '佚名' }}</div>
-    <div class="time"><slot name="time" /></div>
+    <div class="detail">
+      <van-notice-bar color="black" :text="songName" />
+      <van-notice-bar class="singer" :text="singer || '佚名'" />
+      <van-notice-bar class="time" color="gray"><slot name="time" /></van-notice-bar>
+    </div>
   </div>
 </template>
 
@@ -49,18 +50,27 @@ export default {
   overflow: hidden;
 }
 
-.song-name {
-  font-size: 2vh;
-  font-weight: 500;
+.detail {
   width: 15vh;
+  height: 9vh;
   margin-top: 1vh;
-}
-
-.singer,
-.time {
-  font-size: 1.5vh;
-  width: 10vh;
-  color: #ccc;
-  margin-top: 0.7vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  .van-notice-bar {
+    height: 0px; /* 真机和开发者工具样式不一致，在真机上加这个，取代默认高度 */
+    flex: auto;
+    padding: 0 !important;
+    background-color: inherit;
+    font-size: 2vh;
+  }
+  .singer {
+    width: 15vh;
+    font-size: 1.5vh;
+    color: #ccc;
+  }
+  .time {
+    font-size: 1.5vh;
+  }
 }
 </style>
