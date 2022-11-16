@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="examine">
     <div class="image" @click="toListen">
       <van-image width="20vh" height="20vh" fit="fill" :src="applyInfo.imgUrl">
         <template #loading>
@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <div class="info" v-if="applyInfo.noPassReason">
+    <div class="info" v-if="applyInfo.state === 2">
       <div>
         <div class="title">未通过原因</div>
         <div class="message">
@@ -82,7 +82,6 @@ export default {
   },
   mounted() {
     const musicInfo = JSON.parse(localStorage.getItem('musicInfo'))
-    /* console.log(musicInfo) */
     this.$axios.get(`/admin/songDetails?id=${musicInfo.id}`).then((res) => {
       if (res.data.code === 200) {
         const resInfo = res.data.data[0]
@@ -92,8 +91,10 @@ export default {
         const to = resInfo.receiver_name
         const message = resInfo.blessing_words
         const noPassReason = resInfo.no_pass_reason
+        const state = resInfo.status
         this.applyInfo = {
           ...musicInfo,
+          state,
           campus,
           from,
           phone,
@@ -163,7 +164,15 @@ export default {
 
 <style lang="less" scoped>
 .examine {
-  overflow: auto;
+  overflow: scroll;
+  height: calc(100vh - 94.9px);
+
+  @supports (bottom: env(safe-area-inset-bottom)) {
+    & {
+      height: calc(100vh - 94.9px - constant(safe-area-inset-bottom));
+      height: calc(100vh - 94.9px - env(safe-area-inset-bottom));
+    }
+  }
 }
 
 .image {
