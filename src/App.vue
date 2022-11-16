@@ -115,6 +115,11 @@ hr {
   font-size: 2.6vh !important;
 }
 
+.van-dropdown-menu__bar {
+  background-color: transparent;
+  box-shadow: none;
+}
+
 .slide-left-enter,
 .slide-right-leave-to {
   opacity: 0;

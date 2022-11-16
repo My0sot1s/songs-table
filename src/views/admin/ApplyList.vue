@@ -398,17 +398,16 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-</style>
 
-<style>
-.van-dropdown-menu__bar {
-  background-color: transparent;
-  box-shadow: none;
+::v-deep .van-dropdown-menu__bar {
   transform: translateX(-10px);
   height: calc(5.4vh + 2px);
 }
 
-.van-dropdown-menu__title::after {
+::v-deep .van-dropdown-menu__title::after {
   border-color: transparent transparent #333 #333;
 }
+</style>
+
+<style>
 </style>

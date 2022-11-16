@@ -42,7 +42,7 @@ const routes = [
   {
     name: 'Admin',
     path: '/admin',
-    redirect: '/admin/login'
+    redirect: '/admin/home'
   },
   {
     name: 'AdminLogin',

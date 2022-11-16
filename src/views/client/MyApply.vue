@@ -1,10 +1,5 @@
 <template>
   <div>
-    <van-sticky :offset-top="offsetTop">
-      <van-dropdown-menu active-color="#1989fa">
-        <van-dropdown-item v-model="menu.state" :options="menu.states" />
-      </van-dropdown-menu>
-    </van-sticky>
     <div class="my-apply">
       <ApplyInfo
         v-for="(item, index) in curList"
@@ -42,6 +37,11 @@
         </template>
       </ApplyInfo>
     </div>
+
+    <van-dropdown-menu id="dropMenu" active-color="#1989fa">
+      <van-dropdown-item v-model="menu.state" :options="menu.states" />
+    </van-dropdown-menu>
+
     <div ref="lottie" v-show="curList.length === 0"></div>
   </div>
 </template>
@@ -72,8 +72,7 @@ export default {
           { text: '未通过', value: 2 },
           { text: '待播放', value: 3 }
         ]
-      },
-      offsetTop: '0'
+      }
     }
   },
   watch: {
@@ -103,8 +102,6 @@ export default {
       autoplay: true,
       animationData: empty
     })
-
-    this.offsetTop = '44.9px'
   },
   destroyed() {
     if (!this.lottieInstance) return
@@ -250,7 +247,11 @@ export default {
   }
 }
 
-.van-dropdown-menu__item {
-  flex: 0.5 !important;
+::v-deep .van-dropdown-menu {
+  position: fixed;
+  right: 5vw;
+  top: 0;
+  z-index: 9999;
+  height: 45px;
 }
 </style>
