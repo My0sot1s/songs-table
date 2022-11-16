@@ -405,7 +405,7 @@ export default {
   background-color: transparent;
   box-shadow: none;
   transform: translateX(-10px);
-  height: 3.4vh;
+  height: calc(5.4vh + 2px);
 }
 
 .van-dropdown-menu__title::after {
