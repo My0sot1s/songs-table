@@ -1,5 +1,15 @@
 <template>
   <div>
+    <!-- <van-notice-bar
+      color="#1989fa"
+      background="#ecf9ff"
+      left-icon="volume-o"
+      :style="`margin: 2vw 0`"
+      scrollable
+      mode="closeable"
+      :text="this.limitReason"
+    >
+    </van-notice-bar> -->
     <div class="content">
       <MusicList title="今日歌单" :musicList="todayList">
         <template #default>
@@ -45,10 +55,7 @@ export default {
     const res = await getLimitDay()
     this.limitReason = res.data.data?.reason
     if ((this.limitReason ?? '') !== '') {
-      /* localStorage.setItem('limitDay', true) */
       Dialog({ message: this.limitReason, confirmButtonColor: '#1989fa' })
-    } else {
-      localStorage.setItem('limitDay', false)
     }
     getList('/user/todaySongs', this.todayList)
     getList('/user/comingSongs', this.laterList).then(() => {
@@ -65,16 +72,6 @@ export default {
   methods: {
     toSelect() {
       this.$router.push('/selectmusic')
-    }
-  },
-  beforeRouteLeave: (to, from, next) => {
-    /* console.log(localStorage.limitDay) */
-    if (localStorage.limitDay === 'false' || to.path === '/myApply') {
-      next()
-    } else {
-      console.log(to)
-      Dialog({ message: '今天不能点歌哦' })
-      next(false)
     }
   }
 }
