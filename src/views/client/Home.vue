@@ -9,7 +9,7 @@
         </template>
       </MusicList>
       <van-divider :hairline="false" />
-      <MusicList title="即将到来" :musicList="laterList"></MusicList>
+      <MusicList title="即将到来" :musicList="laterList" showTime></MusicList>
       <van-divider :hairline="false" />
     </div>
     <div ref="lottie" @click="toSelect()" class="lottie-btn"></div>
@@ -51,7 +51,11 @@ export default {
       localStorage.setItem('limitDay', false)
     }
     getList('/user/todaySongs', this.todayList)
-    getList('/user/comingSongs', this.laterList)
+    getList('/user/comingSongs', this.laterList).then(() => {
+      this.laterList.sort((a, b) => {
+        return a.time.split('-')[2] - b.time.split('-')[2]
+      })
+    })
   },
   destroyed() {
     if (!this.lottieInstance) return
@@ -92,4 +96,9 @@ export default {
   height: 20vh;
 }
 </style>
->
+
+<style>
+.van-divider {
+  margin: 0.5vh 0;
+}
+</style>

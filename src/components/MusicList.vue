@@ -15,7 +15,9 @@
             :songName="item.songName"
             :singer="item.singer"
             :listenUrl="item.listenUrl"
-          />
+          >
+            <template #time v-if="showTime">{{ item.time }}</template>
+          </Album>
         </div>
         <div v-else>
           <Album
@@ -36,7 +38,8 @@ import Album from './Album'
 export default {
   props: {
     title: String,
-    musicList: Array
+    musicList: Array,
+    showTime: Boolean
   },
   components: {
     Album
@@ -73,4 +76,3 @@ export default {
   }
 }
 </style>
->

@@ -18,6 +18,7 @@
     </div>
     <div class="song-name van-ellipsis">{{ songName }}</div>
     <div class="singer van-ellipsis">{{ singer || '佚名' }}</div>
+    <div class="time"><slot name="time" /></div>
   </div>
 </template>
 
@@ -46,20 +47,20 @@ export default {
   // border: 1px solid rgb(221, 221, 221);
   box-shadow: 0 0 5px #999;
   overflow: hidden;
-  & ~ div {
-    margin-top: 1vh;
-  }
 }
 
 .song-name {
   font-size: 2vh;
   font-weight: 500;
   width: 15vh;
+  margin-top: 1vh;
 }
 
-.singer {
+.singer,
+.time {
   font-size: 1.5vh;
   width: 10vh;
   color: #ccc;
+  margin-top: 0.7vh;
 }
 </style>
