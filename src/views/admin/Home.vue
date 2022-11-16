@@ -60,21 +60,30 @@
       v-if="$store.state.showLoading"
       >加载中...</van-loading
     >
+
+    <FieldDialog
+      :show="showDialog"
+      title="驳回原因"
+      @submit="delItem"
+      @cancle="showDialog = false"
+    />
   </div>
 </template>
 
 <script>
 import ApplyInfo from '@/components/ApplyInfo'
+import FieldDialog from '@/components/FieldDialog.vue'
 import formatDate from '@/tools/FormatDate'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
-import { Dialog, Toast } from 'vant'
-import { getList } from '@/api'
+import { Toast } from 'vant'
+import { getList, reject } from '@/api'
 
 export default {
   name: 'adminHome',
   components: {
-    ApplyInfo
+    ApplyInfo,
+    FieldDialog
   },
   data() {
     return {
@@ -88,7 +97,8 @@ export default {
       },
       scrollTop: 0,
       showGoTop: false,
-      offsetTop: '0'
+      offsetTop: '0',
+      showDialog: false
     }
   },
   computed: {
@@ -130,16 +140,9 @@ export default {
   methods: {
     getApplyList() {
       if (this.$store.state.applyList.length === 0) {
-        // Toast.loading({
-        //   message: '加载中...',
-        //   forbidClick: true,
-        //   loadingType: 'spinner',
-        //   duration: 0
-        // })
         this.$store.commit('setShowLoading', true)
         getList('/admin/songList', this.$store.state.applyList, this).then(
           () => {
-            // Toast.clear()
             this.$store.commit('setShowLoading', false)
             Toast.success('加载完成')
           }
@@ -157,41 +160,26 @@ export default {
       this.showCalendar = false
     },
     selAction() {
-      Dialog.confirm({
-        title: '真的要将其移出歌单吗',
-        message: '您可以在 申请列表 - 已处理 - 该日 内找到并将其恢复'
-      })
-        .then(() => {
-          this.delItem()
-        })
-        .catch(() => {
-          // on cancel
-        })
+      this.showDialog = true
     },
     /* 确认删除后触发 */
-    delItem() {
+    delItem(reason) {
       Toast.loading({
         message: '请求中...',
         forbidClick: true,
         loadingType: 'spinner',
         duration: 0
       })
-      this.$axios
-        .post('/admin/noPass', {
-          id: this.curDayList[this.curIndex].id
-        })
-        .then((res) => {
-          if (res.data.code === 200) {
-            this.$store.commit('noPassApply', this.curDayList[this.curIndex].id)
-            Toast.clear()
-            Toast.success('取消成功')
-          } else {
-            Toast.fail(res.data.msg)
-          }
-        })
-        .catch(() => {
-          Toast.fail('请求异常')
-        })
+      reject(this.curDayList[this.curIndex].id, reason).then((res) => {
+        if (res.data.code === 200 || res.data.code === 406) {
+          this.$store.commit('noPassApply', this.curDayList[this.curIndex].id)
+          Toast.clear()
+          Toast.success('驳回成功')
+          this.showDialog = false
+        } else {
+          Toast.fail(res.data.msg)
+        }
+      })
     },
     toExamine(index) {
       const { id, imgUrl, songName, singer, time, listenUrl } =

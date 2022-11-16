@@ -297,7 +297,7 @@ export default {
           id: this.curDayProcessedList[this.curIndex].id
         })
         .then((res) => {
-          if (res.data.code === 200) {
+          if (res.data.code === 200 || res.data.code === 406) {
             this.$store.commit(
               `${M}Apply`,
               this.curDayProcessedList[this.curIndex].id

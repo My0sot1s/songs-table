@@ -42,40 +42,43 @@
         </div>
       </div>
     </div>
+    <div class="info" v-if="applyInfo.noPassReason">
+      <div>
+        <div class="title">未通过原因</div>
+        <div class="message">
+          {{ applyInfo.noPassReason }}
+        </div>
+      </div>
+    </div>
 
     <div class="btn1" v-if="applyInfo.showBtn">
       <div @click="showReject">驳回</div>
       <div @click="pass" class="btn2">通过</div>
     </div>
 
-    <van-dialog
-      @confirm="reject"
-      v-model="rejectDialog"
-      title="驳回理由"
-      show-cancel-button
-    >
-      <van-field
-        v-model="reason"
-        rows="3"
-        autosize
-        type="textarea"
-        placeholder="请输入驳回理由"
-      />
-    </van-dialog>
+    <FieldDialog
+      :show="showDialog"
+      title="驳回原因"
+      @submit="reject"
+      @cancle="showDialog = false"
+    />
   </div>
 </template>
 
 <script>
 import { Dialog, Toast } from 'vant'
+import FieldDialog from '@/components/FieldDialog.vue'
 import { reject } from '@/api'
 
 export default {
   data() {
     return {
       applyInfo: {},
-      rejectDialog: false,
-      reason: ''
+      showDialog: false
     }
+  },
+  components: {
+    FieldDialog
   },
   mounted() {
     const musicInfo = JSON.parse(localStorage.getItem('musicInfo'))
@@ -88,22 +91,24 @@ export default {
         const phone = resInfo.phone_num
         const to = resInfo.receiver_name
         const message = resInfo.blessing_words
+        const noPassReason = resInfo.no_pass_reason
         this.applyInfo = {
           ...musicInfo,
           campus,
           from,
           phone,
           to,
-          message
+          message,
+          noPassReason
         }
       }
     })
   },
   methods: {
     showReject() {
-      this.rejectDialog = true
+      this.showDialog = true
     },
-    async reject() {
+    async reject(reason) {
       Toast.loading({
         message: '请求中...',
         forbidClick: true,
@@ -111,8 +116,7 @@ export default {
         duration: 0
       })
       try {
-        const res = await reject(this.applyInfo.id, this.reason)
-        /* console.log(res) */
+        const res = await reject(this.applyInfo.id, reason)
         if (res.data.code === 200 || res.data.code === 406) {
           this.$store.commit('noPassApply', this.applyInfo.id)
           Toast.clear()
@@ -124,57 +128,33 @@ export default {
       } catch (err) {
         Toast.fail(err.message)
       }
-      /* this.$axios
-        .post('/admin/noPass', {
-          id: this.applyInfo.id
-        })
-        .then((res) => {
-          if (res.data.code === 200) {
-            this.$store.commit('noPassApply', this.applyInfo.id)
-            Toast.clear()
-            this.$router.replace('/admin/applyList')
-          } else {
-            Toast.fail(res.data.msg)
-          }
-        })
-        .catch(() => {
-          Toast.fail('请求异常')
-        }) */
     },
     pass() {
       Dialog.confirm({
         title: '确认通过请求？'
-      })
-        .then(() => {
-          Toast.loading({
-            message: '请求中...',
-            forbidClick: true,
-            loadingType: 'spinner',
-            duration: 0
+      }).then(() => {
+        Toast.loading({
+          message: '请求中...',
+          forbidClick: true,
+          loadingType: 'spinner',
+          duration: 0
+        })
+        this.$axios
+          .post('/admin/pass', {
+            id: this.applyInfo.id
           })
-          this.$axios
-            .post('/admin/pass', {
-              id: this.applyInfo.id
-            })
-            .then((res) => {
-              if (res.data.code === 200 || res.data.code === 406) {
-                this.$store.commit('passApply', this.applyInfo.id)
-                Toast.clear()
-                this.$router.replace('/admin/applyList')
-              } else {
-                Toast.fail(res.data.msg)
-              }
-            })
-            .catch(() => {
-              Toast.fail('请求异常')
-            })
-        })
-        .catch(() => {
-          // on cancel
-        })
+          .then((res) => {
+            if (res.data.code === 200 || res.data.code === 406) {
+              this.$store.commit('passApply', this.applyInfo.id)
+              Toast.clear()
+              this.$router.replace('/admin/applyList')
+            } else {
+              Toast.fail(res.data.msg)
+            }
+          })
+      })
     },
     toListen() {
-      /* console.log(this.applyInfo.listenUrl) */
       location.href = this.applyInfo.listenUrl
     }
   }
@@ -253,9 +233,11 @@ export default {
 .message {
   // background-color: rgba(200, 210, 210, 0.3);
   background-color: #f8fafc;
-  padding: 2vh;
+  padding: 1.5vh 3vw;
   border-radius: 10px;
-  box-shadow: 0 0 10px #ccc;
+  box-shadow: 0 0 10px #ddd;
+  color: #555;
+  font-size: 2vh;
 }
 
 .btn1 {
