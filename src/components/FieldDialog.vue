@@ -1,9 +1,8 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <div>
-    <van-dialog v-model="show" :title="title" :show-confirm-button="false">
+  <div v-show="show">
+    <van-dialog v-model="SHOW" :title="title" :show-confirm-button="false">
       <van-form @submit="submit">
-        <div style="margin: 1.5vh 1vh">
+        <div style="margin: 12px 8px">
           <slot name="field">
             <van-field
               v-model="value"
@@ -39,7 +38,13 @@ export default {
   },
   data() {
     return {
-      value: ''
+      value: '',
+      SHOW: true
+    }
+  },
+  watch: {
+    show(newValue) {
+      if (newValue === false) this.value = ''
     }
   },
   methods: {
@@ -60,7 +65,7 @@ export default {
   align-items: center;
 
   &-btn {
-    height: 6vh;
+    height: 48px;
     width: 50%;
     border: none;
     border-top: 1px solid #ccc;

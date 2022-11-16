@@ -109,11 +109,19 @@
       v-if="$store.state.showLoading"
       >加载中...</van-loading
     >
+
+    <FieldDialog
+      :show="showDialog"
+      title="驳回原因"
+      @submit="retried($event, 'noPass')"
+      @cancle="showDialog = false"
+    />
   </div>
 </template>
 
 <script>
 import ApplyInfo from '@/components/ApplyInfo'
+import FieldDialog from '@/components/FieldDialog.vue'
 import formatDate from '@/tools/FormatDate'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
@@ -123,7 +131,8 @@ import { getList } from '@/api'
 export default {
   name: 'ApplyList',
   components: {
-    ApplyInfo
+    ApplyInfo,
+    FieldDialog
   },
   data() {
     return {
@@ -152,7 +161,8 @@ export default {
           { text: '待播放', value: 3 }
         ]
       },
-      offsetTop: '0'
+      offsetTop: '0',
+      showDialog: false
     }
   },
   computed: {
@@ -214,16 +224,9 @@ export default {
     getApplyList() {
       // 根据是否是第一次进入页面采取不同方法获取数据
       if (this.$store.state.applyList.length === 0) {
-        // Toast.loading({
-        //   message: '加载中...',
-        //   forbidClick: true,
-        //   loadingType: 'spinner',
-        //   duration: 0
-        // })
         this.$store.commit('setShowLoading', true)
         getList('/admin/songList', this.$store.state.applyList, this).then(
           (res) => {
-            // Toast.clear()
             this.$store.commit('setShowLoading', false)
             Toast.success('加载完成')
           }
@@ -250,15 +253,16 @@ export default {
       this.showCalendar = false
     },
     selAction() {
-      Dialog.confirm({
-        title: '要重新审核该歌曲吗？'
-      })
-        .then(() => {
-          this.retried()
+      const state = this.curDayProcessedList[this.curIndex].state
+      if (state === 3) {
+        this.showDialog = true
+      } else {
+        Dialog.confirm({
+          title: '要重新通过该歌曲吗？'
+        }).then(() => {
+          this.retried(null, 'pass')
         })
-        .catch(() => {
-          // on cancel
-        })
+      }
     },
     toExamine(index) {
       const { id, imgUrl, songName, singer, time, listenUrl } =
@@ -281,36 +285,34 @@ export default {
       this.$router.push('/admin/examine')
     },
     // 重新审核歌曲
-    retried() {
+    retried(reason, type) {
       Toast.loading({
         message: '请求中...',
         forbidClick: true,
         loadingType: 'spinner',
         duration: 0
       })
-      const state = this.curDayProcessedList[this.curIndex].state
-      let M = ''
-      if (state === 2) M = 'pass'
-      else if (state === 3) M = 'noPass'
-      this.$axios
-        .post(`/admin/${M}`, {
-          id: this.curDayProcessedList[this.curIndex].id
-        })
-        .then((res) => {
-          if (res.data.code === 200 || res.data.code === 406) {
-            this.$store.commit(
-              `${M}Apply`,
-              this.curDayProcessedList[this.curIndex].id
-            )
-            Toast.clear()
-            Toast.success('更改成功')
-          } else {
-            Toast.fail(res.data.msg)
-          }
-        })
-        .catch(() => {
-          Toast.fail('请求异常')
-        })
+      const submitObj = {
+        id: this.curDayProcessedList[this.curIndex].id
+      }
+
+      if (reason !== null) {
+        submitObj.noPassReason = reason
+      }
+
+      this.$axios.post(`/admin/${type}`, submitObj).then((res) => {
+        if (res.data.code === 200 || res.data.code === 406) {
+          this.$store.commit(
+            `${type}Apply`,
+            this.curDayProcessedList[this.curIndex].id
+          )
+          Toast.clear()
+          Toast.success('更改成功')
+          if (reason !== null) this.showDialog = false
+        } else {
+          Toast.fail(res.data.msg)
+        }
+      })
     },
     // 监听scroll事件，获取scrollTop
     handelScroll(e) {

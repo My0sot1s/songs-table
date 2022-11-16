@@ -2,11 +2,10 @@
   <div class="apply-info">
     <div class="body">
       <div class="image">
-        <van-image lazy-load width="8vh" height="8vh" fit="fill" :src="imgUrl">
+        <van-image lazy-load fit="fill" width="7vh" height="7vh" :src="imgUrl">
           <template #loading>
             <van-loading type="spinner" size="20" />
           </template>
-          <template #error>加载失败</template>
         </van-image>
       </div>
       <div class="info">
@@ -76,12 +75,12 @@ export default {
     padding: 2vh;
 
     .image {
-      width: 8vh;
-      height: 8vh;
+      width: 7vh;
+      height: 7vh;
       border-radius: 5px;
       box-shadow: 0 0 5px #999;
       overflow: hidden;
-      margin-right: 2.5vw;
+      margin-right: 1vh;
     }
 
     .info {
