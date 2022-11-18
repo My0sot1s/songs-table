@@ -26,14 +26,14 @@ export const getList = (url, list, that) => {
     }).then(async (res) => {
       if (res.data.code === 200 && res.data.data) {
         res.data.data.forEach((item) => {
-          const promise = new Promise((resolve) => {
+          const promise = new Promise((resolve, reject) => {
             if (!that || (that && inTime(item.broadcast_date))) {
               if (item.search_path === '网易云') {
                 Vue.prototype.$musicApi
                   .NetEaseCloudDetail(item.song_id)
                   .then((detail) => {
                     if (detail.data.songs.length === 0) {
-                      resolve()
+                      reject(new Error('无此歌曲'))
                     } else {
                       const temp = getTemp(item, detail)
                       if (that) {
@@ -41,6 +41,7 @@ export const getList = (url, list, that) => {
                       } else {
                         list.push(temp)
                       }
+                      // resolve(temp)
                       resolve()
                     }
                   })
@@ -49,7 +50,7 @@ export const getList = (url, list, that) => {
                   .QQMusicDetail(item.song_id)
                   .then((detail) => {
                     if (!detail.data.data.track_info.name) {
-                      resolve()
+                      reject(new Error('无此歌曲'))
                     } else {
                       const temp = getTemp(
                         item,
@@ -60,20 +61,21 @@ export const getList = (url, list, that) => {
                       } else {
                         list.push(temp)
                       }
+                      // resolve(temp)
                       resolve()
                     }
                   })
               } else {
-                resolve()
+                reject(new Error('未知来源'))
               }
             } else {
-              resolve()
+              reject(new Error('条件不符，不加载此项'))
             }
           })
           promiseList.push(promise)
         })
 
-        Promise.all(promiseList).then(res => {
+        Promise.allSettled(promiseList).then(res => {
           resolve()
         })
       }
