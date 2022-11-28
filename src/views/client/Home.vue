@@ -57,9 +57,13 @@ export default {
 
     getList('/user/todaySongs', this.todayList)
     getList('/user/comingSongs', this.laterList).then(() => {
-      this.laterList.sort((a, b) => {
-        return a.time.split('-')[2] - b.time.split('-')[2]
-      })
+      this.laterList
+        .sort((a, b) => {
+          return a.time.split('-')[2] - b.time.split('-')[2]
+        })
+        .sort((a, b) => {
+          return a.time.split('-')[1] - b.time.split('-')[1]
+        })
       // 如果十分钟内提示过了且限制原因没有改变则不再提示
       if (
         (this.limitReason ?? '') !== '' &&
