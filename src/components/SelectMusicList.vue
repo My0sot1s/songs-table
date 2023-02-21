@@ -1,7 +1,8 @@
 <template>
   <div id="selectMusicList" @click.stop>
-    <van-form>
-      <van-search shape="round" v-model="value" placeholder="" />
+    <van-form id="search">
+      <van-search shape="round" v-model="value" placeholder="搜索歌曲" />
+      <div class="mask"></div>
     </van-form>
     <van-empty
       v-show="this.musicList.length === 0 && !this.loading"
@@ -15,7 +16,6 @@
       v-show="this.musicList.length === 0 && this.loading"
     ></div>
     <div id="list">
-      <div class="mask"></div>
       <van-list
         v-show="this.musicList.length !== 0"
         v-model="loading"
@@ -33,13 +33,13 @@
       </van-list>
       <div class="mask" id="bottom-mask"></div>
     </div>
-    <van-button
+    <!-- <van-button
       round
       type="default"
       @click="confirm"
       v-if="this.musicList.length != 0"
       >确认</van-button
-    >
+    > -->
   </div>
 </template>
 
@@ -57,6 +57,7 @@ export default {
       index: 0,
       value: '',
       timer: null,
+      selectTimer: null,
       loading: false,
       finished: false,
       musicList: [],
@@ -66,13 +67,17 @@ export default {
   },
   methods: {
     select(index) {
-      this.index = index
-      const cells = [...document.querySelectorAll('#background')]
+      /* const cells = [...document.querySelectorAll('.background')]
       cells.forEach((e) => {
         e.style = 'width: 0; height: 0; background-color: white;'
-      })
-      cells[index].style =
-        'width: 100vw; height: 100vw; background-color: rgb(239, 242, 247);'
+      }) */
+      /* cells[index].style =
+        'width: 100vw; height: 100vw; background-color: rgb(239, 242, 247);' */
+      clearTimeout(this.selectTimer)
+      this.selectTimer = setTimeout(() => {
+        this.index = index
+        this.confirm()
+      }, 300)
     },
     confirm() {
       this.$emit('confirmMusic', this.musicList[this.index])
@@ -159,20 +164,24 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: white;
-  margin: 30vw 2vw 0 2vw;
-  padding: 8vw 7vw 0 7vw;
   border-radius: 4vw;
   overflow: scroll;
-  min-height: 50vh;
-  max-height: 70vh;
-  .van-search {
-    padding: 0;
-    position: -webkit-sticky;
+  overflow-x: hidden;
+  height: 80vh;
+  #search {
     position: sticky;
-    top: 0 vw;
-    margin-bottom: 3vw;
-    .van-search__content {
-      background-color: rgb(250, 251, 253);
+    top: 0;
+    padding: 6vw 2vw 0vw 2vw;
+    z-index: 10;
+    .van-search {
+      padding: 0;
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0 vw;
+      margin-bottom: 1vw;
+      .van-search__content {
+        background-color: rgb(250, 251, 253);
+      }
     }
   }
   .empty {
@@ -207,8 +216,7 @@ export default {
   }
   .van-list {
     box-sizing: border-box;
-    max-height: 45vh;
-    padding: 0 1vw 0 1vw;
+    padding: 0 4vw;
     overflow: scroll;
     border-top: 1px solid rgb(250, 251, 253);
     border-bottom: 1px solid rgb(250, 251, 253);

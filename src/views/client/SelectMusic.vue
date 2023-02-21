@@ -1,12 +1,14 @@
 <template>
   <div id="ChooseMusic">
-    <van-overlay
+    <van-popup
       :lock-scroll="false"
-      :show="showPick"
+      v-model="showPick"
+      round
+      position="bottom"
       @click="showPick = false"
     >
       <SelectMusicList @confirmMusic="confirmMusic" />
-    </van-overlay>
+    </van-popup>
     <ApplyForm :musics="musics" @popUp="popUp" />
   </div>
 </template>
@@ -50,7 +52,7 @@ body {
 .van-overlay {
   /* background-color: inherit !important; */
   overflow: scroll;
-  z-index: 1;
+  z-index: 1000;
   /* padding-bottom: 1vw; */
 }
 .van-form {

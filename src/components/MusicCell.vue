@@ -1,11 +1,11 @@
 <template>
-  <div id="cell">
+  <div id="cell" ref="cell" @click="ripple">
     <div id="background"></div>
     <van-image
       round
       error-icon="https://y.qq.com/music/photo_new/T002R300x300M0000030lak94GN5Ad_0.jpg"
-      width="11vw"
-      height="11vw"
+      width="12vw"
+      height="12vw"
       :src="music.cover"
     />
     <div id="detail">
@@ -27,6 +27,24 @@ export default {
       }
     }
   },
+  methods: {
+    ripple(e) {
+      if (this.$refs.cell.querySelector('.ripple')) return
+      /* 清除原来的选中 */
+      const cells = [...document.querySelectorAll('.ripple')]
+      cells.forEach((e) => {
+        e.remove()
+      })
+
+      const x = e.pageX - this.$refs.cell.getBoundingClientRect().left
+      const y = e.pageY - this.$refs.cell.getBoundingClientRect().top
+      const ripple = document.createElement('span')
+      ripple.classList.add('ripple')
+      ripple.style.left = x + 'px'
+      ripple.style.top = y + 'px'
+      this.$refs.cell.appendChild(ripple)
+    }
+  },
   mounted() {}
 }
 </script>
@@ -34,18 +52,38 @@ export default {
 <style lang="less">
 #cell {
   position: relative;
-  height: 16vw;
-  margin: 3vw 0;
+  height: 18vw;
+  margin: 6vw 0;
   padding: 0 4vw;
-  border-radius: 2vw;
-  box-shadow: 0 0 5px #999;
+  border-radius: 4vw;
+  box-shadow: 3px 3px 10px 2px rgb(223, 222, 222);
   display: flex;
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
   .van-image {
+    z-index: 1;
     border-radius: 1vw;
     box-shadow: 0 0 4px #999;
+  }
+  span {
+    position: absolute;
+    z-index: 0;
+    background: rgb(239, 242, 247);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: ripple 0.3s ease-in;
+    animation-fill-mode: forwards;
+  }
+  @keyframes ripple {
+    0% {
+      width: 0;
+      height: 0;
+    }
+    100% {
+      width: 200vw;
+      height: 200vw;
+    }
   }
   #background {
     position: absolute;
@@ -59,8 +97,9 @@ export default {
     transition: width 500ms, height 500ms, background-color 500ms;
   }
   #detail {
-    width: 58vw;
-    height: 11vw;
+    z-index: 1;
+    width: 69vw;
+    height: 12vw;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
