@@ -67,6 +67,7 @@ export default {
   },
   methods: {
     select(index) {
+      if (this.index === index) this.confirm()
       /* const cells = [...document.querySelectorAll('.background')]
       cells.forEach((e) => {
         e.style = 'width: 0; height: 0; background-color: white;'
