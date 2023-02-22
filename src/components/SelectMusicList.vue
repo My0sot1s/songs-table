@@ -67,18 +67,21 @@ export default {
   },
   methods: {
     select(index) {
-      if (this.index === index) this.confirm()
+      if (this.index === index) {
+        this.confirm()
+      } else {
+        clearTimeout(this.selectTimer)
+        this.selectTimer = setTimeout(() => {
+          this.index = index
+          this.confirm()
+        }, 300)
+      }
       /* const cells = [...document.querySelectorAll('.background')]
       cells.forEach((e) => {
         e.style = 'width: 0; height: 0; background-color: white;'
       }) */
       /* cells[index].style =
         'width: 100vw; height: 100vw; background-color: rgb(239, 242, 247);' */
-      clearTimeout(this.selectTimer)
-      this.selectTimer = setTimeout(() => {
-        this.index = index
-        this.confirm()
-      }, 300)
     },
     confirm() {
       this.$emit('confirmMusic', this.musicList[this.index])
