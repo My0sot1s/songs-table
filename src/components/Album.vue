@@ -39,6 +39,7 @@ export default {
   },
   methods: {
     toListen() {
+      if (!this.listenUrl) return
       window.location.href = this.listenUrl
     }
   }
