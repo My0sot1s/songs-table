@@ -7,13 +7,15 @@
       <div>意见与反馈</div>
     </div>
 
-    <van-overlay
+    <van-popup
       :lock-scroll="false"
-      :show="showPick"
+      v-model="showPick"
+      position="bottom"
+      round
       @click="showPick = false"
     >
       <SelectMusicList @confirmMusic="confirmMusic" />
-    </van-overlay>
+    </van-popup>
 
     <van-dialog
       v-model="dialog.show"

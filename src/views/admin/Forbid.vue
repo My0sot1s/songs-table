@@ -23,7 +23,7 @@
       />
       <van-field
         :disabled="!this.checked"
-        v-model="reason"
+        v-model="form.reason"
         rows="3"
         autosize
         label="原因"
@@ -37,34 +37,20 @@
 </template>
 
 <script>
-import { Toast } from 'vant'
+import { Toast, Dialog } from 'vant'
 import { limitTime, limitInfo } from '@/api'
 export default {
   data() {
     return {
       date: '',
-      startTime: '',
-      endTime: '',
+      form: {
+        endTime: '',
+        reason: '',
+        startTime: ''
+      },
+      prevForm: '',
       showCalendar: false,
-      reason: '',
-      checked: false,
-      firstTime: true
-    }
-  },
-  watch: {
-    async checked(val) {
-      if (this.firstTime) {
-        this.firstTime = false
-      } else {
-        if (
-          (this.startTime ?? '') !== '' &&
-          (this.endTime ?? '') !== '' &&
-          this.startTime !== 1 &&
-          this.endTime !== 2
-        ) {
-          this.limitTime(!val)
-        }
-      }
+      checked: null
     }
   },
   methods: {
@@ -73,12 +59,13 @@ export default {
     },
     onConfirm(date) {
       this.showCalendar = false
-      this.startTime = [...date][0].getTime()
-      this.endTime = [...date][1].getTime()
+      this.form.startTime = [...date][0].getTime()
+      this.form.endTime = [...date][1].getTime()
       const [start, end] = date
       this.show = false
       this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`
     },
+    // disable为是否禁用规则
     async limitTime(disable) {
       Toast.loading({
         message: '加载中...',
@@ -87,12 +74,17 @@ export default {
       let res
       try {
         if (disable) {
-          res = await limitTime(1, this.reason, 2)
+          res = await limitTime({
+            startTime: 1,
+            reason: this.form.reason,
+            endTime: 2
+          })
         } else {
-          res = await limitTime(this.startTime, this.reason, this.endTime)
+          res = await limitTime(this.form)
         }
         if (res.data.code === 200) {
           Toast.success('修改成功')
+          this.prevForm = JSON.stringify(this.form)
         } else {
           Toast.fail(res.data.message)
         }
@@ -101,11 +93,13 @@ export default {
       }
     },
     async onSubmit() {
+      console.log(this.form)
       if (this.checked) {
         if (
-          (this.startTime ?? '') !== '' &&
-          (this.endTime ?? '') !== '' &&
-          this.checked
+          (this.form.startTime ?? '') !== '' &&
+          (this.form.endTime ?? '') !== '' &&
+          this.form.startTime !== 1 &&
+          this.form.endTime !== 2
         ) {
           this.limitTime(false)
         } else {
@@ -114,25 +108,55 @@ export default {
       } else {
         Toast.fail('请先启用规则')
       }
+    },
+    checkedHandler(val) {
+      if (val) {
+        this.onSubmit()
+      } else {
+        this.limitTime(true)
+      }
     }
   },
   async created() {
     try {
       const { data } = await limitInfo()
-      console.log(data)
-      this.startTime = data.data.startTime
-      this.reason = data.data.reason
-      this.endTime = data.data.endTime
-      if (this.startTime !== 1 && this.endTime !== 2) {
+      this.form.startTime = data.data.startTime
+      this.form.reason = data.data.reason
+      this.form.endTime = data.data.endTime
+      this.prevForm = JSON.stringify(this.form)
+      if (this.form.startTime !== 1 && this.form.endTime !== 2) {
         this.checked = true
         this.date = `${this.formatDate(
-          new Date(this.startTime)
-        )} - ${this.formatDate(new Date(this.endTime))}`
+          new Date(this.form.startTime)
+        )} - ${this.formatDate(new Date(this.form.endTime))}`
       } else {
         this.date = '暂无'
       }
+      // 加载数据后监听
+      this.$watch('checked', this.checkedHandler)
     } catch (err) {
       Toast.fail(err.message)
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    console.log(this.prevForm, this.form)
+    console.log(JSON.stringify(this.form))
+    if (this.prevForm === JSON.stringify(this.form) || !this.checked) {
+      console.log('pas')
+      next()
+    } else {
+      Dialog.confirm({
+        title: '',
+        message: '是否保存修改？',
+        closeOnPopstate: false,
+        confirmButtonColor: '#1989fa'
+      })
+        .then(async () => {
+          this.onSubmit()
+        })
+        .catch(() => {
+          next()
+        })
     }
   }
 }

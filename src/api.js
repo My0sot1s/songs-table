@@ -52,10 +52,7 @@ export const getList = (url, list, that) => {
                     if (!detail.data.data.track_info.name) {
                       reject(new Error('无此歌曲'))
                     } else {
-                      const temp = getTemp(
-                        item,
-                        detail.data.data.track_info
-                      )
+                      const temp = getTemp(item, detail.data.data.track_info)
                       if (that) {
                         that.$store.commit('pushApply', temp)
                       } else {
@@ -75,7 +72,7 @@ export const getList = (url, list, that) => {
           promiseList.push(promise)
         })
 
-        Promise.allSettled(promiseList).then(res => {
+        Promise.allSettled(promiseList).then((res) => {
           resolve()
         })
       }
@@ -134,7 +131,7 @@ export const getLimitDay = () =>
     url: '/user/isLimitDay'
   })
 
-export const limitTime = (startTime, reason, endTime) =>
+export const limitTime = ({ startTime, reason, endTime }) =>
   axios({
     method: 'POST',
     url: 'admin/limitTime',
