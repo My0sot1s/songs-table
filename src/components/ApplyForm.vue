@@ -288,4 +288,8 @@ export default {
   height: 40px;
   line-height: 40px;
 }
+.van-button {
+  margin-top: 8vw;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.07);
+}
 </style>
