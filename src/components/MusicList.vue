@@ -71,6 +71,7 @@ export default {
     flex-direction: row;
     overflow: auto;
     padding-top: 2vh;
+    padding-left: 1vw;
     &::-webkit-scrollbar {
       display: none;
     }

@@ -53,7 +53,7 @@ export default {
   margin-right: 3vw;
   border-radius: 10px;
   // border: 1px solid rgb(221, 221, 221);
-  box-shadow: 0 0 5px #999;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.07);
   overflow: hidden;
 }
 
