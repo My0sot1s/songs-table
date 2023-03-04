@@ -16,21 +16,23 @@
       v-show="this.musicList.length === 0 && this.loading"
     ></div>
     <div id="list">
-      <van-list
-        v-show="this.musicList.length !== 0"
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="search(false)"
-      >
-        <MusicCell
-          ref="cells"
-          v-for="(music, index) in musicList"
-          :key="music.songid"
-          :music="music"
-          @click.native="select(index)"
-        />
-      </van-list>
+      <transition name="van-fade">
+        <van-list
+          v-show="this.musicList.length !== 0"
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="search(false)"
+        >
+          <MusicCell
+            ref="cells"
+            v-for="(music, index) in musicList"
+            :key="music.songmid"
+            :music="music"
+            @click.native="select(index)"
+          />
+        </van-list>
+      </transition>
       <div class="mask" id="bottom-mask"></div>
     </div>
     <!-- <van-button

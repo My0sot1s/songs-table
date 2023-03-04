@@ -44,8 +44,7 @@ export default {
       ripple.style.top = y + 'px'
       this.$refs.cell.appendChild(ripple)
     }
-  },
-  mounted() {}
+  }
 }
 </script>
 
