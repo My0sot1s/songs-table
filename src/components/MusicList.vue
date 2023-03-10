@@ -63,6 +63,7 @@ export default {
     & > div {
       margin-left: 1vw;
       font-size: 2.5vh;
+      font-weight: bold;
     }
   }
 

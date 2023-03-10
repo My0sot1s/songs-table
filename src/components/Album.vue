@@ -17,7 +17,7 @@
     </div>
     <div class="detail" :class="{ shorter: !showTime }">
       <van-notice-bar color="black" :text="songName" />
-      <van-notice-bar class="singer" :text="singer || '佚名'" />
+      <!-- <van-notice-bar class="singer" :text="singer || '佚名'" /> -->
       <van-notice-bar class="time" color="gray" v-if="showTime">
         <slot name="time" />
       </van-notice-bar>
@@ -59,7 +59,7 @@ export default {
 
 .detail {
   width: 15vh;
-  height: 9vh;
+  height: 5vh;
   margin-top: 1vh;
   display: flex;
   flex-direction: column;
@@ -82,6 +82,6 @@ export default {
 }
 
 .shorter {
-  height: 6vh;
+  height: 3vh;
 }
 </style>

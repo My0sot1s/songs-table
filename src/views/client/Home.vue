@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="home">
     <van-notice-bar
       v-if="this.limitReason"
       color="#1989fa"
@@ -18,7 +18,6 @@
           </router-link>
         </template>
       </MusicList>
-      <van-divider :hairline="false" />
       <MusicList title="即将到来" :musicList="laterList" showTime></MusicList>
       <van-divider :hairline="false" />
     </div>
@@ -95,6 +94,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+#home {
+  background-color: rgb(250, 250, 250);
+}
 .client-header {
   font-size: 2.8vh;
   padding: 2vh 6vw;
@@ -107,7 +109,11 @@ export default {
 }
 
 .lottie-btn {
-  height: 20vh;
+  height: 70vw;
+  transform: translateY(-10vw);
+}
+.van-icon-user-circle-o {
+  color: rgb(71, 113, 178);
 }
 </style>
 
