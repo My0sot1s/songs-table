@@ -139,7 +139,7 @@ export default {
           this.finished = true
         }
       }, 200)
-      // qq音乐的接口只能返回第一页的数据，后面的要客户端，真恶心x
+      // qq音乐的接口只能返回第一页的数据，后面的要客户端
     }
   },
   watch: {

@@ -1,9 +1,11 @@
 <template>
-  <van-empty image="error" description="请在竖屏状态下打开" />
+  <van-empty image="error" description="请用手机竖屏打开" />
 </template>
 
 <script>
-export default {}
+export default {
+  mounted() {}
+}
 </script>
 
 <style></style>

@@ -22,6 +22,17 @@
       <van-divider :hairline="false" />
     </div>
     <div ref="lottie" @click="toSelect()" class="lottie-btn"></div>
+    <van-dialog
+      v-model="tourist"
+      title="提示"
+      confirm-button-text="知道了"
+      confirm-button-color="#3c9cff"
+      cancel-button-text="去登录"
+      message="当前为游客身份，点歌请通过校内认证登录"
+      show-cancel-button
+      @cancel="toLogin"
+    >
+    </van-dialog>
   </div>
 </template>
 
@@ -37,13 +48,18 @@ export default {
     return {
       todayList: [],
       laterList: [],
-      limitReason: ''
+      limitReason: '',
+      tourist: false
     }
   },
   components: {
     MusicList
   },
   async mounted() {
+    if (sessionStorage.getItem('tourist') && !sessionStorage.getItem('poped')) {
+      this.tourist = true
+      sessionStorage.setItem('poped', 1)
+    }
     this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
       renderer: 'svg',
@@ -88,6 +104,12 @@ export default {
   methods: {
     toSelect() {
       this.$router.push('/selectmusic')
+    },
+    toLogin() {
+      window.location.href = `https://apps.hqu.edu.cn/wechat-hqu/wechatauth.html?proxyTo=authoauth&sendUrl=/connect/oauth2/authorize?appid=wxfe035b066fb1158b&redirect_uri=${encodeURIComponent(
+        `${location.origin}`
+      )}&encode_flag=Y&response_type=code&scope=snsapi_userinfo#wechat_redirect`
+      sessionStorage.removeItem('tourist')
     }
   }
 }

@@ -26,7 +26,8 @@ export default {
   data() {
     return {
       height: document.body.clientHeight,
-      transitionName: 'slide-right'
+      transitionName: 'slide-right',
+      timer: null
     }
   },
   watch: {
@@ -49,14 +50,23 @@ export default {
       this.$route.path !== '/error'
     ) {
       this.$router.push('/error')
-    } else {
-      if (this.$route.path === '/error') {
-        this.$router.back()
-      }
     }
-    window.addEventListener('onresize', () => {
-      if (window.innerWidth > window.innerHeight) {
-        this.$router.push('/error')
+    window.addEventListener('resize', () => {
+      if (!this.timer) {
+        this.timer = setTimeout(() => {
+          if (
+            window.innerWidth > window.innerHeight &&
+            this.$route.path !== '/error'
+          ) {
+            this.$router.push('/error')
+          } else if (
+            window.innerWidth <= window.innerHeight &&
+            this.$route.path !== '/home'
+          ) {
+            this.$router.push('/home')
+          }
+          this.timer = null
+        }, 500)
       }
     })
   }

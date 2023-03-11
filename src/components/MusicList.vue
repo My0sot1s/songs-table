@@ -46,7 +46,7 @@ export default {
     Album
   },
   mounted() {
-    console.log(this.musicList)
+    /* console.log(this.musicList) */
   }
 }
 </script>

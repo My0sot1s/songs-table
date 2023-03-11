@@ -1,12 +1,12 @@
 // 封装axios
 import theAxios from 'axios'
 // import qs from 'qs'
-
 const location = {
   origin: document.location.origin,
   search: document.location.search,
   searchParams: new URLSearchParams(document.location.search),
-  isInWechat: window.navigator.userAgent.includes('MicroMessenger')
+  isInWechat: window.navigator.userAgent.includes('MicroMessenger'),
+  isTourist: document.location.href.includes('tourist')
 }
 
 function wxLoginRedirect() {
@@ -84,7 +84,7 @@ function checkCode() {
 
 function checkToken() {
   return new Promise((resolve, reject) => {
-    if (!state.token) {
+    if (!state.token && !location.isTourist) {
       wxLoginRedirect()
       reject(new Error('should_wx_login'))
     } else {
@@ -121,7 +121,7 @@ axios.interceptors.response.use(
         if (document.location.hash.includes('admin')) {
           window.location.hash = '/admin/login'
         } else {
-          wxLoginRedirect()
+          /* wxLoginRedirect() */
         }
       }
     }
@@ -140,13 +140,18 @@ export default function initAxios(vue) {
 
   return new Promise((resolve) => {
     vue.prototype.isInWechat = location.isInWechat
-
-    if (!location.isInWechat) {
+    /* if (!location.isInWechat) {
       return resolve()
+    } */
+    if (location.isTourist) {
+      sessionStorage.setItem('tourist', 1)
     }
-
-    if (!document.location.hash.includes('admin')) {
+    if (
+      !document.location.hash.includes('admin') &&
+      !sessionStorage.getItem('tourist')
+    ) {
       checkCode().then(checkToken).then(resolve)
+      sessionStorage.removeItem('tourist')
     } else {
       resolve()
     }

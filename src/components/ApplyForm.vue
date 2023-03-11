@@ -233,10 +233,10 @@ export default {
           Toast.success('提交成功！')
           this.$router.replace('/myApply')
         } else {
+          if (res.data.msg === 'Unauthorized') res.data.msg = '用户未登录！'
           Toast.fail(res.data.msg)
         }
       } catch (err) {
-        // console.log(err.message)
         Toast.fail(err.message)
       }
       /* for (let i = 0; i < 2; i++) {
@@ -279,7 +279,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .van-search__content {
   background-color: rgb(250, 251, 253) !important;
 }
