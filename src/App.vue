@@ -61,9 +61,9 @@ export default {
             this.$router.push('/error')
           } else if (
             window.innerWidth <= window.innerHeight &&
-            this.$route.path !== '/home'
+            this.$route.path === '/error'
           ) {
-            this.$router.push('/home')
+            this.$router.back()
           }
           this.timer = null
         }, 500)
