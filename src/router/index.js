@@ -1,17 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Home from '@/views/client/Home'
-import MyApply from '@/views/client/MyApply'
-import SelectMusic from '@/views/client/SelectMusic'
-import Login from '@/views/admin/Login'
-import AdminHome from '@/views/admin/Home'
-import ApplyList from '@/views/admin/ApplyList'
-import Setting from '@/views/admin/Setting'
-import Forbid from '@/views/admin/Forbid'
-import Examine from '@/views/admin/Examine'
-import Error from '@/views/client/Error'
-
 Vue.use(VueRouter)
 
 const routes = [
@@ -26,22 +15,22 @@ const routes = [
   {
     name: 'Home',
     path: '/home',
-    component: Home
+    component: () => import('@/views/client/Home')
   },
   {
     name: 'Error',
     path: '/error',
-    component: Error
+    component: () => import('@/views/client/Error')
   },
   {
     name: 'MyApply',
     path: '/myApply',
-    component: MyApply
+    component: () => import('@/views/client/MyApply')
   },
   {
     name: 'SelectMusic',
     path: '/selectMusic',
-    component: SelectMusic
+    component: () => import('@/views/client/SelectMusic')
   },
   {
     name: 'Admin',
@@ -51,37 +40,62 @@ const routes = [
   {
     name: 'AdminLogin',
     path: '/admin/login',
-    component: Login
+    component: () => import('@/views/admin/Login')
   },
   {
     name: 'AdminHome',
     path: '/admin/home',
-    component: AdminHome
+    component: () => import('@/views/admin/Home')
   },
   {
     name: 'ApplyList',
     path: '/admin/applyList',
-    component: ApplyList
+    component: () => import('@/views/admin/ApplyList')
   },
   {
     name: 'Setting',
     path: '/admin/setting',
-    component: Setting
+    component: () => import('@/views/admin/Setting')
   },
   {
     name: 'Forbid',
     path: '/admin/forbid',
-    component: Forbid
+    component: () => import('@/views/admin/Forbid')
   },
   {
     name: 'Examine',
     path: '/admin/examine',
-    component: Examine
+    component: () => import('@/views/admin/Examine')
   }
 ]
 
 const router = new VueRouter({
   routes
+})
+
+const navMap = new Map([
+  [undefined, { leftArrow: false, navText: '' }],
+  ['Home', { leftArrow: false, navText: '' }],
+  ['MyApply', { leftArrow: true, navText: '我的申请' }],
+  ['SelectMusic', { leftArrow: true, navText: '点歌' }],
+  ['Admin', { leftArrow: false, navText: '歌单列表' }],
+  ['AdminHome', { leftArrow: false, navText: '歌单列表' }],
+  ['Setting', { leftArrow: false, navText: '管理' }],
+  ['ApplyList', { leftArrow: false, navText: '申请列表' }],
+  ['Examine', { leftArrow: true, navText: '申请详情' }],
+  ['Forbid', { leftArrow: true, navText: '禁止点歌时间段' }]
+])
+
+router.beforeEach((to, from, next) => {
+  const nav = navMap.get(to.name)
+  if (nav) {
+    router.app.$options.store.commit('changeNavText', nav.navText)
+    router.app.$options.store.commit('changeLeftArrow', nav.leftArrow)
+  } else {
+    router.app.$options.store.commit('changeNavText', '')
+    router.app.$options.store.commit('changeLeftArrow', false)
+  }
+  next()
 })
 
 export default router

@@ -28,6 +28,7 @@
 
 <script>
 import { Toast } from 'vant'
+import { adminLogin } from '@/request/api/admin'
 
 export default {
   data() {
@@ -38,32 +39,28 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       Toast.loading({
         message: '登录中...',
         forbidClick: true,
         loadingType: 'spinner',
         duration: 0
       })
-      this.$axios
-        .post('/admin/login', {
-          name: this.username,
-          password: this.password
-        })
-        .then((res) => {
-          if (res.data.code === 200) {
-            localStorage.setItem('admin_token', res.data.data.token)
-            localStorage.setItem('username', this.username)
-            localStorage.setItem('psw', this.password)
-            Toast.clear()
-            this.$router.replace('/admin/home')
-          } else {
-            Toast.fail(res.data.msg)
-          }
-        })
-        .catch(() => {
-          Toast.fail('请求异常')
-        })
+
+      try {
+        const res = await adminLogin(this.username, this.password)
+        if (res.data.code === 200) {
+          localStorage.setItem('admin_token', res.data.data.token)
+          localStorage.setItem('username', this.username)
+          localStorage.setItem('psw', this.password)
+          Toast.clear()
+          this.$router.replace('/admin/home')
+        } else {
+          Toast.fail(res.data.msg)
+        }
+      } catch (error) {
+        Toast.fail('请求异常')
+      }
     }
   },
   mounted() {

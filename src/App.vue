@@ -1,8 +1,6 @@
 <template>
   <div id="app" :style="`height: ${height}'px'`">
     <NavBar
-      fixed
-      placeholder
       v-if="this.$store.state.navText"
       :navText="this.$store.state.navText"
       :leftArrow="this.$store.state.leftArrow"
@@ -126,8 +124,9 @@ hr {
 }
 
 .van-dropdown-menu__bar {
-  background-color: transparent;
-  box-shadow: none;
+  background-color: transparent !important;
+  box-shadow: none !important
+  ;
 }
 
 .slide-left-enter,

@@ -69,6 +69,7 @@
 import SelectMusicList from '@/components/SelectMusicList'
 import formatDate from '@/tools/FormatDate'
 import { Toast } from 'vant'
+import { submit } from '@/request/api/admin'
 
 export default {
   components: {
@@ -142,7 +143,7 @@ export default {
     submitMusic() {
       Toast.clear()
       this.loading = true
-      this.$axios.post('/admin/submit', this.apply).then((res) => {
+      submit(this.apply).then((res) => {
         this.loading = false
         if (res.data.code === 200) {
           this.$store.commit('pushApply', {

@@ -49,6 +49,7 @@
 import MusicCell from '@/components/MusicCell'
 import search from '@/assets/search.json'
 import lottie from 'lottie-web'
+import { QQsearchMusic, NetEaseCloudSearch } from '@/request/api/music'
 
 export default {
   components: {
@@ -100,7 +101,7 @@ export default {
         if (this.musicList.length === 0) {
           this.loading = true
           // qq音乐接口
-          const { data } = await this.$musicApi.QQsearchMusic({
+          const { data } = await QQsearchMusic({
             key: this.value,
             pageNo: this.pageNo
           })
@@ -114,7 +115,7 @@ export default {
           this.loading = false
         } else {
           // 网易云接口
-          const { data } = await this.$musicApi.NetEaseCloudSearch({
+          const { data } = await NetEaseCloudSearch({
             keywords: this.value,
             limit: 30,
             offset: 15 * (this.pageNo - 1)

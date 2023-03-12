@@ -24,7 +24,7 @@ export default {
 
 <style lang="less">
 .van-nav-bar {
-  z-index: 999 !important;
+  z-index: 9 !important;
 }
 
 //适配软键盘弹出

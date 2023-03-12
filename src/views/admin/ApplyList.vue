@@ -1,8 +1,7 @@
 <template>
   <div>
     <div ref="content" class="admin-content" @scroll="handelScroll">
-      <!-- <div class="admin-header">申请列表</div> -->
-      <van-sticky :offset-top="offsetTop">
+      <van-sticky>
         <div class="admin-navBar">
           <div>
             <div
@@ -126,7 +125,9 @@ import formatDate from '@/tools/FormatDate'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
-import { getList } from '@/api'
+import { getList } from '@/request/api/common'
+import { passOrNot } from '@/request/api/admin'
+import { debounce } from '@/tools/debounce'
 
 export default {
   name: 'ApplyList',
@@ -161,7 +162,6 @@ export default {
           { text: '待播放', value: 3 }
         ]
       },
-      offsetTop: '0',
       showDialog: false
     }
   },
@@ -203,13 +203,9 @@ export default {
     })
   },
   activated() {
-    setTimeout(() => {
-      this.offsetTop = '44.9px'
-    }, 400)
     this.getApplyList()
   },
   deactivated() {
-    this.offsetTop = '0'
     localStorage.setItem('applyListScrollTop', this.scrollTop)
   },
   destroyed() {
@@ -300,7 +296,7 @@ export default {
         submitObj.noPassReason = reason
       }
 
-      this.$axios.post(`/admin/${type}`, submitObj).then((res) => {
+      passOrNot(`/admin/${type}`, submitObj).then((res) => {
         if (res.data.code === 200 || res.data.code === 406) {
           this.$store.commit(
             `${type}Apply`,
@@ -315,10 +311,10 @@ export default {
       })
     },
     // 监听scroll事件，获取scrollTop
-    handelScroll(e) {
-      this.scrollTop = e.path[0].scrollTop
+    handelScroll: debounce(function(e) {
+      this.scrollTop = e.target.scrollTop
       this.showGoTop = this.scrollTop > 200
-    },
+    }, 200),
     goTop() {
       if (this.scrollTop !== 0) {
         this.scrollTop = 0

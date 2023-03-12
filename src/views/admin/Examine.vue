@@ -51,9 +51,9 @@
       </div>
     </div>
 
-    <div class="btn1" v-if="applyInfo.showBtn">
-      <div @click="showReject">驳回</div>
-      <div @click="pass" class="btn2">通过</div>
+    <div class="btn" v-if="applyInfo.showBtn">
+      <div class="btn__reject" @click="showReject">驳回</div>
+      <div class="btn__pass" @click="pass">通过</div>
     </div>
 
     <FieldDialog
@@ -68,7 +68,7 @@
 <script>
 import { Dialog, Toast } from 'vant'
 import FieldDialog from '@/components/FieldDialog.vue'
-import { reject } from '@/api'
+import { getSongsDetail, passOrNot } from '@/request/api/admin'
 
 export default {
   data() {
@@ -82,7 +82,7 @@ export default {
   },
   mounted() {
     const musicInfo = JSON.parse(localStorage.getItem('musicInfo'))
-    this.$axios.get(`/admin/songDetails?id=${musicInfo.id}`).then((res) => {
+    getSongsDetail(musicInfo.id).then((res) => {
       if (res.data.code === 200) {
         const resInfo = res.data.data[0]
         const campus = resInfo.school_district
@@ -117,7 +117,10 @@ export default {
         duration: 0
       })
       try {
-        const res = await reject(this.applyInfo.id, reason)
+        const res = await passOrNot('/admin/noPass', {
+          id: this.applyInfo.id,
+          noPassReason: reason
+        })
         if (res.data.code === 200 || res.data.code === 406) {
           this.$store.commit('noPassApply', this.applyInfo.id)
           Toast.clear()
@@ -140,19 +143,15 @@ export default {
           loadingType: 'spinner',
           duration: 0
         })
-        this.$axios
-          .post('/admin/pass', {
-            id: this.applyInfo.id
-          })
-          .then((res) => {
-            if (res.data.code === 200 || res.data.code === 406) {
-              this.$store.commit('passApply', this.applyInfo.id)
-              Toast.clear()
-              this.$router.replace('/admin/applyList')
-            } else {
-              Toast.fail(res.data.msg)
-            }
-          })
+        passOrNot('/admin/pass', { id: this.applyInfo.id }).then((res) => {
+          if (res.data.code === 200 || res.data.code === 406) {
+            this.$store.commit('passApply', this.applyInfo.id)
+            Toast.clear()
+            this.$router.replace('/admin/applyList')
+          } else {
+            Toast.fail(res.data.msg)
+          }
+        })
       })
     },
     toListen() {
@@ -249,27 +248,26 @@ export default {
   font-size: 2vh;
 }
 
-.btn1 {
-  width: 62vw;
-  margin: 3vh auto;
-  height: 6vh;
+.btn {
+  width: 60vw;
+  height: 6.5vh;
+  margin: 2.5vh auto;
   border-radius: 10px;
   background-color: #f8fafc;
   box-shadow: 0 0 10px #ccc;
   display: flex;
-  padding: 0.5vh 0 0.5vh 8vw;
   justify-content: space-around;
   align-items: center;
 
-  .btn2 {
+  .btn__reject {
+    padding: 0 9vw;
+  }
+
+  .btn__pass {
     background-color: #fff;
     box-shadow: 0 0 10px #ccc;
-    width: 30vw;
-    height: 5vh;
-    display: flex;
-    align-items: center;
+    padding: 1.3vh 9vw;
     border-radius: 10px;
-    justify-content: center;
   }
 }
 </style>

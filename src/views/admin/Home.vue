@@ -77,7 +77,8 @@ import formatDate from '@/tools/FormatDate'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
 import { Toast } from 'vant'
-import { getList, reject } from '@/api'
+import { getList } from '@/request/api/common'
+import { passOrNot } from '@/request/api/admin'
 
 export default {
   name: 'adminHome',
@@ -170,7 +171,10 @@ export default {
         loadingType: 'spinner',
         duration: 0
       })
-      reject(this.curDayList[this.curIndex].id, reason).then((res) => {
+      passOrNot('/admin/noPass', {
+        id: this.curDayList[this.curIndex].id,
+        noPassReason: reason
+      }).then((res) => {
         if (res.data.code === 200 || res.data.code === 406) {
           this.$store.commit('noPassApply', this.curDayList[this.curIndex].id)
           Toast.clear()

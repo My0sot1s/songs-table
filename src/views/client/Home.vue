@@ -40,7 +40,8 @@
 import MusicList from '@/components/MusicList'
 import lottie from 'lottie-web'
 import music from '@/assets/music.json'
-import { getList, getLimitDay } from '@/api'
+import { getLimitDay } from '@/request/api/user'
+import { getList } from '@/request/api/common'
 import { Dialog } from 'vant'
 
 export default {
@@ -56,10 +57,12 @@ export default {
     MusicList
   },
   async mounted() {
+    // 游客首次进入弹窗
     if (sessionStorage.getItem('tourist') && !sessionStorage.getItem('poped')) {
       this.tourist = true
       sessionStorage.setItem('poped', 1)
     }
+    // lottie动画
     this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
       renderer: 'svg',
@@ -67,9 +70,10 @@ export default {
       autoplay: true,
       animationData: music
     })
+    // 获取限制时间段和原因
     const res = await getLimitDay()
     this.limitReason = res.data.data?.reason
-
+    // 获取歌单列表
     getList('/user/todaySongs', this.todayList)
     getList('/user/comingSongs', this.laterList).then(() => {
       this.laterList
