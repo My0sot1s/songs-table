@@ -15,33 +15,23 @@
       id="lottie"
       v-show="this.musicList.length === 0 && this.loading"
     ></div>
-    <div id="list">
-      <transition name="van-fade">
-        <van-list
-          v-show="this.musicList.length !== 0"
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="search(false)"
-        >
-          <MusicCell
-            ref="cells"
-            v-for="(music, index) in musicList"
-            :key="music.songmid"
-            :music="music"
-            @click.native="select(index)"
-          />
-        </van-list>
-      </transition>
-      <div class="mask" id="bottom-mask"></div>
-    </div>
-    <!-- <van-button
-      round
-      type="default"
-      @click="confirm"
-      v-if="this.musicList.length != 0"
-      >确认</van-button
-    > -->
+    <transition name="van-fade">
+      <van-list
+        v-show="this.musicList.length !== 0"
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="search(false)"
+      >
+        <MusicCell
+          ref="cells"
+          v-for="(music, index) in musicList"
+          :key="music.songmid"
+          :music="music"
+          @click.native="select(index)"
+        />
+      </van-list>
+    </transition>
   </div>
 </template>
 
@@ -49,7 +39,7 @@
 import MusicCell from '@/components/MusicCell'
 import search from '@/assets/search.json'
 import lottie from 'lottie-web'
-import { QQsearchMusic, NetEaseCloudSearch } from '@/request/api/music'
+import { searchQQMuic, searchCloudMuic } from '@/musicApi1'
 
 export default {
   components: {
@@ -65,10 +55,49 @@ export default {
       finished: false,
       musicList: [],
       pageNo: 1,
-      animationData: search
+      animationData: search,
+      qqDone: false,
+      cloudDone: false
     }
   },
   methods: {
+    async renderQQMusic(key) {
+      const [err, res] = await searchQQMuic(key)
+      if (!err) {
+        console.log('qq', res)
+        res.list.forEach((item) => {
+          item.searchPath = 'qq'
+          item.cover = `https://y.qq.com/music/photo_new/T002R300x300M000${item.albummid}_1.jpg?max_age=2592000`
+        })
+        this.musicList.push(...res.list)
+      }
+    },
+    async renderCloudMusic(key) {
+      const [err, res] = await searchCloudMuic(key)
+      if (!err) {
+        console.log('cloud', res)
+        res.songs.forEach((item) => {
+          item.searchPath = '网易云'
+        })
+        this.musicList.push(
+          ...res.songs.map((song) => this.formatListItem(song))
+        )
+      }
+    },
+    formatListItem(song) {
+      class MusicObject {
+        constructor(song) {
+          this.name = song.name
+          this.songmid = song.id
+          this.singer = [{ name: '' }]
+          this.singer[0].name = song.ar[0].name
+          this.albumname = song.al.name
+          this.cover = song.al.picUrl
+          this.searchPath = '网易云'
+        }
+      }
+      return new MusicObject(song)
+    },
     select(index) {
       if (this.index === index) {
         this.confirm()
@@ -90,57 +119,26 @@ export default {
       this.$emit('confirmMusic', this.musicList[this.index])
     },
     search(refresh = true) {
-      clearTimeout(this.timer)
-      this.timer = setTimeout(async () => {
-        if (this.value.length === 0) return
-        if (refresh) {
-          this.finished = false
-          this.pageNo = 1
-          this.musicList = []
-        }
-        if (this.musicList.length === 0) {
-          this.loading = true
-          // qq音乐接口
-          const { data } = await QQsearchMusic({
-            key: this.value,
-            pageNo: this.pageNo
-          })
-          console.log(data)
-          data.data.list.forEach((item) => {
-            item.searchPath = 'qq'
-            item.cover = `https://y.qq.com/music/photo_new/T002R300x300M000${item.albummid}_1.jpg?max_age=2592000`
-          })
-          // console.log(data.data.list)
-          this.musicList.push(...data.data.list)
-          this.loading = false
-        } else {
-          // 网易云接口
-          const { data } = await NetEaseCloudSearch({
-            keywords: this.value,
-            limit: 30,
-            offset: 15 * (this.pageNo - 1)
-          })
-          this.pageNo++
-          /* console.log(data.result.songs) */
-          /* this.musicList.push(...data.result.songs) */
-          function MusicObject(song) {
-            this.name = song.name
-            this.songmid = song.id
-            this.singer = [{ name: '' }]
-            this.singer[0].name = song.ar[0].name
-            this.albumname = song.al.name
-            this.cover = song.al.picUrl
-            this.searchPath = '网易云'
+      if (!this.timer) {
+        this.timer = setTimeout(async () => {
+          if (this.value === '') return
+          if (refresh) {
+            this.musicList = []
+            this.finished = false
+            this.qqDone = false
           }
-          data.result.songs.forEach((song) => {
-            this.musicList.push(new MusicObject(song))
-          })
-          // console.log(this.musicList)
+          if (!this.qqDone) {
+            // qq音乐的接口只能返回第一页的数据
+            await this.renderQQMusic(this.value)
+            this.qqDone = true
+          } else {
+            await this.renderCloudMusic(this.value)
+            this.finished = true
+          }
           this.loading = false
-          this.finished = true
-        }
-      }, 200)
-      // qq音乐的接口只能返回第一页的数据，后面的要客户端
+          this.timer = null
+        }, 200)
+      }
     }
   },
   watch: {
@@ -199,7 +197,6 @@ export default {
     z-index: 0;
   }
   #list {
-    position: relative;
   }
   .mask {
     width: 100%;
@@ -211,15 +208,6 @@ export default {
     );
     position: absolute;
     z-index: 1;
-  }
-  #bottom-mask {
-    bottom: 0;
-    background-image: linear-gradient(
-      to top,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 255, 255, 0.6) 60%,
-      rgba(255, 255, 255, 0) 100%
-    );
   }
   .van-list {
     box-sizing: border-box;
