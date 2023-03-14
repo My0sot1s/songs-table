@@ -38,7 +38,7 @@
 
 <script>
 import { Toast, Dialog } from 'vant'
-import { limitTime, limitInfo } from '@/request/api/admin'
+import { limitTime, limitInfo } from '@/request/api/admin1'
 export default {
   data() {
     return {
@@ -71,25 +71,21 @@ export default {
         message: '加载中...',
         forbidClick: true
       })
-      let res
-      try {
-        if (disable) {
-          res = await limitTime({
-            startTime: 1,
-            reason: this.form.reason,
-            endTime: 2
-          })
-        } else {
-          res = await limitTime(this.form)
-        }
-        if (res.data.code === 200) {
-          Toast.success('修改成功')
-          this.prevForm = JSON.stringify(this.form)
-        } else {
-          Toast.fail(res.data.message)
-        }
-      } catch (err) {
-        Toast.fail(err.message)
+      let err
+      if (disable) {
+        ;[err] = await limitTime({
+          startTime: 1,
+          reason: this.form.reason,
+          endTime: 2
+        })
+      } else {
+        ;[err] = await limitTime(this.form)
+      }
+      if (!err) {
+        Toast.success('修改成功')
+        this.prevForm = JSON.stringify(this.form)
+      } else {
+        Toast.fail(err)
       }
     },
     async onSubmit() {
@@ -118,11 +114,11 @@ export default {
     }
   },
   async created() {
-    try {
-      const { data } = await limitInfo()
-      this.form.startTime = data.data.startTime
-      this.form.reason = data.data.reason
-      this.form.endTime = data.data.endTime
+    const [err, res] = await limitInfo()
+    if (!err) {
+      this.form.startTime = res.startTime
+      this.form.reason = res.reason
+      this.form.endTime = res.endTime
       this.prevForm = JSON.stringify(this.form)
       if (this.form.startTime !== 1 && this.form.endTime !== 2) {
         this.checked = true
@@ -134,8 +130,8 @@ export default {
       }
       // 加载数据后监听
       this.$watch('checked', this.checkedHandler)
-    } catch (err) {
-      Toast.fail(err.message)
+    } else {
+      Toast.fail(err)
     }
   },
   beforeRouteLeave(to, from, next) {

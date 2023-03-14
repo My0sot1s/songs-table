@@ -39,7 +39,8 @@
 import MusicCell from '@/components/MusicCell'
 import search from '@/assets/search.json'
 import lottie from 'lottie-web'
-import { searchQQMuic, searchCloudMuic } from '@/musicApi1'
+import { searchQQMuic, searchCloudMuic } from '@/request/api/music1'
+import { Toast } from 'vant'
 
 export default {
   components: {
@@ -47,7 +48,7 @@ export default {
   },
   data() {
     return {
-      index: 0,
+      index: undefined,
       value: '',
       timer: null,
       selectTimer: null,
@@ -56,47 +57,25 @@ export default {
       musicList: [],
       pageNo: 1,
       animationData: search,
-      qqDone: false,
-      cloudDone: false
+      qqDone: false
     }
   },
   methods: {
     async renderQQMusic(key) {
       const [err, res] = await searchQQMuic(key)
       if (!err) {
-        console.log('qq', res)
-        res.list.forEach((item) => {
-          item.searchPath = 'qq'
-          item.cover = `https://y.qq.com/music/photo_new/T002R300x300M000${item.albummid}_1.jpg?max_age=2592000`
-        })
-        this.musicList.push(...res.list)
+        this.musicList.push(...res)
+      } else {
+        Toast.fail(err)
       }
     },
     async renderCloudMusic(key) {
       const [err, res] = await searchCloudMuic(key)
       if (!err) {
-        console.log('cloud', res)
-        res.songs.forEach((item) => {
-          item.searchPath = '网易云'
-        })
-        this.musicList.push(
-          ...res.songs.map((song) => this.formatListItem(song))
-        )
+        this.musicList.push(...res)
+      } else {
+        Toast.fail(err)
       }
-    },
-    formatListItem(song) {
-      class MusicObject {
-        constructor(song) {
-          this.name = song.name
-          this.songmid = song.id
-          this.singer = [{ name: '' }]
-          this.singer[0].name = song.ar[0].name
-          this.albumname = song.al.name
-          this.cover = song.al.picUrl
-          this.searchPath = '网易云'
-        }
-      }
-      return new MusicObject(song)
     },
     select(index) {
       if (this.index === index) {
@@ -121,7 +100,10 @@ export default {
     search(refresh = true) {
       if (!this.timer) {
         this.timer = setTimeout(async () => {
-          if (this.value === '') return
+          if (this.value === '') {
+            this.timer = null
+            return
+          }
           if (refresh) {
             this.musicList = []
             this.finished = false

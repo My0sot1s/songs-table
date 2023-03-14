@@ -39,12 +39,17 @@ export default {
   data() {
     return {
       value: '',
-      SHOW: true
+      SHOW: false
     }
   },
   watch: {
     show(newValue) {
-      if (newValue === false) this.value = ''
+      if (newValue === false) {
+        this.SHOW = false
+        this.value = ''
+      } else {
+        this.SHOW = true
+      }
     }
   },
   methods: {
@@ -58,7 +63,7 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .form-btns {
   display: flex;
   justify-content: space-between;

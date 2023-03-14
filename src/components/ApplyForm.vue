@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { submitRequest, updateRequest } from '@/request/api/user'
+import { submitRequest, updateRequest } from '@/request/api/user1'
 import { Toast, Dialog } from 'vant'
 export default {
   props: ['musics'],
@@ -192,7 +192,7 @@ export default {
             if (this.musics[i]) {
               arr[i] =
                 /* a[i] + */
-                this.musics[i].name + ' - ' + this.musics[i].singer[0].name
+                this.musics[i].name + ' - ' + this.musics[i].singers
             }
           }
         }
@@ -221,24 +221,27 @@ export default {
         Toast.fail('请选择歌曲')
         return
       }
-      try {
-        let res
-        if (this.form.id) {
-          res = await updateRequest(this.form)
-        } else {
-          res = await submitRequest(this.form)
-        }
-        // // console.log(res)
-        if (res.data.code === 200 || res.data.code === 406) {
-          Toast.success('提交成功！')
-          this.$router.replace('/myApply')
-        } else {
-          if (res.data.msg === 'Unauthorized') res.data.msg = '用户未登录！'
-          Toast.fail(res.data.msg)
-        }
-      } catch (err) {
-        Toast.fail(err.message)
+      let err
+      if (this.form.id) {
+        ;[err] = await updateRequest(this.form)
+      } else {
+        ;[err] = await submitRequest(this.form)
       }
+      if (!err) {
+        Toast.success('提交成功！')
+        this.$router.replace('/myApply')
+      } else {
+        if (err === 'Unauthorized') err = '用户未登录！'
+        Toast.fail(err)
+      }
+      // // console.log(res)
+      /* if (res.data.code === 200 || res.data.code === 406) {
+        Toast.success('提交成功！')
+        this.$router.replace('/myApply')
+      } else {
+        if (res.data.msg === 'Unauthorized') res.data.msg = '用户未登录！'
+        Toast.fail(res.data.msg)
+      } */
       /* for (let i = 0; i < 2; i++) {
         if (!this.musics[i]) {
           Toast.fail(notices[i])

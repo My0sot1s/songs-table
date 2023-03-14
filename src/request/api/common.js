@@ -1,25 +1,30 @@
 import { axios } from '@/request/config'
 import formatDate from '@/tools/FormatDate'
-import { GetMusicDetail } from '@/request/api/music'
+import { GetMusicDetail } from '@/request/api/music1'
 
 export const getList = async (url, list, that) => {
   const promiseList = []
 
-  const res = await axios.get(url)
-
-  if (res.data.code === 200 && res.data.data) {
-    res.data.data.forEach(item => {
+  const [e, res] = await http.get(url)
+  console.log(res)
+  if (!e) {
+    res.forEach((item) => {
       if (!that || (that && inTime(item.broadcast_date))) {
         const promise = new Promise((resolve, reject) => {
           try {
-            GetMusicDetail(item.search_path, item.song_id).then(detail => {
+            GetMusicDetail(item.search_path, item.song_id).then((arr) => {
+              let [, detail] = arr
               let isEmpty = false
-              if (item.search_path === '网易云' && detail.data.songs.length === 0) isEmpty = true
-              else if (item.search_path === 'qq' && !detail.data.data.track_info.name) isEmpty = true
+              console.log('d==', detail)
+              if (item.search_path === '网易云' && detail.length === 0) {
+                isEmpty = true
+              } else if (item.search_path === 'qq' && !detail.track_info.name) {
+                isEmpty = true
+              }
               if (isEmpty) {
                 reject(new Error('无此歌曲'))
               } else {
-                detail = item.search_path === 'qq' ? detail.data.data.track_info : detail
+                detail = item.search_path === 'qq' ? detail.track_info : detail
                 const temp = formatItem(item, detail)
                 if (that) {
                   that.$store.commit('pushApply', temp)

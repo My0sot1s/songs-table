@@ -1,6 +1,6 @@
 // 封装axios
 import _axios from 'axios'
-import { state, wxLoginRedirect } from './wxAuth'
+import { state } from './wxAuth'
 
 export const axios = _axios.create({
   baseURL: '',
@@ -20,26 +20,6 @@ axios.interceptors.request.use(
       config.headers.token = state.adminToken
     }
     return config
-  },
-  async (error) => {
-    console.dir(error)
-  }
-)
-
-// 响应拦截
-axios.interceptors.response.use(
-  function (response) {
-    if (response.data.code) {
-      const code = response.data.code.toString()
-      if (['401', '440', '441'].includes(code)) {
-        if (document.location.hash.includes('admin')) {
-          window.location.hash = '/admin/login'
-        } else {
-          if (!sessionStorage.tourist) wxLoginRedirect()
-        }
-      }
-    }
-    return response
   },
   async (error) => {
     console.dir(error)

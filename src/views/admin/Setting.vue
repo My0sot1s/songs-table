@@ -69,7 +69,7 @@
 import SelectMusicList from '@/components/SelectMusicList'
 import formatDate from '@/tools/FormatDate'
 import { Toast } from 'vant'
-import { submit } from '@/request/api/admin'
+import { submit } from '@/request/api/admin1'
 
 export default {
   components: {
@@ -85,7 +85,7 @@ export default {
         songName: ''
       },
       music: {
-        imgUrl: '',
+        cover: '',
         singer: '',
         songName: ''
       },
@@ -132,34 +132,30 @@ export default {
       this.apply.searchPath = music.searchPath
       this.apply.songId = music.songmid
       this.apply.songName = music.name
-      this.music.imgUrl = music.cover
+      this.music.cover = music.cover
       this.music.songName = music.songname
-      this.music.singer = music.singer[0].name
-      for (let i = 1; i < music.singer.length; i++) {
-        this.music.singer += ' ' + music.singer[i].name
-      }
+      this.music.singer = music.singers
       this.dialog.show = true
     },
-    submitMusic() {
+    async submitMusic() {
       Toast.clear()
       this.loading = true
-      submit(this.apply).then((res) => {
-        this.loading = false
-        if (res.data.code === 200) {
-          this.$store.commit('pushApply', {
-            campus: this.apply.schoolDistrict,
-            id: res.data.data.id,
-            state: 3,
-            time: formatDate(new Date(this.apply.broadcastDate)).split(' ')[1],
-            ...this.music
-          })
-          this.showPick = false
-          this.dialog.show = false
-          Toast.success('添加成功\n返回首页查看')
-        } else {
-          Toast.fail('添加失败\n请重试')
-        }
-      })
+      const [err, res] = await submit(this.apply)
+      this.loading = false
+      if (!err) {
+        this.$store.commit('pushApply', {
+          campus: this.apply.schoolDistrict,
+          id: res.id,
+          state: 3,
+          time: formatDate(new Date(this.apply.broadcastDate)).split(' ')[1],
+          ...this.music
+        })
+        this.showPick = false
+        this.dialog.show = false
+        Toast.success('添加成功\n返回首页查看')
+      } else {
+        Toast.fail(err)
+      }
     }
   }
 }

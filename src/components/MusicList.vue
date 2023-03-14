@@ -11,7 +11,7 @@
           <Album
             v-for="(item, index) in musicList"
             :key="index"
-            :imgUrl="item.imgUrl"
+            :cover="item.cover"
             :songName="item.songName"
             :singer="item.singer"
             :listenUrl="item.listenUrl"
@@ -22,7 +22,7 @@
         </div>
         <div class="music-list-body" v-else>
           <Album
-            imgUrl="https://y.qq.com/music/photo_new/T002R300x300M0000030lak94GN5Ad_0.jpg"
+            cover="https://y.qq.com/music/photo_new/T002R300x300M0000030lak94GN5Ad_0.jpg"
             songName="暂无歌曲"
             singer=" "
           />

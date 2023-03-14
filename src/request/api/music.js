@@ -19,7 +19,7 @@ const NetEaseCloudBaseUrl = 'https://neteasecloudmusicapi.sends.cc'
 //   })
 // }
 
-const QQsearchMusic = ({ key, pageNo = 1, pageSize = 20, t = 0 }) =>
+const searchQQMuic = ({ key, pageNo = 1, pageSize = 20, t = 0 }) =>
   axios({
     baseURL: QQMusicBaseUrl,
     url: '/search',
@@ -50,7 +50,7 @@ const QQMusicDetail = (ids) => {
 }
 
 /* 网易云搜索歌曲 */
-const NetEaseCloudSearch = ({ keywords, limit = 15, offset = 0 }) => {
+const searchCloudMuic = ({ keywords, limit = 15, offset = 0 }) => {
   return axios({
     url: `${NetEaseCloudBaseUrl}/search`,
     method: 'get',
@@ -90,9 +90,9 @@ const GetMusicDetail = (source, id) => {
 
 export {
   // QQsearchRequest,
-  QQsearchMusic,
+  searchQQMuic,
   QQMusicDetail,
-  NetEaseCloudSearch,
+  searchCloudMuic,
   NetEaseCloudDetail,
   GetMusicDetail
 }

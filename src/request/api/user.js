@@ -6,7 +6,6 @@ async function userLogin(code) {
     return res.data.data.token
   } else {
     if (res.data.msg === '找不到学号，请绑定桑梓微助手！') {
-      alert(res.data.msg)
       window.location.href = 'http://wx.sends.cc/temporary/proxy'
     }
     throw Error(res.data)

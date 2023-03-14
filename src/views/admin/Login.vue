@@ -28,7 +28,7 @@
 
 <script>
 import { Toast } from 'vant'
-import { adminLogin } from '@/request/api/admin'
+import { adminLogin } from '@/request/api/admin1'
 
 export default {
   data() {
@@ -46,20 +46,15 @@ export default {
         loadingType: 'spinner',
         duration: 0
       })
-
-      try {
-        const res = await adminLogin(this.username, this.password)
-        if (res.data.code === 200) {
-          localStorage.setItem('admin_token', res.data.data.token)
-          localStorage.setItem('username', this.username)
-          localStorage.setItem('psw', this.password)
-          Toast.clear()
-          this.$router.replace('/admin/home')
-        } else {
-          Toast.fail(res.data.msg)
-        }
-      } catch (error) {
-        Toast.fail('请求异常')
+      const [err, res] = await adminLogin(this.username, this.password)
+      if (!err) {
+        localStorage.setItem('adminToken', res.token)
+        localStorage.setItem('username', this.username)
+        localStorage.setItem('psw', this.password)
+        Toast.clear()
+        this.$router.replace('/admin/home')
+      } else {
+        Toast.fail(err)
       }
     }
   },

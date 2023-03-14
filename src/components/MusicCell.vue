@@ -10,7 +10,7 @@
     />
     <div id="detail">
       <van-notice-bar color="black" :text="music.name" />
-      <van-notice-bar id="singer" :text="singer" />
+      <van-notice-bar id="singer" :text="music.singers" />
     </div>
   </div>
 </template>
@@ -18,15 +18,6 @@
 <script>
 export default {
   props: ['music'],
-  computed: {
-    singer() {
-      if (this.music.albumname) {
-        return this.music.singer[0].name + ' - ' + this.music.albumname
-      } else {
-        return this.music.singer[0].name
-      }
-    }
-  },
   methods: {
     ripple(e) {
       if (this.$refs.cell.querySelector('.ripple')) return

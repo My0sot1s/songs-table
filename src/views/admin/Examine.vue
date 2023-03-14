@@ -1,7 +1,7 @@
 <template>
   <div class="examine">
     <div class="image" @click="toListen">
-      <van-image width="20vh" height="20vh" fit="fill" :src="applyInfo.imgUrl">
+      <van-image width="20vh" height="20vh" fit="fill" :src="applyInfo.cover">
         <template #loading>
           <van-loading type="spinner" size="20" />
         </template>
@@ -68,7 +68,7 @@
 <script>
 import { Dialog, Toast } from 'vant'
 import FieldDialog from '@/components/FieldDialog.vue'
-import { getSongsDetail, passOrNot } from '@/request/api/admin'
+import { getSongsDetail, passOrNot } from '@/request/api/admin1'
 
 export default {
   data() {
@@ -80,30 +80,31 @@ export default {
   components: {
     FieldDialog
   },
-  mounted() {
+  async mounted() {
     const musicInfo = JSON.parse(localStorage.getItem('musicInfo'))
-    getSongsDetail(musicInfo.id).then((res) => {
-      if (res.data.code === 200) {
-        const resInfo = res.data.data[0]
-        const campus = resInfo.school_district
-        const from = resInfo.sender_name
-        const phone = resInfo.phone_num
-        const to = resInfo.receiver_name
-        const message = resInfo.blessing_words
-        const noPassReason = resInfo.no_pass_reason
-        const state = resInfo.status
-        this.applyInfo = {
-          ...musicInfo,
-          state,
-          campus,
-          from,
-          phone,
-          to,
-          message,
-          noPassReason
-        }
+    const [err, res] = await getSongsDetail(musicInfo.id)
+    if (!err) {
+      const resInfo = res[0]
+      const campus = resInfo.school_district
+      const from = resInfo.sender_name
+      const phone = resInfo.phone_num
+      const to = resInfo.receiver_name
+      const message = resInfo.blessing_words
+      const noPassReason = resInfo.no_pass_reason
+      const state = resInfo.status
+      this.applyInfo = {
+        ...musicInfo,
+        state,
+        campus,
+        from,
+        phone,
+        to,
+        message,
+        noPassReason
       }
-    })
+    } else {
+      Toast.fail(err)
+    }
   },
   methods: {
     showReject() {
@@ -116,42 +117,38 @@ export default {
         loadingType: 'spinner',
         duration: 0
       })
-      try {
-        const res = await passOrNot('/admin/noPass', {
-          id: this.applyInfo.id,
-          noPassReason: reason
-        })
-        if (res.data.code === 200 || res.data.code === 406) {
-          this.$store.commit('noPassApply', this.applyInfo.id)
-          Toast.clear()
-          Toast.success('驳回成功')
-          this.$router.replace('/admin/applyList')
-        } else {
-          Toast.fail(res.data.msg)
-        }
-      } catch (err) {
-        Toast.fail(err.message)
+      const [err] = await passOrNot('/admin/noPass', {
+        id: this.applyInfo.id,
+        noPassReason: reason
+      })
+      if (!err) {
+        this.$store.commit('noPassApply', this.applyInfo.id)
+        Toast.clear()
+        Toast.success('驳回成功')
+        this.$router.replace('/admin/applyList')
+      } else {
+        Toast.fail(err)
       }
     },
     pass() {
       Dialog.confirm({
         title: '确认通过请求？'
-      }).then(() => {
+      }).then(async () => {
         Toast.loading({
           message: '请求中...',
           forbidClick: true,
           loadingType: 'spinner',
           duration: 0
         })
-        passOrNot('/admin/pass', { id: this.applyInfo.id }).then((res) => {
-          if (res.data.code === 200 || res.data.code === 406) {
-            this.$store.commit('passApply', this.applyInfo.id)
-            Toast.clear()
-            this.$router.replace('/admin/applyList')
-          } else {
-            Toast.fail(res.data.msg)
-          }
-        })
+        const [err] = await passOrNot('/admin/pass', { id: this.applyInfo.id })
+        if (!err) {
+          this.$store.commit('passApply', this.applyInfo.id)
+          Toast.clear()
+          Toast.success('通过成功')
+          this.$router.replace('/admin/applyList')
+        } else {
+          Toast.fail(err)
+        }
       })
     },
     toListen() {

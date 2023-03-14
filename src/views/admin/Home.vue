@@ -16,7 +16,7 @@
 
       <div v-for="(item, index) in curDayList" :key="item.id">
         <ApplyInfo
-          :imgUrl="item.imgUrl"
+          :cover="item.cover"
           :songName="item.songName"
           :singer="item.singer"
           :time="item.time"
@@ -77,8 +77,8 @@ import formatDate from '@/tools/FormatDate'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
 import { Toast } from 'vant'
-import { getList } from '@/request/api/common'
-import { passOrNot } from '@/request/api/admin'
+import { getList } from '@/request/api/common1'
+import { passOrNot } from '@/request/api/admin1'
 
 export default {
   name: 'adminHome',
@@ -164,36 +164,35 @@ export default {
       this.showDialog = true
     },
     /* 确认删除后触发 */
-    delItem(reason) {
+    async delItem(reason) {
       Toast.loading({
         message: '请求中...',
         forbidClick: true,
         loadingType: 'spinner',
         duration: 0
       })
-      passOrNot('/admin/noPass', {
+      const [err] = await passOrNot('/admin/noPass', {
         id: this.curDayList[this.curIndex].id,
         noPassReason: reason
-      }).then((res) => {
-        if (res.data.code === 200 || res.data.code === 406) {
-          this.$store.commit('noPassApply', this.curDayList[this.curIndex].id)
-          Toast.clear()
-          Toast.success('驳回成功')
-          this.showDialog = false
-        } else {
-          Toast.fail(res.data.msg)
-        }
       })
+      if (!err) {
+        this.$store.commit('noPassApply', this.curDayList[this.curIndex].id)
+        Toast.clear()
+        Toast.success('驳回成功')
+        this.showDialog = false
+      } else {
+        Toast.fail(err)
+      }
     },
     toExamine(index) {
-      const { id, imgUrl, songName, singer, time, listenUrl } =
+      const { id, cover, songName, singer, time, listenUrl } =
         this.curDayList[index]
       localStorage.setItem(
         'musicInfo',
         JSON.stringify({
           showBtn: false,
           id,
-          imgUrl,
+          cover,
           songName,
           singer,
           time,

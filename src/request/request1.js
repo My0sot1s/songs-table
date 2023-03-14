@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { wxLoginRedirect } from '@/tools/wxLogin'
+import { wxLoginRedirect } from '@/request/wxAuth1'
 import { Toast } from 'vant'
 
 function addToken(config) {
@@ -29,12 +29,12 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use(
   (response) => {
     if (response.data.code) {
-      const { code, msg } = response.data || response.result
-      if (code === 200) {
-        Toast.success('')
-      } else {
-        Toast.fail(msg)
-        if (code === 401) {
+      const { code } = response.data || response.result
+      if (code === 401) {
+        Toast.fail('未登录!')
+        if (location.hash.includes('admin')) {
+          location.hash = '/admin/login'
+        } else {
           wxLoginRedirect(location.hash)
         }
       }
@@ -49,13 +49,18 @@ axios.interceptors.response.use(
 
 const http = {
   get(url, params = {}) {
+    /* 是否出现错误，都返回resolve */
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
       try {
         const res = await axios.get(url, { params })
-        resolve([null, res.data.data || res.data.result])
+        if (!res.data.code || [200, 406].includes(res.data.code)) {
+          resolve([null, res.data.data || res.data.result || res.data.songs])
+        } else {
+          resolve([res.data.msg, undefined])
+        }
       } catch (err) {
-        resolve([err, undefined])
+        resolve(['请求异常：' + err, undefined])
       }
     })
   },
@@ -64,9 +69,13 @@ const http = {
     return new Promise(async (resolve) => {
       try {
         const res = await axios.post(url, data)
-        resolve([null, res.data.data || res.data.result])
+        if (!res.data.code || [200, 406].includes(res.data.code)) {
+          resolve([null, res.data.data || res.data.result || res.data.songs])
+        } else {
+          resolve([res.data.msg, undefined])
+        }
       } catch (err) {
-        resolve([err, undefined])
+        resolve(['请求异常：' + err, undefined])
       }
     })
   }

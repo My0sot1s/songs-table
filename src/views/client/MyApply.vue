@@ -4,7 +4,7 @@
       <ApplyInfo
         v-for="(item, index) in curList"
         :key="item.id"
-        :imgUrl="item.imgUrl"
+        :cover="item.cover"
         :songName="item.songName"
         :singer="item.singer"
         :time="item.time"
@@ -51,8 +51,8 @@ import ApplyInfo from '@/components/ApplyInfo.vue'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
-import { getList } from '@/request/api/common'
-import { deleteApply, withdrawApply, getDetails } from '@/request/api/user'
+import { getList } from '@/request/api/common1'
+import { deleteApply, withdrawApply, getDetails } from '@/request/api/user1'
 
 export default {
   components: {
@@ -119,16 +119,13 @@ export default {
         Dialog.confirm({
           title: '删除后不可找回，确定删除？'
         }).then(async () => {
-          try {
-            if (await deleteApply(this.curList[index].id)) {
-              this.curList.splice(index, 1)
-              this.curIndex = -1
-              Toast.success('删除成功')
-            } else {
-              Toast.fail('删除失败')
-            }
-          } catch (error) {
-            Toast.fail('请求异常')
+          const [err] = await deleteApply(this.curList[index].id)
+          if (!err) {
+            this.curList.splice(index, 1)
+            this.curIndex = -1
+            Toast.success('删除成功!')
+          } else {
+            Toast.fail(err)
           }
         })
       } else {
@@ -142,15 +139,12 @@ export default {
       Dialog.confirm({
         title: '确认撤回请求？'
       }).then(async () => {
-        try {
-          if (await withdrawApply(this.curList[index].id)) {
-            this.curList[index].state = -1
-            Toast.success('撤回成功')
-          } else {
-            Toast.fail('撤回失败')
-          }
-        } catch (error) {
-          Toast.fail('请求异常')
+        const [err] = await withdrawApply(this.curList[index].id)
+        if (!err) {
+          this.curList[index].state = -1
+          Toast.success('撤回成功')
+        } else {
+          Toast.fail(err)
         }
       })
     },
@@ -162,39 +156,34 @@ export default {
         loadingType: 'spinner',
         duration: 0
       })
-      try {
-        const disabled = !(state === -1 || state === 2)
-        const res = await getDetails(this.curList[index].id)
-        if (res.data.code === 200) {
-          const data = res.data.data[0]
-          localStorage.setItem(
-            'applyInfo',
-            JSON.stringify({
-              id: this.curList[index].id,
-              songName: data.song_name,
-              songId: data.song_id,
-              searchPath: data.search_path,
-              receiverName: data.receiver_name,
-              senderName: data.sender_name,
-              phoneNum: data.phone_num,
-              schoolDistrict: data.school_district,
-              broadcastDate: new Date(data.broadcast_date).getTime(),
-              blessingWords: data.blessing_words,
-              placeHolder:
-                this.curList[index].songName + '-' + this.curList[index].singer,
-              disabled,
-              reason: data.no_pass_reason,
-              btn: (data.no_pass_reason ?? '') !== '' ? '重新提交' : '提交'
-            })
-          )
-          Toast.clear()
-          this.$router.push('/selectMusic')
-        } else {
-          Toast.fail('res.data.msg')
-        }
-      } catch (error) {
-        console.log(error)
-        Toast.fail('请求异常')
+      const disabled = !(state === -1 || state === 2)
+      const [err, res] = await getDetails(this.curList[index].id)
+      if (!err) {
+        const data = res[0]
+        localStorage.setItem(
+          'applyInfo',
+          JSON.stringify({
+            id: this.curList[index].id,
+            songName: data.song_name,
+            songId: data.song_id,
+            searchPath: data.search_path,
+            receiverName: data.receiver_name,
+            senderName: data.sender_name,
+            phoneNum: data.phone_num,
+            schoolDistrict: data.school_district,
+            broadcastDate: new Date(data.broadcast_date).getTime(),
+            blessingWords: data.blessing_words,
+            placeHolder:
+              this.curList[index].songName + '-' + this.curList[index].singer,
+            disabled,
+            reason: data.no_pass_reason,
+            btn: (data.no_pass_reason ?? '') !== '' ? '重新提交' : '提交'
+          })
+        )
+        Toast.clear()
+        this.$router.push('/selectMusic')
+      } else {
+        Toast.fail(err)
       }
     }
   }

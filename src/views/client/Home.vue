@@ -40,8 +40,8 @@
 import MusicList from '@/components/MusicList'
 import lottie from 'lottie-web'
 import music from '@/assets/music.json'
-import { getLimitDay } from '@/request/api/user'
-import { getList } from '@/request/api/common'
+import { getLimitDay } from '@/request/api/user1'
+import { getList } from '@/request/api/common1'
 import { Dialog } from 'vant'
 
 export default {
@@ -72,7 +72,7 @@ export default {
     })
     // 获取限制时间段和原因
     const res = await getLimitDay()
-    this.limitReason = res.data.data?.reason
+    this.limitReason = res?.reason
     // 获取歌单列表
     getList('/user/todaySongs', this.todayList)
     getList('/user/comingSongs', this.laterList).then(() => {

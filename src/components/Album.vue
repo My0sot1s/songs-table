@@ -8,7 +8,7 @@
         width="15vh"
         height="15vh"
         fit="fill"
-        :src="imgUrl"
+        :src="cover"
       >
         <template #loading>
           <van-loading type="spinner" size="20" />
@@ -28,7 +28,7 @@
 <script>
 export default {
   props: {
-    imgUrl: String,
+    cover: String,
     songName: String,
     singer: String,
     listenUrl: String,

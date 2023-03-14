@@ -36,7 +36,7 @@
         <ApplyInfo
           v-for="(item, index) in curDayPendingList"
           :key="item.id"
-          :imgUrl="item.imgUrl"
+          :cover="item.cover"
           :songName="item.songName"
           :singer="item.singer"
           :time="item.time"
@@ -48,7 +48,7 @@
         <ApplyInfo
           v-for="(item, index) in curDayProcessedList"
           :key="index"
-          :imgUrl="item.imgUrl"
+          :cover="item.cover"
           :songName="item.songName"
           :singer="item.singer"
           :time="item.time"
@@ -125,8 +125,8 @@ import formatDate from '@/tools/FormatDate'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
-import { getList } from '@/request/api/common'
-import { passOrNot } from '@/request/api/admin'
+import { getList } from '@/request/api/common1'
+import { passOrNot } from '@/request/api/admin1'
 import { debounce } from '@/tools/debounce'
 
 export default {
@@ -261,7 +261,7 @@ export default {
       }
     },
     toExamine(index) {
-      const { id, imgUrl, songName, singer, time, listenUrl } =
+      const { id, cover, songName, singer, time, listenUrl } =
         this.curNav === 0
           ? this.curDayPendingList[index]
           : this.curDayProcessedList[index]
@@ -271,7 +271,7 @@ export default {
         JSON.stringify({
           showBtn,
           id,
-          imgUrl,
+          cover,
           songName,
           singer,
           time,
@@ -281,7 +281,7 @@ export default {
       this.$router.push('/admin/examine')
     },
     // 重新审核歌曲
-    retried(reason, type) {
+    async retried(reason, type) {
       Toast.loading({
         message: '请求中...',
         forbidClick: true,
@@ -296,22 +296,21 @@ export default {
         submitObj.noPassReason = reason
       }
 
-      passOrNot(`/admin/${type}`, submitObj).then((res) => {
-        if (res.data.code === 200 || res.data.code === 406) {
-          this.$store.commit(
-            `${type}Apply`,
-            this.curDayProcessedList[this.curIndex].id
-          )
-          Toast.clear()
-          Toast.success('更改成功')
-          if (reason !== null) this.showDialog = false
-        } else {
-          Toast.fail(res.data.msg)
-        }
-      })
+      const [err] = await passOrNot(`/admin/${type}`, submitObj)
+      if (!err) {
+        this.$store.commit(
+          `${type}Apply`,
+          this.curDayProcessedList[this.curIndex].id
+        )
+        Toast.clear()
+        Toast.success('更改成功')
+        if (reason !== null) this.showDialog = false
+      } else {
+        Toast.fail(err)
+      }
     },
     // 监听scroll事件，获取scrollTop
-    handelScroll: debounce(function(e) {
+    handelScroll: debounce(function (e) {
       this.scrollTop = e.target.scrollTop
       this.showGoTop = this.scrollTop > 200
     }, 200),

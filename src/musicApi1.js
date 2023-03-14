@@ -1,4 +1,4 @@
-import http from '@/request1.js'
+import http from '@/request/request1.js'
 
 export function searchQQMuic(key) {
   return http.get('https://qqmusicapi.sends.cc/search', { key })

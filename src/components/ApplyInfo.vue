@@ -2,7 +2,7 @@
   <div class="apply-info">
     <div class="body">
       <div class="image">
-        <van-image lazy-load fit="fill" width="7vh" height="7vh" :src="imgUrl">
+        <van-image lazy-load fit="fill" width="7vh" height="7vh" :src="cover">
           <template #loading>
             <van-loading type="spinner" size="20" />
           </template>
@@ -41,7 +41,7 @@
 <script>
 export default {
   props: {
-    imgUrl: String,
+    cover: String,
     songName: String,
     singer: String,
     time: String,

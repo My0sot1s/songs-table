@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import { wxAuth } from './request/wxAuth'
+import { wxLogin } from './request/wxAuth1'
 import importVant from './tools/importVant'
 
 Vue.config.productionTip = false
@@ -16,7 +16,7 @@ window.addEventListener(
   false
 )
 
-wxAuth(Vue).then(() => {
+wxLogin().then(() => {
   new Vue({
     router,
     store,
