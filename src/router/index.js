@@ -38,11 +38,6 @@ const routes = [
     redirect: '/admin/home'
   },
   {
-    name: 'AdminLogin',
-    path: '/admin/login',
-    component: () => import('@/views/admin/Login')
-  },
-  {
     name: 'AdminHome',
     path: '/admin/home',
     component: () => import('@/views/admin/Home')

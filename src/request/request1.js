@@ -2,8 +2,17 @@ import axios from 'axios'
 import { wxLoginRedirect } from '@/request/wxAuth1'
 import { Toast } from 'vant'
 
+/* 不携带token的请求 */
+const withoutToken = [
+  'login',
+  'todaySongs',
+  'comingSongs',
+  'isLimitDay',
+  'musicapi'
+]
+
 function addToken(config) {
-  if (config.url.includes('musicapi')) return config
+  if (withoutToken.some((item) => config.url.includes(item))) return config
   if (!document.location.hash.includes('admin')) {
     /* 用户端 */
     /* 若localstorage中不存在token,则不加token至请求头 */
@@ -28,22 +37,23 @@ axios.interceptors.request.use((config) => {
 /* 响应拦截 */
 axios.interceptors.response.use(
   (response) => {
-    if (response.data.code) {
-      const { code } = response.data || response.result
-      if (code === 401) {
-        Toast.fail('未登录!')
-        if (location.hash.includes('admin')) {
-          location.hash = '/admin/login'
-        } else {
-          wxLoginRedirect(location.hash)
-        }
+    const { code, msg } = response.data || response.result
+    if (
+      code &&
+      ![200, 406].includes(code) &&
+      !sessionStorage.getItem('tourist')
+    ) {
+      if (msg === 'Unauthorized') {
+        Toast.fail('用户未登录！')
+        wxLoginRedirect(location.hash)
+      } else {
+        return Promise.reject(msg)
       }
     }
     return response
   },
   (error) => {
-    Toast.fail(error)
-    console.dir(error)
+    return Promise.reject(error.message)
   }
 )
 
@@ -54,13 +64,10 @@ const http = {
     return new Promise(async (resolve) => {
       try {
         const res = await axios.get(url, { params })
-        if (!res.data.code || [200, 406].includes(res.data.code)) {
-          resolve([null, res.data.data || res.data.result || res.data.songs])
-        } else {
-          resolve([res.data.msg, undefined])
-        }
+        resolve([null, res.data.data || res.data.result || res.data.songs])
       } catch (err) {
-        resolve(['请求异常：' + err, undefined])
+        console.dir(err)
+        resolve([err, undefined])
       }
     })
   },
@@ -69,13 +76,10 @@ const http = {
     return new Promise(async (resolve) => {
       try {
         const res = await axios.post(url, data)
-        if (!res.data.code || [200, 406].includes(res.data.code)) {
-          resolve([null, res.data.data || res.data.result || res.data.songs])
-        } else {
-          resolve([res.data.msg, undefined])
-        }
+        resolve([null, res.data.data || res.data.result || res.data.songs])
       } catch (err) {
-        resolve(['请求异常：' + err, undefined])
+        console.dir(err)
+        resolve([err, undefined])
       }
     })
   }

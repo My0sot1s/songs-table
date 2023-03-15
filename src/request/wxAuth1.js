@@ -45,23 +45,23 @@ async function checkWxCode() {
   }
 }
 
-function checkToken() {
-  if (!getToken()) {
-    if (!location.hash.includes('admin')) {
-      wxLoginRedirect(location.hash)
-    } /*  else {
-      location.hash = '/admin/login'
-    } */
+async function checkToken() {
+  if (!getToken() && !sessionStorage.getItem('tourist')) {
+    wxLoginRedirect(location.hash)
+    /* 重定向获取微信code请求等待时，防止用户页面提前加载 */
+    await sleep(30000)
+    Toast.fail('网络故障！')
   }
 }
 
+function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time))
+}
+
 export async function wxLogin() {
-  if (location.isTourist) {
+  if (location.href.includes('tourist')) {
     sessionStorage.setItem('tourist', 1)
   }
-  if (sessionStorage.getItem('tourist')) {
-    return
-  }
   await checkWxCode()
-  checkToken()
+  await checkToken()
 }

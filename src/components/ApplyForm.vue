@@ -231,7 +231,6 @@ export default {
         Toast.success('提交成功！')
         this.$router.replace('/myApply')
       } else {
-        if (err === 'Unauthorized') err = '用户未登录！'
         Toast.fail(err)
       }
       // // console.log(res)

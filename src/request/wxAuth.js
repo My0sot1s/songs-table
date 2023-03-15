@@ -59,16 +59,14 @@ async function wxAuth(vue) {
     sessionStorage.setItem('tourist', 1)
   }
   // 不是游客或管理员
-  if (!document.location.hash.includes('admin') &&
-    !sessionStorage.getItem('tourist')) {
+  if (
+    !document.location.hash.includes('admin') &&
+    !sessionStorage.getItem('tourist')
+  ) {
     await checkCode()
     await checkToken()
     sessionStorage.removeItem('tourist')
   }
 }
 
-export {
-  wxLoginRedirect,
-  state,
-  wxAuth
-}
+export { wxLoginRedirect, state, wxAuth }

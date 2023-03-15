@@ -178,8 +178,6 @@ export default {
     transform: translate(-50%, -50%);
     z-index: 0;
   }
-  #list {
-  }
   .mask {
     width: 100%;
     height: 3vw;
