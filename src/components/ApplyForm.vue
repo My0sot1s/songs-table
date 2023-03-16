@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { submitRequest, updateRequest } from '@/request/api/user1'
+import { submitRequest, updateRequest } from '@/request/api/user'
 import { Toast, Dialog } from 'vant'
 export default {
   props: ['musics'],

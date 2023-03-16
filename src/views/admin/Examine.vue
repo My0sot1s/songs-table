@@ -68,7 +68,7 @@
 <script>
 import { Dialog, Toast } from 'vant'
 import FieldDialog from '@/components/FieldDialog.vue'
-import { getSongsDetail, passOrNot } from '@/request/api/admin1'
+import { getSongsDetail, passOrNot } from '@/request/api/admin'
 
 export default {
   data() {

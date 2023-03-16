@@ -51,8 +51,8 @@ import ApplyInfo from '@/components/ApplyInfo.vue'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
-import { getList } from '@/request/api/common1'
-import { deleteApply, withdrawApply, getDetails } from '@/request/api/user1'
+import { getList } from '@/request/api/common'
+import { deleteApply, withdrawApply, getDetails } from '@/request/api/user'
 
 export default {
   components: {

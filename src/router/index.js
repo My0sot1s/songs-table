@@ -61,6 +61,11 @@ const routes = [
     name: 'Examine',
     path: '/admin/examine',
     component: () => import('@/views/admin/Examine')
+  },
+  {
+    name: 'ManageAdmin',
+    path: '/admin/manageAdmin',
+    component: () => import('@/views/admin/ManageAdmin')
   }
 ]
 
@@ -78,7 +83,8 @@ const navMap = new Map([
   ['Setting', { leftArrow: false, navText: '管理' }],
   ['ApplyList', { leftArrow: false, navText: '申请列表' }],
   ['Examine', { leftArrow: true, navText: '申请详情' }],
-  ['Forbid', { leftArrow: true, navText: '禁止点歌时间段' }]
+  ['Forbid', { leftArrow: true, navText: '禁止点歌时间段' }],
+  ['ManageAdmin', { leftArrow: true, navText: '管理员设置' }]
 ])
 
 router.beforeEach((to, from, next) => {

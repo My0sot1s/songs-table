@@ -1,13 +1,13 @@
 import axios from 'axios'
-import { wxLoginRedirect } from '@/request/wxAuth1'
+import { wxLoginRedirect } from '@/request/wxAuth'
 import { Toast } from 'vant'
 
 /* 不携带token的请求 */
 const withoutToken = [
   'login',
-  'todaySongs',
+  /* 'todaySongs',
   'comingSongs',
-  'isLimitDay',
+  'isLimitDay', */
   'musicapi'
 ]
 

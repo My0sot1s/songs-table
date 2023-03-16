@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import { wxLogin } from './request/wxAuth1'
+import { wxLogin } from './request/wxAuth'
 import importVant from './tools/importVant'
 
 Vue.config.productionTip = false

@@ -18,9 +18,12 @@
           </router-link>
         </template>
       </MusicList>
+      <!-- <div class="line1"></div> -->
       <MusicList title="即将到来" :musicList="laterList" showTime></MusicList>
       <van-divider :hairline="false" />
     </div>
+    <!-- <div class="line2"></div>
+    <div class="line3"></div> -->
     <div ref="lottie" @click="toSelect()" class="lottie-btn"></div>
     <van-dialog
       v-model="tourist"
@@ -40,8 +43,8 @@
 import MusicList from '@/components/MusicList'
 import lottie from 'lottie-web'
 import music from '@/assets/music.json'
-import { getLimitDay } from '@/request/api/user1'
-import { getList } from '@/request/api/common1'
+import { getLimitDay } from '@/request/api/user'
+import { getList } from '@/request/api/common'
 import { Dialog } from 'vant'
 
 export default {
@@ -140,6 +143,54 @@ export default {
 }
 .van-icon-user-circle-o {
   color: rgb(71, 113, 178);
+}
+
+.line1 {
+  position: absolute;
+  right: 0;
+  background-image: linear-gradient(90deg, #0fbcf9, pink);
+  width: 45vw;
+  height: 0.8vw;
+}
+.line2 {
+  background-image: linear-gradient(90deg, #0fbcf9, pink);
+  width: 35vw;
+  height: 0.8vw;
+  position: relative;
+  left: 65vw;
+}
+.line3 {
+  background-image: linear-gradient(90deg, #0fbcf9, pink);
+  width: 25vw;
+  height: 0.8vw;
+  position: relative;
+  top: 6vw;
+  left: 75vw;
+}
+
+.line1::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: rotate(45deg);
+  right: 0;
+  top: -0.5vw;
+  width: 3vw;
+  height: 3vw;
+  background-color: #0fbcf9;
+}
+.line2::before {
+  content: '';
+  display: block;
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(0, -25%);
+  left: 0;
+  width: 3vw;
+  height: 3vw;
+  background-color: #0fbcf9;
 }
 </style>
 

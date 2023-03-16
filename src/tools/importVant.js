@@ -26,7 +26,8 @@ import {
   Dialog,
   Swipe,
   SwipeItem,
-  Switch
+  Switch,
+  SwipeCell
 } from 'vant'
 
 export default {
@@ -59,5 +60,6 @@ export default {
     Vue.use(Swipe)
     Vue.use(SwipeItem)
     Vue.use(Switch)
+    Vue.use(SwipeCell)
   }
 }

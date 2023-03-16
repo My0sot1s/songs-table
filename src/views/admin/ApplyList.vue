@@ -125,8 +125,8 @@ import formatDate from '@/tools/FormatDate'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
 import empty from '@/assets/empty.json'
-import { getList } from '@/request/api/common1'
-import { passOrNot } from '@/request/api/admin1'
+import { getList } from '@/request/api/common'
+import { passOrNot } from '@/request/api/admin'
 import { debounce } from '@/tools/debounce'
 
 export default {

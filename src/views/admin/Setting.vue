@@ -3,6 +3,7 @@
     <div class="body">
       <div @click="showPick = true">添加备选歌曲</div>
       <div @click="$router.push('/admin/forbid')">禁止点歌时间段</div>
+      <div @click="$router.push('/admin/manageAdmin')">管理员设置</div>
       <div>使用帮助</div>
       <div>意见与反馈</div>
     </div>
@@ -69,7 +70,7 @@
 import SelectMusicList from '@/components/SelectMusicList'
 import formatDate from '@/tools/FormatDate'
 import { Toast } from 'vant'
-import { submit } from '@/request/api/admin1'
+import { submit } from '@/request/api/admin'
 
 export default {
   components: {

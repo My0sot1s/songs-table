@@ -1,8 +1,6 @@
 <template>
   <van-nav-bar
     @click-left="back()"
-    fixed
-    :placeholder="true"
     :left-text="navText"
     :left-arrow="leftArrow"
   />

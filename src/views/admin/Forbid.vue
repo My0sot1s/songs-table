@@ -38,7 +38,7 @@
 
 <script>
 import { Toast, Dialog } from 'vant'
-import { limitTime, limitInfo } from '@/request/api/admin1'
+import { limitTime, limitInfo } from '@/request/api/admin'
 export default {
   data() {
     return {

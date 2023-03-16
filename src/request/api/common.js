@@ -1,76 +1,66 @@
-import { axios } from '@/request/config'
+import http from '@/request/request'
 import formatDate from '@/tools/FormatDate'
-import { GetMusicDetail } from '@/request/api/music1'
+import { GetMusicDetail } from '@/request/api/music'
+import { Toast } from 'vant'
 
-export const getList = async (url, list, that) => {
+export async function getList(url, list, that) {
   const promiseList = []
-
-  const [e, res] = await http.get(url)
-  console.log(res)
-  if (!e) {
+  const [err, res] = await http.get(url)
+  if (!err) {
     res.forEach((item) => {
-      if (!that || (that && inTime(item.broadcast_date))) {
-        const promise = new Promise((resolve, reject) => {
-          try {
-            GetMusicDetail(item.search_path, item.song_id).then((arr) => {
-              let [, detail] = arr
-              let isEmpty = false
-              console.log('d==', detail)
-              if (item.search_path === '网易云' && detail.length === 0) {
-                isEmpty = true
-              } else if (item.search_path === 'qq' && !detail.track_info.name) {
-                isEmpty = true
-              }
-              if (isEmpty) {
-                reject(new Error('无此歌曲'))
+      if (that && !inTime(item.broadcast_date)) return
+      const promise = new Promise((resolve, reject) => {
+        GetMusicDetail(item.search_path, item.song_id)
+          .then((arr) => {
+            let [, detail] = arr
+            let isEmpty = false
+            if (item.search_path === '网易云' && detail.length === 0) {
+              isEmpty = true
+            } else if (item.search_path === 'qq' && !detail.track_info.name) {
+              isEmpty = true
+            }
+            if (isEmpty) {
+              reject(new Error('无此歌曲'))
+            } else {
+              detail = item.search_path === 'qq' ? detail.track_info : detail
+              const temp = new MusicItem(item, detail)
+              if (that) {
+                that.$store.commit('pushApply', temp)
               } else {
-                detail = item.search_path === 'qq' ? detail.track_info : detail
-                const temp = formatItem(item, detail)
-                if (that) {
-                  that.$store.commit('pushApply', temp)
-                } else {
-                  list.push(temp)
-                }
-                resolve()
+                list.push(temp)
               }
-            })
-          } catch (error) {
-            reject(error)
-          }
-        })
-        promiseList.push(promise)
-      }
+              resolve()
+            }
+          })
+          .catch((error) => reject(error))
+      })
+      promiseList.push(promise)
     })
+  } else {
+    Toast.fail(err)
   }
-
   await Promise.allSettled(promiseList)
 }
 
-function formatItem(item, detail) {
-  const temp = {}
-  temp.id = item.ID
-  temp.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
-  temp.campus = item.school_district
-  temp.state = item.status
-  if (item.search_path === '网易云') {
-    temp.listenUrl = `https://music.163.com/#/song?id=${detail.data.songs[0].id}`
-    temp.imgUrl = detail.data.songs[0].al.picUrl
-    temp.songName = detail.data.songs[0].name
-    temp.singer = detail.data.songs[0].ar[0].name
-    for (let i = 1; i < detail.data.songs[0].ar.length; i++) {
-      temp.singer += ' ' + detail.data.songs[0].ar[i].name
-    }
-  } else if (item.search_path === 'qq') {
-    temp.listenUrl = `https://y.qq.com/n/ryqq/songDetail/${detail.mid}`
-    temp.imgUrl = `https://y.gtimg.cn/music/photo_new/T002R300x300M000${detail.album.mid}.jpg`
-    temp.songName = detail.name
-    temp.singer = detail.singer[0].name
-    for (let i = 1; i < detail.singer.length; i++) {
-      temp.singer += ' ' + detail.singer[i].name
+class MusicItem {
+  constructor(item, detail) {
+    this.id = item.ID
+    this.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
+    this.campus = item.school_district
+    this.state = item.status
+    if (item.search_path === '网易云') {
+      detail = detail[0]
+      this.listenUrl = `https://music.163.com/#/song?id=${detail.id}`
+      this.cover = detail.al.picUrl
+      this.songName = detail.name
+      this.singer = detail.ar.map((item) => item.name).join('/')
+    } else if (item.search_path === 'qq') {
+      this.listenUrl = `https://y.qq.com/n/ryqq/songDetail/${detail.mid}`
+      this.cover = `https://y.gtimg.cn/music/photo_new/T002R300x300M000${detail.album.mid}.jpg`
+      this.songName = detail.name
+      this.singer = detail.singer.map((item) => item.name).join('/')
     }
   }
-
-  return temp
 }
 // 限制时间为前后七天
 function inTime(time) {

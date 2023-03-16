@@ -39,7 +39,7 @@
 import MusicCell from '@/components/MusicCell'
 import search from '@/assets/search.json'
 import lottie from 'lottie-web'
-import { searchQQMuic, searchCloudMuic } from '@/request/api/music1'
+import { searchQQMuic, searchCloudMuic } from '@/request/api/music'
 import { Toast } from 'vant'
 
 export default {

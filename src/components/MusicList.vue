@@ -59,11 +59,23 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-
+    position: relative;
     & > div {
       margin-left: 1vw;
-      font-size: 2.5vh;
+      font-size: 4vw;
       font-weight: bold;
+    }
+    & > div:before {
+      content: '';
+      display: block;
+      height: 1vw;
+      width: 17vw;
+      background-color: blue;
+      position: absolute;
+      top: 6vw;
+      border-radius: 6px;
+      transform: translateX(-0.5vw);
+      background-image: linear-gradient(90deg, rgb(128, 165, 221), #0fbcf9);
     }
   }
 
@@ -71,8 +83,7 @@ export default {
     display: flex;
     flex-direction: row;
     overflow: auto;
-    padding-top: 2vh;
-    padding-left: 1vw;
+    padding: 5vw 2vw 0 2vw;
     &::-webkit-scrollbar {
       display: none;
     }

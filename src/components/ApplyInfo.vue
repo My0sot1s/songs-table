@@ -6,6 +6,18 @@
           <template #loading>
             <van-loading type="spinner" size="20" />
           </template>
+          <template v-slot:error>
+            <van-image
+              radius="10px"
+              show-loading
+              width="15vh"
+              height="15vh"
+              fit="fill"
+              src="https://y.qq.com/mediastyle/music_v11/extra/default_300x300.jpg?max_age=31536000"
+              ><template #loading>
+                <van-loading type="spinner" size="20" /> </template
+            ></van-image>
+          </template>
         </van-image>
       </div>
       <div class="info">

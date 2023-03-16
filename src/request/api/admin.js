@@ -1,37 +1,37 @@
-import { axios } from '../config'
+import http from '@/request/request'
 
-function adminLogin(name, password) {
-  return axios.post('/admin/login', {
-    name,
-    password
-  })
+export function adminLogin(code) {
+  return http.post('/admin/login', { code })
 }
 
-function passOrNot(url, data) {
-  return axios.post(url, data)
+export function passOrNot(url, data) {
+  return http.post(url, data)
 }
 
-function getSongsDetail(id) {
-  return axios.get(`/admin/songDetails?id=${id}`)
+export function getSongsDetail(id) {
+  return http.get(`/admin/songDetails?id=${id}`)
 }
 
-function limitTime({ startTime, reason, endTime }) {
-  return axios.post('/admin/limitTime', { startTime, reason, endTime })
+export function limitTime({ startTime, reason, endTime }) {
+  return http.post('/admin/limitTime', { startTime, reason, endTime })
 }
 
-function limitInfo() {
-  return axios.get('/admin/limitInfo')
+export function limitInfo() {
+  return http.get('/admin/limitInfo')
 }
 
-function submit(form) {
-  return axios.post('/admin/submit', form)
+export function submit(form) {
+  return http.post('/admin/submit', form)
 }
 
-export {
-  adminLogin,
-  passOrNot,
-  getSongsDetail,
-  limitTime,
-  limitInfo,
-  submit
+export function adminList() {
+  return http.get('/admin/adminList')
+}
+
+export function deleteAdmin(stuNum) {
+  return http.post('/admin/deleteAdmin', { stu_num: stuNum })
+}
+
+export function addAdmin(form) {
+  return http.post('/admin/addAdmin', form)
 }
