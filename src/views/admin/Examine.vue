@@ -82,6 +82,7 @@ export default {
   },
   async mounted() {
     const musicInfo = JSON.parse(localStorage.getItem('musicInfo'))
+    console.log(musicInfo)
     const [err, res] = await getSongsDetail(musicInfo.id)
     if (!err) {
       const resInfo = res[0]

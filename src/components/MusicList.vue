@@ -74,7 +74,6 @@ export default {
       position: absolute;
       top: 6vw;
       border-radius: 6px;
-      transform: translateX(-0.5vw);
       background-image: linear-gradient(90deg, rgb(128, 165, 221), #0fbcf9);
     }
   }
