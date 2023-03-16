@@ -1,10 +1,11 @@
 <template>
   <div id="app" :style="`height: ${height}'px'`">
-    <NavBar
-      v-if="this.$store.state.navText"
-      :navText="this.$store.state.navText"
-      :leftArrow="this.$store.state.leftArrow"
-    />
+    <transition name="van-fade"
+      ><NavBar
+        v-if="this.$store.state.navText"
+        :navText="this.$store.state.navText"
+        :leftArrow="this.$store.state.leftArrow"
+    /></transition>
     <transition :name="transitionName">
       <keep-alive include="ApplyList,adminHome">
         <router-view class="view" />
@@ -133,12 +134,14 @@ hr {
 .slide-right-leave-to {
   opacity: 0;
   transform: translateX(100%);
+  position: absolute;
 }
 
 .slide-left-leave-to,
 .slide-right-enter {
   opacity: 0;
   transform: translateX(-100%);
+  position: absolute;
 }
 
 .slide-left-enter-active,

@@ -3,6 +3,8 @@
     @click-left="back()"
     :left-text="navText"
     :left-arrow="leftArrow"
+    fixed
+    placeholder
   />
 </template>
 
