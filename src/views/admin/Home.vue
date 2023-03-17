@@ -111,7 +111,7 @@ export default {
             item.time === this.dateString.split(' ')[1] &&
             (item.state === 3 || item.state === 0)
         )
-        .sort((a, b) => (a.time > b.time ? -1 : 1))
+        .sort((a, b) => (a.time > b.time ? 1 : -1))
     }
   },
   mounted() {

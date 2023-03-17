@@ -82,7 +82,7 @@ export default {
       handler: function (val) {
         this.curList = this.applyList
           .filter((item) => val === -2 || item.state === val)
-          .sort((a, b) => (a.time > b.time ? -1 : 1))
+          .sort((a, b) => (a.time > b.time ? 1 : -1))
       },
       immediate: true
     },
@@ -96,7 +96,7 @@ export default {
   },
   computed: {
     applyList() {
-      return [...this.applyList0].sort((a, b) => (a.time > b.time ? -1 : 1))
+      return [...this.applyList0].sort((a, b) => (a.time > b.time ? 1 : -1))
     }
   },
   mounted() {
