@@ -25,11 +25,19 @@ const routes = [
   {
     name: 'MyApply',
     path: '/myApply',
+    meta: {
+      name: '我的申请',
+      leftArrow: true
+    },
     component: () => import('@/views/client/MyApply')
   },
   {
     name: 'SelectMusic',
     path: '/selectMusic',
+    meta: {
+      name: '点歌',
+      leftArrow: true
+    },
     component: () => import('@/views/client/SelectMusic')
   },
   {
@@ -40,63 +48,61 @@ const routes = [
   {
     name: 'AdminHome',
     path: '/admin/home',
+    meta: {
+      name: '歌单列表',
+      leftArrow: false
+    },
     component: () => import('@/views/admin/Home')
   },
   {
     name: 'ApplyList',
     path: '/admin/applyList',
+    meta: {
+      name: '申请列表',
+      leftArrow: false
+    },
     component: () => import('@/views/admin/ApplyList')
   },
   {
     name: 'Setting',
     path: '/admin/setting',
+    meta: {
+      name: '管理',
+      leftArrow: false
+    },
     component: () => import('@/views/admin/Setting')
   },
   {
     name: 'Forbid',
     path: '/admin/forbid',
+    meta: {
+      name: '禁止点歌时间段',
+      leftArrow: true
+    },
     component: () => import('@/views/admin/Forbid')
   },
   {
     name: 'Examine',
     path: '/admin/examine',
+    meta: {
+      name: '申请详情',
+      leftArrow: true
+    },
     component: () => import('@/views/admin/Examine')
   },
   {
     name: 'ManageAdmin',
     path: '/admin/manageAdmin',
+    meta: {
+      name: '管理员设置',
+      leftArrow: true
+    },
     component: () => import('@/views/admin/ManageAdmin')
   }
 ]
 
 const router = new VueRouter({
   routes
-})
-
-const navMap = new Map([
-  [undefined, { leftArrow: false, navText: '' }],
-  ['Home', { leftArrow: false, navText: '' }],
-  ['MyApply', { leftArrow: true, navText: '我的申请' }],
-  ['SelectMusic', { leftArrow: true, navText: '点歌' }],
-  ['Admin', { leftArrow: false, navText: '歌单列表' }],
-  ['AdminHome', { leftArrow: false, navText: '歌单列表' }],
-  ['Setting', { leftArrow: false, navText: '管理' }],
-  ['ApplyList', { leftArrow: false, navText: '申请列表' }],
-  ['Examine', { leftArrow: true, navText: '申请详情' }],
-  ['Forbid', { leftArrow: true, navText: '禁止点歌时间段' }],
-  ['ManageAdmin', { leftArrow: true, navText: '管理员设置' }]
-])
-
-router.beforeEach((to, from, next) => {
-  const nav = navMap.get(to.name)
-  if (nav) {
-    router.app.$options.store.commit('changeNavText', nav.navText)
-    router.app.$options.store.commit('changeLeftArrow', nav.leftArrow)
-  } else {
-    router.app.$options.store.commit('changeNavText', '')
-    router.app.$options.store.commit('changeLeftArrow', false)
-  }
-  next()
 })
 
 export default router

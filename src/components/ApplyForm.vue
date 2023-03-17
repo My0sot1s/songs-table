@@ -211,10 +211,10 @@ export default {
       Toast.loading({
         forbidClick: true
       })
-      /* if (localStorage.limitDay === 'true') {
+      if (localStorage.limitDay === 'true') {
         Toast.fail('今天不可以点歌哦')
         return
-      } */
+      }
       // console.log(this.form)
       /* const notices = ['请选择首选歌曲', '请选择备选歌曲'] */
       if (!this.form.songId && !this.form.searchPath) {
@@ -233,20 +233,6 @@ export default {
       } else {
         Toast.fail(err)
       }
-      // // console.log(res)
-      /* if (res.data.code === 200 || res.data.code === 406) {
-        Toast.success('提交成功！')
-        this.$router.replace('/myApply')
-      } else {
-        if (res.data.msg === 'Unauthorized') res.data.msg = '用户未登录！'
-        Toast.fail(res.data.msg)
-      } */
-      /* for (let i = 0; i < 2; i++) {
-        if (!this.musics[i]) {
-          Toast.fail(notices[i])
-          return
-        }
-      } */
     },
     onConfirm(date) {
       this.showCalendar = false

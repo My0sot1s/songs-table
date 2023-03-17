@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NavBar />
     <div class="body">
       <div @click="showPick = true">添加备选歌曲</div>
       <div @click="$router.push('/admin/forbid')">禁止点歌时间段</div>

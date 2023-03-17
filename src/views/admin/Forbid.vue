@@ -1,5 +1,6 @@
 <template>
   <div id="forbid">
+    <NavBar />
     <van-divider />
     <van-cell center title="启用规则">
       <template #right-icon>

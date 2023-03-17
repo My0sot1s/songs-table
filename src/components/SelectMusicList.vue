@@ -86,13 +86,7 @@ export default {
           this.index = index
           this.confirm()
         }, 300)
-      }
-      /* const cells = [...document.querySelectorAll('.background')]
-      cells.forEach((e) => {
-        e.style = 'width: 0; height: 0; background-color: white;'
-      }) */
-      /* cells[index].style =
-        'width: 100vw; height: 100vw; background-color: rgb(239, 242, 247);' */
+      }    
     },
     confirm() {
       this.$emit('confirmMusic', this.musicList[this.index])

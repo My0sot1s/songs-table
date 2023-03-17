@@ -1,5 +1,6 @@
 <template>
   <div class="examine">
+    <NavBar />
     <div class="image" @click="toListen">
       <van-image width="20vh" height="20vh" fit="fill" :src="applyInfo.cover">
         <template #loading>

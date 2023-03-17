@@ -1,8 +1,8 @@
 <template>
   <van-nav-bar
     @click-left="back()"
-    :left-text="navText"
-    :left-arrow="leftArrow"
+    :left-text="this.$route.meta.name"
+    :left-arrow="this.$route.meta.leftArrow"
     fixed
     placeholder
   />
@@ -16,6 +16,7 @@ export default {
       /* console.log('返回') */
     },
     back() {
+      if (!this.$route.meta.leftArrow) return
       this.$router.back()
     }
   }

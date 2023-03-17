@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="my-apply">
+      <NavBar />
       <ApplyInfo
         v-for="(item, index) in curList"
         :key="item.id"

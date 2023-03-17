@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NavBar />
     <div ref="content" class="admin-content" @scroll="handelScroll">
       <!-- <div class="admin-header">歌单列表</div> -->
       <van-sticky :offset-top="offsetTop">

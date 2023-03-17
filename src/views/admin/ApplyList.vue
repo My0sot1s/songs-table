@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NavBar />
     <div ref="content" class="admin-content" @scroll="handelScroll">
       <van-sticky>
         <div class="admin-navBar">

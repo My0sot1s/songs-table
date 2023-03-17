@@ -1,5 +1,7 @@
 <template>
   <div id="ChooseMusic">
+    <NavBar />
+    <ApplyForm :musics="musics" @popUp="popUp" />
     <van-popup
       :lock-scroll="false"
       v-model="showPick"
@@ -9,7 +11,6 @@
     >
       <SelectMusicList @confirmMusic="confirmMusic" />
     </van-popup>
-    <ApplyForm :musics="musics" @popUp="popUp" />
   </div>
 </template>
 
@@ -28,9 +29,7 @@ export default {
       musics: []
     }
   },
-  mounted() {
-    this.$store.commit('changeNavText', '点歌')
-  },
+  mounted() {},
   methods: {
     popUp(index) {
       this.showPick = true

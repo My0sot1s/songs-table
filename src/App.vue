@@ -1,11 +1,5 @@
 <template>
   <div id="app" :style="`height: ${height}'px'`">
-    <transition name="van-fade"
-      ><NavBar
-        v-if="this.$store.state.navText"
-        :navText="this.$store.state.navText"
-        :leftArrow="this.$store.state.leftArrow"
-    /></transition>
     <transition :name="transitionName">
       <keep-alive include="ApplyList,adminHome">
         <router-view class="view" />
@@ -18,10 +12,9 @@
 </template>
 
 <script>
-import NavBar from '@/components/NavBar'
 import TabBar from '@/components/TabBar'
 export default {
-  components: { NavBar, TabBar },
+  components: { TabBar },
   data() {
     return {
       height: document.body.clientHeight,

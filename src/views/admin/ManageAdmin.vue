@@ -1,5 +1,6 @@
 <template>
   <div id="manageAdmin">
+    <NavBar />
     <van-list v-model="loading" :finished="finished" @load="onLoad">
       <van-swipe-cell
         :before-close="beforeClose"
