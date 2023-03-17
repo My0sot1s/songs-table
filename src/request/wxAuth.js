@@ -31,6 +31,9 @@ async function setToken(wxCode) {
       localStorage.setItem('token', res.token)
     } else {
       Toast.fail(err)
+      if (err === '找不到学号，请绑定桑梓微助手！') {
+        window.location.href = 'http://wx.sends.cc/temporary/proxy'
+      }
     }
   } else {
     /* 管理端 */
