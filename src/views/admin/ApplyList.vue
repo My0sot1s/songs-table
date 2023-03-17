@@ -168,19 +168,23 @@ export default {
   },
   computed: {
     curDayPendingList() {
-      return this.$store.state.applyList.filter(
-        (item) =>
-          (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
-          item.state === 1
-      )
+      return this.$store.state.applyList
+        .filter(
+          (item) =>
+            (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
+            item.state === 1
+        )
+        .sort((a, b) => (a.time > b.time ? -1 : 1))
     },
     curDayProcessedList() {
-      return this.$store.state.applyList.filter(
-        (item) =>
-          (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
-          ((this.menu.state === -2 && item.state !== 1) ||
-            item.state === this.menu.state)
-      )
+      return this.$store.state.applyList
+        .filter(
+          (item) =>
+            (!this.dateString || item.time === this.dateString.split(' ')[1]) &&
+            ((this.menu.state === -2 && item.state !== 1) ||
+              item.state === this.menu.state)
+        )
+        .sort((a, b) => (a.time > b.time ? -1 : 1))
     },
     showEmpty() {
       return (

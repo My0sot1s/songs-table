@@ -61,7 +61,7 @@ export default {
   },
   data() {
     return {
-      applyList: [] /* 请求列表 */,
+      applyList0: [],
       curList: [],
       curIndex: 0 /* 当前显示footer的index */,
       menu: {
@@ -80,9 +80,9 @@ export default {
   watch: {
     'menu.state': {
       handler: function (val) {
-        this.curList = this.applyList.filter(
-          (item) => val === -2 || item.state === val
-        )
+        this.curList = this.applyList
+          .filter((item) => val === -2 || item.state === val)
+          .sort((a, b) => (a.time > b.time ? -1 : 1))
       },
       immediate: true
     },
@@ -94,10 +94,14 @@ export default {
       deep: true
     }
   },
+  computed: {
+    applyList() {
+      return [...this.applyList0].sort((a, b) => (a.time > b.time ? -1 : 1))
+    }
+  },
   mounted() {
     // 获取列表
-    getList('/user/myApplication', this.applyList)
-
+    getList('/user/myApplication', this.applyList0)
     this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
       renderer: 'svg',
