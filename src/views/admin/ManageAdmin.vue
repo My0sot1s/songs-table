@@ -45,7 +45,7 @@ export default {
     return {
       list: [],
       form: {
-        is_super_admin: undefined,
+        is_super_admin: 0,
         note: undefined,
         stu_num: undefined
       },
@@ -75,8 +75,27 @@ export default {
         Toast.fail(err)
       }
     },
+    checkStuNum() {
+      if (!this.form.stu_num) {
+        Toast.fail('请填写学号!')
+        return false
+      } else {
+        return true
+      }
+    },
+    checkNote() {
+      if (!this.form.stu_num) {
+        Toast.fail('请填写备注名!')
+        return false
+      } else {
+        return true
+      }
+    },
+    checkFilled() {
+      return this.checkStuNum() && this.checkNote()
+    },
     async onSubmit() {
-      console.log(this.form)
+      if (!this.checkFilled()) return
       const [err] = await addAdmin(this.form)
       this.show = false
       if (!err) {

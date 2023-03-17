@@ -86,7 +86,7 @@ export default {
           this.index = index
           this.confirm()
         }, 300)
-      }    
+      }
     },
     confirm() {
       this.$emit('confirmMusic', this.musicList[this.index])
