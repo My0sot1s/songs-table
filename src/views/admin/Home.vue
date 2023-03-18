@@ -143,8 +143,9 @@ export default {
   },
   methods: {
     getApplyList() {
-      if (this.$store.state.applyList.length === 0) {
+      if (!this.$store.state.load) {
         this.$store.commit('setShowLoading', true)
+        this.$store.commit('changeLoad')
         getList('/admin/songList', this.$store.state.applyList, this).then(
           () => {
             this.$store.commit('setShowLoading', false)

@@ -224,8 +224,9 @@ export default {
   methods: {
     getApplyList() {
       // 根据是否是第一次进入页面采取不同方法获取数据
-      if (this.$store.state.applyList.length === 0) {
+      if (!this.$store.state.load) {
         this.$store.commit('setShowLoading', true)
+        this.$store.commit('changeLoad')
         getList('/admin/songList', this.$store.state.applyList, this).then(
           (res) => {
             this.$store.commit('setShowLoading', false)

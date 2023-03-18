@@ -10,10 +10,14 @@ export default new Vuex.Store({
     navText: '',
     leftArrow: false,
     applyList: [],
-    showLoading: false
+    showLoading: false,
+    load: false
   },
   getters: {},
   mutations: {
+    changeLoad(state) {
+      state.load = true
+    },
     changeNavText(state, text) {
       state.navText = text
     },
