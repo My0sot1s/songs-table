@@ -18,13 +18,10 @@
           </router-link>
         </template>
       </MusicList>
-      <!-- <div class="line1"></div> -->
       <MusicList title="即将到来" :musicList="laterList" showTime></MusicList>
-      <van-divider :hairline="false" />
     </div>
-    <!-- <div class="line2"></div>
-    <div class="line3"></div> -->
-    <div ref="lottie" @click="toSelect()" class="lottie-btn"></div>
+    <div ref="lottieWaves" class="lottie-waves"></div>
+    <div ref="lottieBtn" @click="toSelect()" class="lottie-btn"></div>
     <van-dialog
       v-model="tourist"
       title="提示"
@@ -43,6 +40,7 @@
 import MusicList from '@/components/MusicList'
 import lottie from 'lottie-web'
 import music from '@/assets/music.json'
+import waves from '@/assets/waves.json'
 import { getLimitDay } from '@/request/api/user'
 import { getList } from '@/request/api/common'
 import { Dialog } from 'vant'
@@ -53,6 +51,8 @@ export default {
       todayList: [],
       laterList: [],
       limitReason: '',
+      showPopover: true,
+      actions: [{ text: '选项一' }, { text: '选项二' }, { text: '选项三' }],
       tourist: false
     }
   },
@@ -66,12 +66,19 @@ export default {
       sessionStorage.setItem('poped', 1)
     }
     // lottie动画
-    this.lottieInstance = lottie.loadAnimation({
-      container: this.$refs.lottie,
+    this.lottieBtn = lottie.loadAnimation({
+      container: this.$refs.lottieBtn,
       renderer: 'svg',
       loop: true,
       autoplay: true,
       animationData: music
+    })
+    this.lottieWaves = lottie.loadAnimation({
+      container: this.$refs.lottieWaves,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      animationData: waves
     })
     // 获取限制时间段和原因
     const res = await getLimitDay()
@@ -104,9 +111,15 @@ export default {
     })
   },
   destroyed() {
-    if (!this.lottieInstance) return
-    this.lottieInstance.destroy()
-    this.lottieInstance = null
+    if (this.lottieBtn) {
+      this.lottieBtn.destroy()
+      this.lottieBtn = null
+    }
+
+    if (this.lottieWaves) {
+      this.lottieWaves.destroy()
+      this.lottieWaves = null
+    }
   },
   methods: {
     toSelect() {
@@ -131,66 +144,25 @@ export default {
   padding: 2vh 6vw;
   border-bottom: 1px solid #ccc;
 }
-
+.van-icon-user-circle-o {
+  background-image: linear-gradient(
+    315deg,
+    rgb(176, 232, 253),
+    rgb(128, 165, 221)
+  );
+  color: transparent;
+  background-clip: text;
+}
 .content {
   padding: 3vw;
   // overflow: auto;
 }
-
+.lottie-waves {
+  transform: translateY(-4vw);
+}
 .lottie-btn {
   height: 70vw;
-  transform: translateY(-10vw);
-}
-.van-icon-user-circle-o {
-  color: rgb(71, 113, 178);
-}
-
-.line1 {
-  position: absolute;
-  right: 0;
-  background-image: linear-gradient(90deg, #0fbcf9, pink);
-  width: 45vw;
-  height: 0.8vw;
-}
-.line2 {
-  background-image: linear-gradient(90deg, #0fbcf9, pink);
-  width: 35vw;
-  height: 0.8vw;
-  position: relative;
-  left: 65vw;
-}
-.line3 {
-  background-image: linear-gradient(90deg, #0fbcf9, pink);
-  width: 25vw;
-  height: 0.8vw;
-  position: relative;
-  top: 6vw;
-  left: 75vw;
-}
-
-.line1::before {
-  content: '';
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: rotate(45deg);
-  right: 0;
-  top: -0.5vw;
-  width: 3vw;
-  height: 3vw;
-  background-color: #0fbcf9;
-}
-.line2::before {
-  content: '';
-  display: block;
-  position: absolute;
-  border-radius: 50%;
-  transform: translate(0, -25%);
-  left: 0;
-  width: 3vw;
-  height: 3vw;
-  background-color: #0fbcf9;
+  transform: translateY(-18vw);
 }
 </style>
 

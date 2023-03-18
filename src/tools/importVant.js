@@ -27,7 +27,8 @@ import {
   Swipe,
   SwipeItem,
   Switch,
-  SwipeCell
+  SwipeCell,
+  Popover
 } from 'vant'
 
 export default {
@@ -61,5 +62,6 @@ export default {
     Vue.use(SwipeItem)
     Vue.use(Switch)
     Vue.use(SwipeCell)
+    Vue.use(Popover)
   }
 }
