@@ -5,8 +5,8 @@
       <van-image
         radius="10px"
         show-loading
-        width="15vh"
-        height="15vh"
+        width="25vw"
+        height="25vw"
         fit="fill"
         :src="cover"
       >
@@ -17,8 +17,8 @@
           <van-image
             radius="10px"
             show-loading
-            width="15vh"
-            height="15vh"
+            width="25vw"
+            height="25vw"
             fit="fill"
             src="https://y.qq.com/mediastyle/music_v11/extra/default_300x300.jpg?max_age=31536000"
             ><template #loading>
@@ -60,8 +60,8 @@ export default {
 
 <style lang="less" scoped>
 .image {
-  width: 15vh;
-  height: 15vh;
+  width: 25vw;
+  height: 25vw;
   margin-right: 3vw;
   border-radius: 10px;
   // border: 1px solid rgb(221, 221, 221);
@@ -70,9 +70,9 @@ export default {
 }
 
 .detail {
-  width: 15vh;
-  height: 5vh;
-  margin-top: 1vh;
+  width: 25vw;
+  height: 9vw;
+  margin-top: 2vw;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -84,16 +84,16 @@ export default {
     font-size: 2vh;
   }
   .singer {
-    width: 15vh;
-    font-size: 1.5vh;
+    width: 25vw;
+    font-size: 3vw;
     color: #ccc;
   }
   .time {
-    font-size: 1.5vh;
+    font-size: 3vw;
   }
 }
 
 .shorter {
-  height: 3vh;
+  height: 6vw;
 }
 </style>

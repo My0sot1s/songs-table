@@ -21,7 +21,11 @@
       <MusicList title="即将到来" :musicList="laterList" showTime></MusicList>
     </div>
     <div ref="lottieWaves" class="lottie-waves"></div>
-    <div ref="lottieBtn" @click="toSelect()" class="lottie-btn"></div>
+    <div class="lottie-btn">
+      <div ref="lottieBtn" class="btn" @click="toSelect()">
+        <div class="pop">戳我点歌</div>
+      </div>
+    </div>
     <van-dialog
       v-model="tourist"
       title="提示"
@@ -51,8 +55,6 @@ export default {
       todayList: [],
       laterList: [],
       limitReason: '',
-      showPopover: true,
-      actions: [{ text: '选项一' }, { text: '选项二' }, { text: '选项三' }],
       tourist: false
     }
   },
@@ -137,7 +139,10 @@ export default {
 
 <style lang="less" scoped>
 #home {
-  background-color: rgb(250, 250, 250);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
 }
 .client-header {
   font-size: 2.8vh;
@@ -155,14 +160,66 @@ export default {
 }
 .content {
   padding: 3vw;
+  height: 100vw;
   // overflow: auto;
 }
-.lottie-waves {
-  transform: translateY(-4vw);
-}
 .lottie-btn {
-  height: 70vw;
-  transform: translateY(-18vw);
+  height: 40vw;
+  flex-grow: 1;
+  position: relative;
+  .btn {
+    height: 70vw;
+    width: 100vw;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .pop {
+    width: 20vw;
+    height: 10vw;
+    font-size: 3vw;
+    position: absolute;
+    top: 15%;
+    left: 65%;
+    background-color: rgb(74, 74, 74);
+    color: white;
+    border-radius: 2vw;
+    text-align: center;
+    line-height: 10vw;
+    transform-origin: 0% 100%;
+    opacity: 0;
+    animation: pop 5s ease-in-out 1s;
+    animation-fill-mode: forwards;
+  }
+  .pop::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 10vw;
+    border: 1vw solid transparent;
+    border-top-color: rgb(74, 74, 74);
+    transform-origin: 50% 0%;
+    transform: translate(-50%, 0) rotate(45deg);
+  }
+}
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  3% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  97% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
 }
 </style>
 
