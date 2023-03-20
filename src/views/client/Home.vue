@@ -86,7 +86,9 @@ export default {
     const res = await getLimitDay()
     this.limitReason = res?.reason
     // 获取歌单列表
-    getList('/user/todaySongs', this.todayList)
+    getList('/user/todaySongs', this.todayList).then(() => {
+      this.todayList.sort((a, b) => (a.time > b.time ? 1 : -1))
+    })
     getList('/user/comingSongs', this.laterList).then(() => {
       this.laterList
         .sort((a, b) => {

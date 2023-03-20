@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       height: document.body.clientHeight,
-      transitionName: 'slide-right',
+      transitionName: 'van-fade',
       timer: null
     }
   },
@@ -28,7 +28,12 @@ export default {
       if (isBack) {
         this.transitionName = 'slide-right'
       } else {
-        this.transitionName = 'slide-left'
+        console.log(this.$route)
+        if (this.$route.path === '/home') {
+          this.transitionName = 'van-fade'
+        } else {
+          this.transitionName = 'slide-left'
+        }
       }
       this.$router.isBack = false
     }
