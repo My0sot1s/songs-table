@@ -29,7 +29,6 @@ export default {
       musics: []
     }
   },
-  mounted() {},
   methods: {
     popUp(index) {
       this.showPick = true

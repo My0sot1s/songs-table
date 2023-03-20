@@ -1,7 +1,7 @@
 <template>
   <div class="music-list">
     <div class="music-list-header">
-      <div>{{ title }}</div>
+      <div class="title">{{ title }}</div>
       <slot></slot>
     </div>
     <div>
@@ -44,9 +44,6 @@ export default {
   },
   components: {
     Album
-  },
-  mounted() {
-    /* console.log(this.musicList) */
   }
 }
 </script>
@@ -65,7 +62,7 @@ export default {
       font-size: 4vw;
       font-weight: bold;
     }
-    & > div:before {
+    & > .title:before {
       content: '';
       display: block;
       height: 1vw;

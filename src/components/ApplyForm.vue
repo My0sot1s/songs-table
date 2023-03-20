@@ -89,16 +89,16 @@
       label="校区"
       placeholder="请选择你所在的校区"
       :rules="[{ required: true, message: '' }]"
-      @click="onlyAmoy"
+      @click="showSchoolDistrict = true"
     />
-    <van-popup v-model="showschoolDistrict" round position="bottom">
+    <van-popup v-model="showSchoolDistrict" round position="bottom">
       <van-cascader
         active-color="#1989fa"
         v-model="form.schoolDistrict"
         title="请选择所在校区"
         :options="options"
-        @close="showschoolDistrict = false"
-        @finish="showschoolDistrict = false"
+        @close="showSchoolDistrict = false"
+        @finish="showSchoolDistrict = false"
       />
     </van-popup>
     <van-field
@@ -137,7 +137,7 @@
 
 <script>
 import { submitRequest, updateRequest } from '@/request/api/user'
-import { Toast, Dialog } from 'vant'
+import { Toast } from 'vant'
 export default {
   props: ['musics'],
   data() {
@@ -158,7 +158,7 @@ export default {
       placeHolders: [],
       notice:
         '欢迎来到华侨大学点歌台！如果你有想听的歌，或者想要送出的祝福，请认真填写下面的表格，我们会在每天晚上的 6:20 - 6:40 将歌曲送出。',
-      showschoolDistrict: false,
+      showSchoolDistrict: false,
       fieldValue: '',
       cascaderValue: '',
       // 选项列表，children 代表子选项，支持多级嵌套
@@ -170,10 +170,6 @@ export default {
         {
           text: '泉州校区',
           value: '泉州校区'
-        },
-        {
-          text: '龙舟池校区',
-          value: '龙舟池校区'
         }
       ],
       showCalendar: false
@@ -241,18 +237,13 @@ export default {
     },
     popUp(index) {
       this.$emit('popUp', index)
-    },
-    onlyAmoy() {
-      Dialog.alert({
-        message: '目前只支持厦门校区点歌哦',
-        confirmButtonColor: '#1989fa'
-      })
     }
   },
   mounted() {
-    /* if (localStorage.limitDay === 'true') {
+    if (localStorage.limitDay === 'true') {
       Toast.fail('今天不可以点歌哦')
-    } */
+    }
+    this.form.schoolDistrict = localStorage.getItem('campus') || undefined
     const applyInfo = JSON.parse(localStorage.getItem('applyInfo'))
     if (applyInfo) {
       const { placeHolder, ...form } = applyInfo

@@ -28,7 +28,6 @@ export default {
       if (isBack) {
         this.transitionName = 'slide-right'
       } else {
-        console.log(this.$route)
         if (this.$route.path === '/home') {
           this.transitionName = 'van-fade'
         } else {
