@@ -24,9 +24,18 @@
       <van-form @submit="onSubmit">
         <van-field v-model="form.stu_num" name="学号" label="学号：" />
         <van-field v-model="form.note" name="备注名" label="备注名：" />
-        <van-cell title="超级管理员">
+        <van-cell center title="超级管理员">
           <van-switch v-model="checked" />
         </van-cell>
+        <van-cell
+          ><van-radio-group
+            v-model="form.school_district"
+            direction="horizontal"
+          >
+            <van-radio name="厦门校区">厦门校区</van-radio>
+            <van-radio name="泉州校区">泉州校区</van-radio>
+          </van-radio-group></van-cell
+        >
         <div style="margin: 16px">
           <van-button round block type="info" native-type="submit"
             >提交</van-button
@@ -47,7 +56,8 @@ export default {
       form: {
         is_super_admin: 0,
         note: undefined,
-        stu_num: undefined
+        stu_num: undefined,
+        school_district: undefined
       },
       loading: false,
       finished: false,
@@ -91,8 +101,16 @@ export default {
         return true
       }
     },
+    checkCampus() {
+      if (!this.form.school_district) {
+        Toast.fail('请选择校区!')
+        return false
+      } else {
+        return true
+      }
+    },
     checkFilled() {
-      return this.checkStuNum() && this.checkNote()
+      return this.checkStuNum() && this.checkNote() && this.checkCampus()
     },
     async onSubmit() {
       if (!this.checkFilled()) return

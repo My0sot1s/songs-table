@@ -5,8 +5,8 @@ export function userLogin(code) {
 }
 
 /* 首页 */
-export function getLimitDay() {
-  return http.get('/user/isLimitDay')
+export function getLimitDay(schoolDistrict) {
+  return http.get('/user/isLimitDay', { schoolDistrict })
 }
 
 /* 表单 */
@@ -26,5 +26,5 @@ export function withdrawApply(id) {
 }
 
 export function getDetails(id) {
-  return http.get(`/user/songDetails?id=${id}`)
+  return http.get('/user/songDetails', { id })
 }

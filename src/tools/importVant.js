@@ -29,7 +29,9 @@ import {
   Switch,
   SwipeCell,
   Popover,
-  Tag
+  Tag,
+  RadioGroup,
+  Radio
 } from 'vant'
 
 export default {
@@ -65,5 +67,7 @@ export default {
     Vue.use(SwipeCell)
     Vue.use(Popover)
     Vue.use(Tag)
+    Vue.use(Radio)
+    Vue.use(RadioGroup)
   }
 }

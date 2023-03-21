@@ -11,10 +11,7 @@
           <Album
             v-for="(item, index) in musicList"
             :key="index"
-            :cover="item.cover"
-            :songName="item.songName"
-            :singer="item.singer"
-            :listenUrl="item.listenUrl"
+            :music="item"
             :showTime="showTime"
           >
             <template #time v-if="showTime">{{ item.time }}</template>
@@ -22,9 +19,12 @@
         </div>
         <div class="music-list-body" v-else>
           <Album
-            cover="https://y.qq.com/music/photo_new/T002R300x300M0000030lak94GN5Ad_0.jpg"
-            songName="暂无歌曲"
-            singer=" "
+            :music="{
+              cover:
+                'https://y.qq.com/music/photo_new/T002R300x300M0000030lak94GN5Ad_0.jpg',
+              songName: '暂无歌曲',
+              singer: ' '
+            }"
           />
         </div>
         <!-- </transition-group> -->

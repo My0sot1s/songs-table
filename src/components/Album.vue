@@ -1,6 +1,6 @@
 <template>
   <!-- 首页方形唱片 -->
-  <div @click="toListen">
+  <div @click="toDetail">
     <div class="image">
       <van-image
         radius="10px"
@@ -8,7 +8,7 @@
         width="25vw"
         height="25vw"
         fit="fill"
-        :src="cover"
+        :src="music?.cover"
       >
         <template #loading>
           <van-loading type="spinner" size="20" />
@@ -28,7 +28,7 @@
       </van-image>
     </div>
     <div class="detail" :class="{ shorter: !showTime }">
-      <van-notice-bar color="black" :text="songName" />
+      <van-notice-bar color="black" :text="music.songName" />
       <!-- <van-notice-bar class="singer" :text="singer || '佚名'" /> -->
       <van-notice-bar class="time" color="gray" v-if="showTime">
         <slot name="time" />
@@ -40,19 +40,16 @@
 <script>
 export default {
   props: {
-    cover: String,
-    songName: String,
-    singer: String,
-    listenUrl: String,
+    music: Object,
     showTime: {
       type: Boolean,
       default: false
     }
   },
   methods: {
-    toListen() {
-      if (!this.listenUrl) return
-      window.location.href = this.listenUrl
+    toDetail() {
+      localStorage.setItem('orderDetail', JSON.stringify(this.music))
+      this.$router.push('/detail')
     }
   }
 }

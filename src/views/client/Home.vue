@@ -122,28 +122,10 @@ export default {
       autoplay: true,
       animationData: waves
     })
-    // 获取限制时间段和原因
-    const res = await getLimitDay()
-    this.limitReason = res?.reason
+    this.checkLimit()
     // 获取歌单列表
     getList('/user/todaySongs', this.todayList)
     getList('/user/comingSongs', this.laterList)
-
-    // 如果十分钟内提示过了且限制原因没有改变则不再提示
-    if (
-      (this.limitReason ?? '') !== '' &&
-      (new Date().getTime() - (localStorage.homeToastTime || 0) >
-        1000 * 10 * 60 ||
-        localStorage.limitReason !== this.limitReason)
-    ) {
-      Dialog({
-        message: this.limitReason,
-        confirmButtonColor: '#1989fa'
-      }).then(() => {
-        localStorage.setItem('homeToastTime', new Date().getTime())
-        localStorage.setItem('limitReason', this.limitReason)
-      })
-    }
   },
   destroyed() {
     if (this.lottieBtn) {
@@ -157,6 +139,26 @@ export default {
     }
   },
   methods: {
+    async checkLimit() {
+      // 获取限制时间段和原因
+      const res = await getLimitDay(this.campus)
+      this.limitReason = res?.reason
+      // 如果十分钟内提示过了且限制原因没有改变则不再提示
+      if (
+        (this.limitReason ?? '') !== '' &&
+        (new Date().getTime() - (localStorage.homeToastTime || 0) >
+          1000 * 10 * 60 ||
+          localStorage.limitReason !== this.limitReason)
+      ) {
+        Dialog({
+          message: this.limitReason,
+          confirmButtonColor: '#1989fa'
+        }).then(() => {
+          localStorage.setItem('homeToastTime', new Date().getTime())
+          localStorage.setItem('limitReason', this.limitReason)
+        })
+      }
+    },
     toSelect() {
       this.$router.push('/selectmusic')
     },
@@ -176,11 +178,13 @@ export default {
         setTimeout(() => {
           this.campus = '泉州校区'
           localStorage.setItem('campus', '泉州校区')
+          this.checkLimit()
         }, 400)
       } else {
         setTimeout(() => {
           this.campus = '厦门校区'
           localStorage.setItem('campus', '厦门校区')
+          this.checkLimit()
         }, 400)
       }
     }

@@ -23,7 +23,7 @@ export async function getList(url, list, that) {
               reject(new Error('无此歌曲'))
             } else {
               detail = item.search_path === 'qq' ? detail.track_info : detail
-              const temp = new MusicItem(item, detail)
+              const temp = new OrderItem(item, detail)
               if (that) {
                 that.$store.commit('pushApply', temp)
               } else {
@@ -42,12 +42,15 @@ export async function getList(url, list, that) {
   await Promise.allSettled(promiseList)
 }
 
-class MusicItem {
+class OrderItem {
   constructor(item, detail) {
     this.id = item.ID
     this.time = formatDate(new Date(item.broadcast_date)).split(' ')[1]
     this.campus = item.school_district
     this.state = item.status
+    this.blessingWords = item.blessing_words
+    this.senderName = item.sender_name
+    this.receiverName = item.receiver_name
     if (item.search_path === '网易云') {
       detail = detail[0]
       this.listenUrl = `https://music.163.com/#/song?id=${detail.id}`
@@ -56,7 +59,12 @@ class MusicItem {
       this.singer = detail.ar.map((item) => item.name).join('/')
     } else if (item.search_path === 'qq') {
       this.listenUrl = `https://y.qq.com/n/ryqq/songDetail/${detail.mid}`
-      this.cover = `https://y.gtimg.cn/music/photo_new/T002R300x300M000${detail.album.mid}.jpg`
+      if (detail.album.mid) {
+        this.cover = `https://y.gtimg.cn/music/photo_new/T002R300x300M000${detail.album.mid}.jpg`
+      } else {
+        this.cover =
+          'https://y.qq.com/mediastyle/music_v11/extra/default_300x300.jpg?max_age=31536000'
+      }
       this.songName = detail.name
       this.singer = detail.singer.map((item) => item.name).join('/')
     }
