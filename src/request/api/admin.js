@@ -24,6 +24,14 @@ export function submit(form) {
   return http.post('/admin/submit', form)
 }
 
+export function noticeInfo() {
+  return http.get('/admin/noticeInfo')
+}
+
+export function publishNotice(notice) {
+  return http.post('/admin/publishNotice', { notice })
+}
+
 export function adminList() {
   return http.get('/admin/adminList')
 }

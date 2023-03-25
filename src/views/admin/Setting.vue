@@ -3,11 +3,31 @@
     <NavBar />
     <div class="body">
       <div @click="showPick = true">添加备选歌曲</div>
+      <div @click="showPublish = true">管理公告</div>
       <div @click="$router.push('/admin/forbid')">禁止点歌时间段</div>
       <div @click="$router.push('/admin/manageAdmin')">管理员设置</div>
       <div>使用帮助</div>
       <div>意见与反馈</div>
     </div>
+
+    <van-popup round id="popup" v-model="showPublish">
+      <div id="title">管理公告</div>
+      <van-form @submit="onSubmitNotice">
+        <van-field
+          autofocus
+          v-model="notice"
+          rows="2"
+          autosize
+          type="textarea"
+          maxlength="100"
+          placeholder="请输入公告内容"
+          show-word-limit
+        /><van-button round block type="info" native-type="submit"
+          >发布公告</van-button
+        >
+      </van-form>
+      <div class="delete" @click="deleteNotice">删除当前公告</div></van-popup
+    >
 
     <van-popup
       :lock-scroll="false"
@@ -71,7 +91,7 @@
 import SelectMusicList from '@/components/SelectMusicList'
 import formatDate from '@/tools/FormatDate'
 import { Toast } from 'vant'
-import { submit } from '@/request/api/admin'
+import { submit, noticeInfo, publishNotice } from '@/request/api/admin'
 
 export default {
   components: {
@@ -94,6 +114,8 @@ export default {
       showCalendar: false,
       showPick: false,
       showTime: false,
+      showPublish: false,
+      notice: '',
       date: '',
       dialog: {
         show: false,
@@ -158,6 +180,36 @@ export default {
       } else {
         Toast.fail(err)
       }
+    },
+    async onSubmitNotice() {
+      if (!this.notice) {
+        Toast.fail('请输入公告内容！')
+        return
+      }
+      const [err] = await publishNotice(this.notice)
+      if (!err) {
+        Toast.success('发布成功！')
+      } else {
+        Toast.fail(err)
+      }
+    },
+    async deleteNotice() {
+      const [err] = await publishNotice('')
+      if (!err) {
+        Toast.success('删除公告成功！')
+      } else {
+        Toast.fail(err)
+      }
+    }
+  },
+  async mounted() {
+    const [err, res] = await noticeInfo()
+    if (!err) {
+      if (res) {
+        this.notice = res
+      }
+    } else {
+      Toast.fail(err)
     }
   }
 }
@@ -194,6 +246,29 @@ export default {
   &-btn:first-child {
     border-left: none;
     color: #323233;
+  }
+}
+#popup {
+  padding: 5vw;
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .title {
+    padding: 5vw 0;
+  }
+  .van-form {
+    width: 80vw;
+    .van-field {
+      margin: 5vw 0;
+      border-radius: 2vw;
+    }
+  }
+  .delete {
+    padding: 3vw 0 1vw 0;
+    font-size: 75%;
+    color: rgb(238, 10, 36);
+    text-decoration: underline;
   }
 }
 </style>

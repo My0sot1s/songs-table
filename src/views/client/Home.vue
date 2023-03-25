@@ -70,6 +70,7 @@ export default {
     return {
       todayList: [],
       laterList: [],
+      notice: '',
       limitReason: '',
       tourist: false,
       campus: ''
@@ -141,22 +142,39 @@ export default {
   methods: {
     async checkLimit() {
       // 获取限制时间段和原因
-      const res = await getLimitDay(this.campus)
-      this.limitReason = res?.reason
-      // 如果十分钟内提示过了且限制原因没有改变则不再提示
-      if (
-        (this.limitReason ?? '') !== '' &&
-        (new Date().getTime() - (localStorage.homeToastTime || 0) >
-          1000 * 10 * 60 ||
-          localStorage.limitReason !== this.limitReason)
-      ) {
-        Dialog({
-          message: this.limitReason,
-          confirmButtonColor: '#1989fa'
-        }).then(() => {
-          localStorage.setItem('homeToastTime', new Date().getTime())
-          localStorage.setItem('limitReason', this.limitReason)
-        })
+      const [err, res] = await getLimitDay(this.campus)
+      if (!err) {
+        this.notice = res?.notice
+        if (
+          (this.notice ?? '') !== '' &&
+          (new Date().getTime() - (localStorage.homeToastTime || 0) >
+            1000 * 10 * 60 ||
+            localStorage.notice !== this.notice)
+        ) {
+          Dialog({
+            message: this.notice,
+            confirmButtonColor: '#1989fa'
+          }).then(() => {
+            localStorage.setItem('homeToastTime', new Date().getTime())
+            localStorage.setItem('notice', this.notice)
+          })
+        }
+        this.limitReason = res?.reason
+        // 如果十分钟内提示过了且限制原因没有改变则不再提示
+        if (
+          (this.limitReason ?? '') !== '' &&
+          (new Date().getTime() - (localStorage.homeToastTime || 0) >
+            1000 * 10 * 60 ||
+            localStorage.limitReason !== this.limitReason)
+        ) {
+          Dialog({
+            message: this.limitReason,
+            confirmButtonColor: '#1989fa'
+          }).then(() => {
+            localStorage.setItem('homeToastTime', new Date().getTime())
+            localStorage.setItem('limitReason', this.limitReason)
+          })
+        }
       }
     },
     toSelect() {
