@@ -1,5 +1,10 @@
 <template>
   <div id="detail">
+    <router-link to="/home">
+      <div class="back">
+        <van-icon name="arrow-left" />
+      </div>
+    </router-link>
     <div class="main">
       <van-image
         fit="cover"
@@ -61,6 +66,22 @@ export default {
 .van-icon::before {
   margin-right: 1vw;
 }
+.back {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 6vw;
+  width: 8vw;
+  height: 8vw;
+  position: absolute;
+  top: 2vw;
+  left: 2vw;
+  color: white;
+  z-index: 1002;
+  .van-icon::before {
+    margin: 0;
+  }
+}
 .main {
   color: white;
   min-height: 100vh;
@@ -71,7 +92,7 @@ export default {
   .van-image {
     border-radius: 3vw;
     box-shadow: 0 3vw 5vw 0 rgba(0, 0, 0, 0.1);
-    margin-top: 10vw;
+    margin-top: 15vw;
   }
   .song-detail {
     width: 80vw;
