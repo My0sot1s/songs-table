@@ -2,12 +2,15 @@ import axios from 'axios'
 import { wxLoginRedirect } from '@/request/wxAuth'
 import { Toast } from 'vant'
 
+axios.defaults.baseURL = 'https://songs.sends.cc'
+
 /* 不携带token的请求 */
 const withoutToken = [
   'login',
   'todaySongs',
   'comingSongs',
   'isLimitDay',
+  'notice',
   'musicapi'
 ]
 

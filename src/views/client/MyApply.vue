@@ -44,10 +44,12 @@
     </van-dropdown-menu>
 
     <div ref="lottie" v-if="curList.length === 0"></div>
+    <TouristNotice :tourist="tourist" />
   </div>
 </template>
 
 <script>
+import TouristNotice from '@/components/TouristNotice.vue'
 import ApplyInfo from '@/components/ApplyInfo.vue'
 import { Dialog, Toast } from 'vant'
 import lottie from 'lottie-web'
@@ -57,7 +59,8 @@ import { deleteApply, withdrawApply, getDetails } from '@/request/api/user'
 
 export default {
   components: {
-    ApplyInfo
+    ApplyInfo,
+    TouristNotice
   },
   data() {
     return {
@@ -74,7 +77,8 @@ export default {
           { text: '未通过', value: 2 },
           { text: '待播放', value: 3 }
         ]
-      }
+      },
+      tourist: false
     }
   },
   watch: {
@@ -100,6 +104,9 @@ export default {
     }
   },
   mounted() {
+    if (sessionStorage.getItem('tourist')) {
+      this.tourist = true
+    }
     // 获取列表
     getList('/user/myApplication', this.applyList0)
     this.lottieInstance = lottie.loadAnimation({

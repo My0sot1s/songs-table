@@ -72,16 +72,13 @@ export default {
         message: '加载中...',
         forbidClick: true
       })
-      let err
-      if (disable) {
-        ;[err] = await limitTime({
+      const [err] = disable
+        ? await limitTime({
           startTime: 1,
           reason: this.form.reason,
           endTime: 2
         })
-      } else {
-        ;[err] = await limitTime(this.form)
-      }
+        : await limitTime(this.form)
       if (!err) {
         Toast.success('修改成功')
         this.prevForm = JSON.stringify(this.form)

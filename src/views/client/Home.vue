@@ -42,17 +42,6 @@
         <div class="pop">戳我点歌</div>
       </div>
     </div>
-    <van-dialog
-      v-model="tourist"
-      title="提示"
-      confirm-button-text="知道了"
-      confirm-button-color="#3c9cff"
-      cancel-button-text="去登录"
-      message="当前为游客身份，点歌请通过校内认证登录"
-      show-cancel-button
-      @cancel="toLogin"
-    >
-    </van-dialog>
   </div>
 </template>
 
@@ -61,7 +50,7 @@ import MusicList from '@/components/MusicList'
 import lottie from 'lottie-web'
 import music from '@/assets/music.json'
 import waves from '@/assets/waves.json'
-import { getLimitDay } from '@/request/api/user'
+import { getLimitDay, getNotice } from '@/request/api/user'
 import { getList } from '@/request/api/common'
 import { Dialog } from 'vant'
 
@@ -70,9 +59,7 @@ export default {
     return {
       todayList: [],
       laterList: [],
-      notice: '',
       limitReason: '',
-      tourist: false,
       campus: ''
     }
   },
@@ -102,12 +89,12 @@ export default {
     }
   },
   async mounted() {
-    // 游客首次进入弹窗
-    if (sessionStorage.getItem('tourist') && !sessionStorage.getItem('poped')) {
-      this.tourist = true
-      sessionStorage.setItem('poped', 1)
+    if (localStorage.getItem('campus')) {
+      this.campus = localStorage.getItem('campus')
+    } else {
+      this.campus = '厦门校区'
+      localStorage.setItem('campus', '厦门校区')
     }
-    this.campus = localStorage.getItem('campus') || '厦门校区'
     // lottie动画
     this.lottieBtn = lottie.loadAnimation({
       container: this.$refs.lottieBtn,
@@ -124,6 +111,7 @@ export default {
       animationData: waves
     })
     this.checkLimit()
+    this.getNotice().then(this.checkNotice())
     // 获取歌单列表
     getList('/user/todaySongs', this.todayList)
     getList('/user/comingSongs', this.laterList)
@@ -144,21 +132,6 @@ export default {
       // 获取限制时间段和原因
       const [err, res] = await getLimitDay(this.campus)
       if (!err) {
-        this.notice = res?.notice
-        if (
-          (this.notice ?? '') !== '' &&
-          (new Date().getTime() - (localStorage.homeToastTime || 0) >
-            1000 * 10 * 60 ||
-            localStorage.notice !== this.notice)
-        ) {
-          Dialog({
-            message: this.notice,
-            confirmButtonColor: '#1989fa'
-          }).then(() => {
-            localStorage.setItem('homeToastTime', new Date().getTime())
-            localStorage.setItem('notice', this.notice)
-          })
-        }
         this.limitReason = res?.reason
         // 如果十分钟内提示过了且限制原因没有改变则不再提示
         if (
@@ -177,14 +150,37 @@ export default {
         }
       }
     },
+    async getNotice() {
+      const [err, res] = await getNotice()
+      if (!err) {
+        for (const key in res) {
+          localStorage.setItem(key, res[key])
+        }
+      }
+    },
+    async checkNotice() {
+      if (
+        localStorage.getItem('campus') === '厦门校区' &&
+        localStorage.getItem('XMHomeNotice')
+      ) {
+        Dialog({
+          message: localStorage.getItem('XMHomeNotice'),
+          confirmButtonColor: '#1989fa',
+          closeOnPopstate: false
+        })
+      } else if (
+        localStorage.getItem('campus') === '泉州校区' &&
+        localStorage.getItem('QZHomeNotice')
+      ) {
+        Dialog({
+          message: localStorage.getItem('QZHomeNotice'),
+          confirmButtonColor: '#1989fa',
+          closeOnPopstate: false
+        })
+      }
+    },
     toSelect() {
       this.$router.push('/selectmusic')
-    },
-    toLogin() {
-      window.location.href = `https://apps.hqu.edu.cn/wechat-hqu/wechatauth.html?proxyTo=authoauth&sendUrl=/connect/oauth2/authorize?appid=wxfe035b066fb1158b&redirect_uri=${encodeURIComponent(
-        `${location.origin}`
-      )}&encode_flag=Y&response_type=code&scope=snsapi_userinfo#wechat_redirect`
-      sessionStorage.removeItem('tourist')
     },
     changeCampus() {
       const home = document.querySelector('#home')

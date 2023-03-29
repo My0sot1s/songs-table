@@ -9,6 +9,10 @@ export function getLimitDay(schoolDistrict) {
   return http.get('/user/isLimitDay', { schoolDistrict })
 }
 
+export function getNotice() {
+  return http.get('/user/notice')
+}
+
 /* 表单 */
 export function submitRequest(form) {
   return http.post('/user/submit', form)

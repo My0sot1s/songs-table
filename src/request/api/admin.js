@@ -24,12 +24,20 @@ export function submit(form) {
   return http.post('/admin/submit', form)
 }
 
-export function noticeInfo() {
-  return http.get('/admin/noticeInfo')
+export function getSongNotice() {
+  return http.get('/admin/songNotice')
 }
 
-export function publishNotice(notice) {
-  return http.post('/admin/publishNotice', { notice })
+export function getHomeNotice() {
+  return http.get('/admin/homeNotice')
+}
+
+export function publishHomeNotice(notice) {
+  return http.post('/admin/publishHomeNotice', { notice })
+}
+
+export function publishSongNotice(notice) {
+  return http.post('/admin/publishSongNotice', { notice })
 }
 
 export function adminList() {

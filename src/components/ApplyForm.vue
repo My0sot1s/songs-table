@@ -1,30 +1,20 @@
 <template>
   <van-form @submit="onSubmit" :disabled="form.disabled">
     <van-notice-bar
-      v-show="!form.disabled"
+      v-show="!form.disabled && this.notice"
       color="#1989fa"
       background="#ecf9ff"
       left-icon="volume-o"
       :style="`margin: 2vw 0`"
-      :scrollable="false"
+      scrollable
+      :text="notice"
     >
-      <van-swipe
-        vertical
-        class="notice-swipe"
-        :autoplay="3000"
-        :show-indicators="false"
-      >
-        <van-swipe-item>周五为英语点歌台，点歌请用英文噢~</van-swipe-item>
-        <van-swipe-item
-          >周日为粤语点歌台，我们将用粤语送出你的祝福~</van-swipe-item
-        >
-      </van-swipe>
     </van-notice-bar>
     <van-notice-bar
       v-show="!(form.reason ?? '') !== '' && !form.disabled"
       wrapable
       :scrollable="false"
-      :text="notice"
+      :text="noticeDetail"
       :style="`text-indent: 6vw`"
       color="black"
       background="inherit"
@@ -132,14 +122,19 @@
         form.btn || '提交'
       }}</van-button>
     </div>
+    <TouristNotice />
   </van-form>
 </template>
 
 <script>
 import { submitRequest, updateRequest } from '@/request/api/user'
 import { Toast } from 'vant'
+import TouristNotice from './TouristNotice.vue'
 export default {
   props: ['musics'],
+  components: {
+    TouristNotice
+  },
   data() {
     return {
       form: {
@@ -154,10 +149,11 @@ export default {
         disabled: false,
         songName: ''
       },
+      noticeDetail:
+        '欢迎来到华侨大学点歌台！如果你有想听的歌，或者想要送出的祝福，请认真填写下面的表格，我们会在每天晚上的 6:20 - 6:40 将歌曲送出。',
       showingDate: '',
       placeHolders: [],
-      notice:
-        '欢迎来到华侨大学点歌台！如果你有想听的歌，或者想要送出的祝福，请认真填写下面的表格，我们会在每天晚上的 6:20 - 6:40 将歌曲送出。',
+      notice: '欢迎来到华侨大学点歌台！',
       showSchoolDistrict: false,
       fieldValue: '',
       cascaderValue: '',
@@ -172,7 +168,8 @@ export default {
           value: '泉州校区'
         }
       ],
-      showCalendar: false
+      showCalendar: false,
+      tourist: false
     }
   },
   watch: {
@@ -199,11 +196,27 @@ export default {
     }
   },
   methods: {
+    checkNotice() {
+      if (
+        localStorage.getItem('campus') === '厦门校区' &&
+        localStorage.getItem('XMSongNotice')
+      ) {
+        this.notice = localStorage.getItem('XMSongNotice')
+      } else if (
+        localStorage.getItem('campus') === '泉州校区' &&
+        localStorage.getItem('QZSongNotice')
+      ) {
+        this.notice = localStorage.getItem('QZSongNotice')
+      }
+    },
     formatDate(date) {
       return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
     },
     async onSubmit() {
-      console.log(this.form)
+      if (sessionStorage.getItem('tourist')) {
+        this.tourist = true
+        return
+      }
       Toast.loading({
         forbidClick: true
       })
@@ -217,12 +230,9 @@ export default {
         Toast.fail('请选择歌曲')
         return
       }
-      let err
-      if (this.form.id) {
-        ;[err] = await updateRequest(this.form)
-      } else {
-        ;[err] = await submitRequest(this.form)
-      }
+      const [err] = this.form.id
+        ? await updateRequest(this.form)
+        : await submitRequest(this.form)
       if (!err) {
         Toast.success('提交成功！')
         this.$router.replace('/myApply')
@@ -243,6 +253,7 @@ export default {
     if (localStorage.limitDay === 'true') {
       Toast.fail('今天不可以点歌哦')
     }
+    this.checkNotice()
     this.form.schoolDistrict = localStorage.getItem('campus') || undefined
     const applyInfo = JSON.parse(localStorage.getItem('applyInfo'))
     if (applyInfo) {
