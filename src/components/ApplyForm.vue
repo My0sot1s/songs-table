@@ -149,8 +149,8 @@ export default {
         disabled: false,
         songName: ''
       },
-      noticeDetail:
-        '欢迎来到华侨大学点歌台！如果你有想听的歌，或者想要送出的祝福，请认真填写下面的表格，我们会在每天晚上的 6:20 - 6:40 将歌曲送出。',
+      plusText: '',
+      broadcastTime: '',
       showingDate: '',
       placeHolders: [],
       notice: '欢迎来到华侨大学点歌台！',
@@ -170,6 +170,11 @@ export default {
       ],
       showCalendar: false,
       tourist: false
+    }
+  },
+  computed: {
+    noticeDetail() {
+      return `欢迎来到华侨大学点歌台！如果你有想听的歌，或者想要送出的祝福，请认真填写下面的表格，我们会在每天晚上的 ${this.broadcastTime} 将歌曲送出。${this.plusText}`
     }
   },
   watch: {
@@ -250,6 +255,12 @@ export default {
     }
   },
   mounted() {
+    if (localStorage.getItem('campus') === '厦门校区') {
+      this.broadcastTime = ' 6:20 - 6:40 '
+    } else {
+      this.broadcastTime = ' 6:40 - 7:10 '
+      this.plusText = '未放完歌曲将在次日其余时间播放。'
+    }
     if (localStorage.limitDay === 'true') {
       Toast.fail('今天不可以点歌哦')
     }
