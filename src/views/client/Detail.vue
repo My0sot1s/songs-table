@@ -113,13 +113,16 @@ export default {
   }
   .sender-receiver {
     position: relative;
+    flex-wrap: wrap;
     width: 80vw;
-    height: 10vw;
     line-height: 10vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
     vertical-align: center;
+    .van-icon {
+      margin: 2vw 0;
+    }
   }
   .wish {
     width: 80vw;

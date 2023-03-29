@@ -56,7 +56,7 @@ class OrderItem {
       this.listenUrl = `https://music.163.com/#/song?id=${detail.id}`
       this.cover = detail.al.picUrl
       this.songName = detail.name
-      this.singer = detail.ar.map((item) => item.name).join('/')
+      this.singer = detail.ar.map((item) => item.name).join(' / ')
     } else if (item.search_path === 'qq') {
       this.listenUrl = `https://y.qq.com/n/ryqq/songDetail/${detail.mid}`
       if (detail.album.mid) {
@@ -66,7 +66,7 @@ class OrderItem {
           'https://y.qq.com/mediastyle/music_v11/extra/default_300x300.jpg?max_age=31536000'
       }
       this.songName = detail.name
-      this.singer = detail.singer.map((item) => item.name).join('/')
+      this.singer = detail.singer.map((item) => item.name).join(' / ')
     }
   }
 }
