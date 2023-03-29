@@ -73,7 +73,7 @@ export default {
   font-size: 6vw;
   width: 8vw;
   height: 8vw;
-  position: absolute;
+  position: fixed;
   top: 2vw;
   left: 2vw;
   color: white;
