@@ -31,7 +31,9 @@ import {
   Popover,
   Tag,
   RadioGroup,
-  Radio
+  Radio,
+  Tabs,
+  Tab
 } from 'vant'
 
 export default {
@@ -69,5 +71,7 @@ export default {
     Vue.use(Tag)
     Vue.use(Radio)
     Vue.use(RadioGroup)
+    Vue.use(Tabs)
+    Vue.use(Tab)
   }
 }

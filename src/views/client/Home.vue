@@ -55,6 +55,7 @@ import { getList } from '@/request/api/common'
 import { Dialog } from 'vant'
 
 export default {
+  name: 'Home',
   data() {
     return {
       todayList: [],

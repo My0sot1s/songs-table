@@ -1,7 +1,7 @@
 <template>
   <div id="app" :style="`height: ${height}'px'`">
     <transition :name="transitionName">
-      <keep-alive include="ApplyList,adminHome">
+      <keep-alive include="ApplyList,AdminHome,Home">
         <router-view class="view" />
       </keep-alive>
     </transition>
@@ -28,6 +28,7 @@ export default {
       if (isBack) {
         this.transitionName = 'slide-right'
       } else {
+        // console.log(this.$route)
         if (this.$route.path === '/home') {
           this.transitionName = 'van-fade'
         } else {
@@ -94,17 +95,13 @@ hr {
   margin-bottom: 1vh;
 }
 
-.admin-navBar {
-  display: flex;
-  justify-content: space-between;
-  background-color: #fafbfd;
-  padding: 1vh 0;
-  border-bottom: 1px solid #ccc;
-  border-top: 1px solid #ccc;
+.van-tabs__nav {
+  background-color: #fafbfd !important;
 
-  & > div {
-    display: flex;
-    align-items: center;
+  .van-tab {
+    flex: none !important;
+    width: 20vw !important;
+    font-size: 4vw !important;
   }
 }
 
