@@ -50,6 +50,7 @@ export default {
     this.music = JSON.parse(localStorage.getItem('orderDetail'))
   },
   mounted() {
+    document.body.style.color = 'white'
     document.querySelector(
       '#detail'
     ).style.backgroundImage = `url(${this.music.cover})`
@@ -62,7 +63,6 @@ export default {
 
       const context = canvas.getContext('2d')
       context.drawImage(this, 0, 0)
-
       const imageData = context.getImageData(
         0,
         0,
@@ -70,11 +70,9 @@ export default {
         canvas.height
       ).data
       const color = getDominantColor(imageData)
-
       const brightness =
         (color[0] * 299 + color[1] * 587 + color[2] * 114) / 1000
       const fontColor = brightness > 125 ? '#444' : 'white'
-
       document.body.style.color = fontColor
       console.log(document.body.style.color)
     }
