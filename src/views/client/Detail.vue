@@ -50,7 +50,6 @@ export default {
     this.music = JSON.parse(localStorage.getItem('orderDetail'))
   },
   mounted() {
-    document.body.style.color = 'white'
     document.querySelector(
       '#detail'
     ).style.backgroundImage = `url(${this.music.cover})`
