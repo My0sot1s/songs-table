@@ -54,50 +54,6 @@ export default {
     document.querySelector(
       '#detail'
     ).style.backgroundImage = `url(${this.music.cover})`
-    const backgroundImage = new Image()
-    backgroundImage.src = this.music.cover
-    backgroundImage.onload = function () {
-      const canvas = document.createElement('canvas')
-      canvas.width = this.width
-      canvas.height = this.height
-
-      const context = canvas.getContext('2d')
-      context.drawImage(this, 0, 0)
-      const imageData = context.getImageData(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      ).data
-      const color = getDominantColor(imageData)
-      const brightness =
-        (color[0] * 299 + color[1] * 587 + color[2] * 114) / 1000
-      const fontColor = brightness > 125 ? '#444' : 'white'
-      document.body.style.color = fontColor
-      console.log(document.body.style.color)
-    }
-
-    function getDominantColor(imageData) {
-      const colorCounts = {}
-      let maxCount = 0
-      let dominantColor = [0, 0, 0]
-
-      for (let i = 0; i < imageData.length; i += 4) {
-        const r = imageData[i]
-        const g = imageData[i + 1]
-        const b = imageData[i + 2]
-
-        const colorKey = `${r},${g},${b}`
-        colorCounts[colorKey] = (colorCounts[colorKey] || 0) + 1
-
-        if (colorCounts[colorKey] > maxCount) {
-          maxCount = colorCounts[colorKey]
-          dominantColor = [r, g, b]
-        }
-      }
-
-      return dominantColor
-    }
   }
 }
 </script>
@@ -129,7 +85,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  backdrop-filter: blur(30vw);
+  backdrop-filter: blur(30vw) brightness(0.7);
   .van-image {
     border-radius: 3vw;
     box-shadow: 0 3vw 5vw 0 rgba(0, 0, 0, 0.1);
