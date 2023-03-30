@@ -1,10 +1,8 @@
 <template>
   <div id="detail">
-    <router-link to="/home">
-      <div class="back">
-        <van-icon name="arrow-left" />
-      </div>
-    </router-link>
+    <div class="back" @click="$router.back()">
+      <van-icon name="arrow-left" />
+    </div>
     <div class="main">
       <van-image
         fit="cover"
@@ -55,6 +53,53 @@ export default {
     document.querySelector(
       '#detail'
     ).style.backgroundImage = `url(${this.music.cover})`
+    const backgroundImage = new Image()
+    backgroundImage.src = this.music.cover
+    backgroundImage.onload = function () {
+      const canvas = document.createElement('canvas')
+      canvas.width = this.width
+      canvas.height = this.height
+
+      const context = canvas.getContext('2d')
+      context.drawImage(this, 0, 0)
+
+      const imageData = context.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      ).data
+      const color = getDominantColor(imageData)
+
+      const brightness =
+        (color[0] * 299 + color[1] * 587 + color[2] * 114) / 1000
+      const fontColor = brightness > 125 ? '#444' : 'white'
+
+      document.body.style.color = fontColor
+      console.log(document.body.style.color)
+    }
+
+    function getDominantColor(imageData) {
+      const colorCounts = {}
+      let maxCount = 0
+      let dominantColor = [0, 0, 0]
+
+      for (let i = 0; i < imageData.length; i += 4) {
+        const r = imageData[i]
+        const g = imageData[i + 1]
+        const b = imageData[i + 2]
+
+        const colorKey = `${r},${g},${b}`
+        colorCounts[colorKey] = (colorCounts[colorKey] || 0) + 1
+
+        if (colorCounts[colorKey] > maxCount) {
+          maxCount = colorCounts[colorKey]
+          dominantColor = [r, g, b]
+        }
+      }
+
+      return dominantColor
+    }
   }
 }
 </script>
@@ -76,14 +121,12 @@ export default {
   position: fixed;
   top: 2vw;
   left: 2vw;
-  color: white;
   z-index: 1002;
   .van-icon::before {
     margin: 0;
   }
 }
 .main {
-  color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -131,8 +174,10 @@ export default {
       line-height: 10vw;
     }
     .text {
+      background-color: rgba(255, 255, 255, 0.2);
       white-space: pre-line;
-      padding: 0 2vw 10vw 2vw;
+      padding: 2vw;
+      margin-bottom: 10vw;
       line-height: 7vw;
       border-radius: 2vw;
     }
