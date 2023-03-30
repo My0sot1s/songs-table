@@ -60,6 +60,7 @@ export default {
 <style scoped lang="less">
 * {
   box-sizing: border-box;
+  color: white;
 }
 .van-icon::before {
   margin-right: 1vw;
