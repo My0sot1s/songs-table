@@ -61,7 +61,8 @@ export default {
       todayList: [],
       laterList: [],
       limitReason: '',
-      campus: ''
+      campus: '',
+      prevChangeTime: undefined
     }
   },
   components: {
@@ -184,6 +185,16 @@ export default {
       this.$router.push('/selectmusic')
     },
     changeCampus() {
+      // 节流
+      if (!this.prevChangeTime) {
+        this.prevChangeTime = Date.now()
+      } else {
+        if (Date.now() - this.prevChangeTime < 800) {
+          return
+        } else {
+          this.prevChangeTime = Date.now()
+        }
+      }
       const home = document.querySelector('#home')
       home.classList.add('home-animated')
       home.addEventListener('animationend', function () {
