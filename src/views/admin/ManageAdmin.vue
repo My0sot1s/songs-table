@@ -1,25 +1,42 @@
 <template>
   <div id="manageAdmin">
     <NavBar />
-    <van-list v-model="loading" :finished="finished" @load="onLoad">
+    <van-list
+      v-model="loading"
+      finished-text="没有更多了"
+      :finished="finished"
+      @load="onLoad"
+    >
       <van-swipe-cell
         :before-close="beforeClose"
-        v-for="item in list"
+        v-for="(item, index) in list"
         :key="item.ID"
-        :name="item.stu_num"
+        :name="index"
       >
         <van-cell
           :border="false"
           :title="item.note"
           :value="item.is_super_admin === 1 ? '超级管理员' : '管理员'"
         />
+        <template #left>
+          <van-button square type="info" text="编辑" />
+        </template>
         <template #right>
           <van-button square type="danger" text="删除" />
         </template>
       </van-swipe-cell>
     </van-list>
-    <van-button id="add" round icon="plus" type="info" @click="show = true" />
-    <van-popup round id="popup" v-model="show">
+    <van-button
+      id="add"
+      round
+      icon="plus"
+      type="info"
+      @click="
+        show = true
+        isEdit = false
+      "
+    />
+    <van-popup round id="popup" v-model="show" @close="resetForm">
       <div class="title">添加管理员</div>
       <van-form @submit="onSubmit">
         <van-field v-model="form.stu_num" name="学号" label="学号：" />
@@ -62,7 +79,8 @@ export default {
       loading: false,
       finished: false,
       show: false,
-      checked: false
+      checked: false,
+      isEdit: false
     }
   },
   watch: {
@@ -112,12 +130,22 @@ export default {
     checkFilled() {
       return this.checkStuNum() && this.checkNote() && this.checkCampus()
     },
+    resetForm() {
+      this.form = {
+        is_super_admin: 0,
+        note: undefined,
+        stu_num: undefined,
+        school_district: undefined
+      }
+      this.checked = false
+    },
     async onSubmit() {
       if (!this.checkFilled()) return
       const [err] = await addAdmin(this.form)
       this.show = false
       if (!err) {
-        Toast.success('添加成功！')
+        const text = this.isEdit ? '修改成功！' : '添加成功！'
+        Toast.success(text)
         this.onLoad()
       } else {
         Toast.fail(err)
@@ -126,8 +154,24 @@ export default {
     // position 为关闭时点击的位置
     // instance 为对应的 SwipeCell 实例
     beforeClose({ position, instance, name }) {
+      const index = name
       switch (position) {
         case 'left':
+          this.isEdit = true
+          this.form = (({
+            is_super_admin,
+            note,
+            stu_num,
+            school_district
+          }) => ({
+            is_super_admin,
+            note,
+            stu_num,
+            school_district
+          }))(this.list[index])
+          this.checked = this.form.is_super_admin === 1
+          this.show = true
+          break
         case 'cell':
         case 'outside':
           instance.close()
@@ -136,13 +180,10 @@ export default {
           Dialog.confirm({
             message: '确定删除吗？'
           }).then(async () => {
-            console.log(name)
-            const [err] = await deleteAdmin(name)
+            console.log(this.list[index].stu_num)
+            const [err] = await deleteAdmin(this.list[index].stu_num)
             if (!err) {
-              this.list.splice(
-                this.list.findIndex((item) => item.stu_num === name),
-                1
-              )
+              this.list.splice(index, 1)
               instance.close()
             } else {
               Toast.fail(err)
@@ -163,6 +204,7 @@ export default {
       margin-top: 3vw;
       box-shadow: 3px 3px 10px 2px rgb(223, 222, 222);
     }
+    padding-bottom: 10vh;
   }
   #add {
     position: fixed;
