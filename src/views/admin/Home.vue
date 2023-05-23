@@ -2,6 +2,7 @@
   <div>
     <NavBar />
     <Tabs
+      ref="tabsComponent"
       :navList="['歌单']"
       :applyList="[curDayList]"
       :dateString="dateString"
@@ -61,6 +62,7 @@ export default {
         getList('/admin/songList', this.$store.state.applyList, this).then(
           () => {
             this.$store.commit('setShowLoading', false)
+            this.$refs.tabsComponent.onLoad()
             Toast.success('加载完成')
           }
         )

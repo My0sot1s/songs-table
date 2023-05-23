@@ -27,19 +27,26 @@
               </van-dropdown-menu>
             </div>
           </template>
-          <ApplyInfo
-            v-for="(item, index2) in applyList[index]"
-            :key="item.id"
-            :cover="item.cover"
-            :songName="item.songName"
-            :singer="item.singer"
-            :time="item.time"
-            :state="state(item)"
-            :campus="campus(item)"
-            :iconName="iconName(item)"
-            @click.native="cardClick(index2)"
-            @action="actionClick(index2)"
-          />
+          <van-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
+            <ApplyInfo
+              v-for="(item, index2) in showingList[index]"
+              :key="item.id"
+              :cover="item.cover"
+              :songName="item.songName"
+              :singer="item.singer"
+              :time="item.time"
+              :state="state(item)"
+              :campus="campus(item)"
+              :iconName="iconName(item)"
+              @click.native="cardClick(index2)"
+              @action="actionClick(index2)"
+            />
+          </van-list>
         </van-tab>
         <template #nav-right>
           <div class="time" @click="showCalendar = true">
@@ -140,7 +147,10 @@ export default {
       actionSheet: {
         show: false,
         actions: this.actions
-      }
+      },
+      showingList: [[], []],
+      loading: false,
+      finished: false
     }
   },
   mounted() {
@@ -155,8 +165,7 @@ export default {
   },
   activated() {
     this.routeName = this.$route.name
-    const distance =
-      sessionStorage.getItem(`${this.routeName}-scrollTop`) || 0
+    const distance = sessionStorage.getItem(`${this.routeName}-scrollTop`) || 0
     this.$refs.content.scrollTop = parseInt(distance)
   },
   deactivated() {
@@ -203,16 +212,25 @@ export default {
     selMenu() {
       this.$emit('changeMenu', this.menuState)
       this.goTop()
+      setTimeout(() => {
+        this.onRefresh()
+      }, 0)
     },
     // 选择日期
     selDay(date) {
       this.$emit('selDay', date)
       this.showCalendar = false
+      setTimeout(() => {
+        this.onRefresh()
+      }, 0)
     },
     // 点击全部日期
     allDate() {
       this.$emit('allDate')
       this.showCalendar = false
+      setTimeout(() => {
+        this.onRefresh()
+      }, 0)
     },
     // 点击 ApplyInfo 组件
     cardClick(index) {
@@ -241,6 +259,9 @@ export default {
     // 选择 actionSheet 中的某一项
     selAction() {
       this.$emit('selAction', this.curIndex)
+      setTimeout(() => {
+        this.onRefresh()
+      }, 0)
     },
     // 取消弹窗
     cancelDialog() {
@@ -261,6 +282,43 @@ export default {
         this.scrollTop = 0
         this.$refs.content.scrollTop = 0
       }
+    },
+    async onLoad() {
+      console.log(this.applyList[this.curNav])
+      if (!this.applyList[this.curNav].length) {
+        this.loading = false
+        return
+      }
+      const startIndex = this.showingList[this.curNav].length
+      let index
+      const loadingList = []
+      for (let i = 0; i < 15; i++) {
+        console.log('i=', i)
+        index = startIndex + i
+        if (index >= this.applyList[this.curNav].length) {
+          this.finished = true
+          break
+        }
+        loadingList.push(this.applyList[this.curNav][index].getDetail())
+      }
+      Promise.all(loadingList).finally(() => {
+        this.showingList[this.curNav].splice(
+          this.showingList[this.curNav].length,
+          0,
+          ...this.applyList[this.curNav].slice(startIndex, index)
+        )
+        this.loading = false
+      })
+    },
+    onRefresh() {
+      // 清空列表数据
+      this.showingList[this.curNav].splice(0)
+      this.finished = false
+
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true
+      this.onLoad()
     }
   }
 }
@@ -337,6 +395,11 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.van-list {
+  overflow: scroll;
+  height: 100vh;
 }
 
 ::v-deep .van-dropdown-menu__bar {

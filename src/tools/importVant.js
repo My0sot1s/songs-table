@@ -33,7 +33,8 @@ import {
   RadioGroup,
   Radio,
   Tabs,
-  Tab
+  Tab,
+  PullRefresh
 } from 'vant'
 
 export default {
@@ -73,5 +74,6 @@ export default {
     Vue.use(RadioGroup)
     Vue.use(Tabs)
     Vue.use(Tab)
+    Vue.use(PullRefresh)
   }
 }

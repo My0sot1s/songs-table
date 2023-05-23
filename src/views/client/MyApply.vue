@@ -108,7 +108,7 @@ export default {
       this.tourist = true
     }
     // 获取列表
-    getList('/user/myApplication', this.applyList0)
+    getList('/user/myApplication', this.applyList0, null, true)
     this.lottieInstance = lottie.loadAnimation({
       container: this.$refs.lottie,
       renderer: 'svg',

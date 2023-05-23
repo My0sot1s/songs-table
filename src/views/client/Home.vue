@@ -115,8 +115,8 @@ export default {
     this.checkLimit()
     this.getNotice().then(this.checkNotice())
     // 获取歌单列表
-    getList('/user/todaySongs', this.todayList)
-    getList('/user/comingSongs', this.laterList)
+    getList('/user/todaySongs', this.todayList, null, true)
+    getList('/user/comingSongs', this.laterList, null, true)
   },
   destroyed() {
     if (this.lottieBtn) {
